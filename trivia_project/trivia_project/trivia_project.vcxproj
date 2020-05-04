@@ -20,7 +20,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
-    <ProjectGuid>{29237E64-6603-47D7-A8E3-CC4EE0ACD410}</ProjectGuid>
+    <ProjectGuid>{559C5F03-5436-4DC3-A725-23495F1C36B5}</ProjectGuid>
     <RootNamespace>triviaproject</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -123,14 +123,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Server.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Server.cpp" />
-    <ClInclude Include="LoginRequestHandler.h" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="LoginRequestHandler.cpp" />
+    <ClCompile Include="Server.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="LoginRequestHandler.h" />
+    <ClInclude Include="Server.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
