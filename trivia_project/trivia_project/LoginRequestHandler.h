@@ -3,8 +3,8 @@
 
 class LoginRequestHandler : public IRequestHandler
 {
+public:
 	//c'tor
-	LoginRequestHandler() {}
-	~LoginRequestHandler() {}
+	LoginRequestHandler();
 
 };
