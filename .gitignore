@@ -1,0 +1,11 @@
+*
+!*.h
+!*.cpp
+!*.c
+!*.vcxproj
+!*.vcxproj.filters
+!*.sln
+!**/x64
+!**/Debug
+!*.exe
+!.gitignore
