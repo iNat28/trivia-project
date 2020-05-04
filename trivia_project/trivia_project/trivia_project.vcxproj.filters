@@ -15,12 +15,20 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD
     <ClInclude Include="Server.h">
+=======
+    <ClInclude Include="LoginRequestHandler.h">
+>>>>>>> 15d122e230cd0e9f15e9d27b7a1ff01e3c1e23c6
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD
     <ClCompile Include="Server.cpp">
+=======
+    <ClCompile Include="LoginRequestHandler.cpp">
+>>>>>>> 15d122e230cd0e9f15e9d27b7a1ff01e3c1e23c6
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
