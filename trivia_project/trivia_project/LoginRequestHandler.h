@@ -1,6 +1,7 @@
 #include <iostream>
+#include "IRequestHandler.h"
 
-class LoginRequestHandler
+class LoginRequestHandler : public IRequestHandler
 {
 	//c'tor
 	LoginRequestHandler() {}
