@@ -1,10 +1,11 @@
 #pragma once
 #include <string>
 #include <vector>
+#include "json.hpp"
 
 using std::string;
 using std::vector;
-typedef unsigned char Byte;
+typedef std::uint8_t Byte;
 
 class JsonRequestPacketDeserializer
 {
@@ -12,15 +13,15 @@ class JsonRequestPacketDeserializer
 	static SignupRequest deserializeSignupRequest(vector<Byte> Buffer);
 };
 
-typedef struct LoginRequest
+struct LoginRequest
 {
 	string username;
 	string password;
-} LoginRequest;
+};
 
-typedef struct SignupRequest
+struct SignupRequest
 {
 	string username;
 	string password;
 	string email;
-} SignupRequest;
+};
