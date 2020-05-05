@@ -4,6 +4,7 @@
 !*.h
 !*.cpp
 !*.c
+!*.hpp
 !*.vcxproj
 !*.vcxproj.filters
 !*.sln
