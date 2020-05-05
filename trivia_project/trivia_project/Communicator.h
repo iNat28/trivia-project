@@ -15,6 +15,7 @@
 
 #define ADDRESS "127.0.0.1"
 #define PORT 40200
+#define CLIENT_MSG "Hello"
 #define CLIENT_BUFFER_MAX 5
 
 class Communicator

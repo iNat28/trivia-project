@@ -63,16 +63,22 @@ void Communicator::_handleNewClient(SOCKET socket)
 {
 	//Recieves from the buffer
 	char buffer[CLIENT_BUFFER_MAX + 1] = "";
+
+	if (INVALID_SOCKET == send(socket, CLIENT_MSG, strlen(CLIENT_MSG), 0))
+	{
+		Exception::ex << "Error sending to socket " << socket;
+		throw Exception();
+	}
+
 	if (INVALID_SOCKET == recv(socket, buffer, sizeof(char) * CLIENT_BUFFER_MAX, 0))
 	{
 		Exception::ex << "Error recieving from socket " << socket;
 		throw Exception();
 	}
 
-	if (INVALID_SOCKET == send(socket, buffer, CLIENT_BUFFER_MAX, 0))
+	if (CLIENT_MSG == std::string(buffer))
 	{
-		Exception::ex << "Error sending to socket " << socket;
-		throw Exception();
+		std::cout << CLIENT_MSG << std::endl;
 	}
 
 	closesocket(socket);
