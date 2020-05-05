@@ -1,8 +1,9 @@
 #include "Communicator.h"
 
-Communicator::Communicator() : _socket(socket(AF_INET, SOCK_STREAM, IPPROTO_TCP))
+//Default Constructor
+Communicator::Communicator() : _serverSocket(socket(AF_INET, SOCK_STREAM, IPPROTO_TCP))
 {
-	if (this->_socket == INVALID_SOCKET)
+	if (this->_serverSocket == INVALID_SOCKET)
 	{
 		throw std::exception("Error opening communicator's socket");
 	}
@@ -19,7 +20,7 @@ void Communicator::startHandleRequests()
 	while (true)
 	{
 		//Accepts the client's socket
-		clientSocket = accept(this->_socket, NULL, NULL);
+		clientSocket = accept(this->_serverSocket, NULL, NULL);
 		if (clientSocket == INVALID_SOCKET)
 		{
 			throw std::exception("Error accepting client");
@@ -47,13 +48,13 @@ void Communicator::_bindAndListen()
 
 	//Binds the socket to the port
 	//Connects between the socket and the socket struct
-	if (bind(this->_socket, (struct sockaddr*)&sa, sizeof(sa)) == SOCKET_ERROR)
+	if (bind(this->_serverSocket, (struct sockaddr*)&sa, sizeof(sa)) == SOCKET_ERROR)
 	{
 		throw std::exception("Error binding socket");
 	}
 
 	// Start listening for incoming requests of clients
-	if (listen(this->_socket, SOMAXCONN) == SOCKET_ERROR)
+	if (listen(this->_serverSocket, SOMAXCONN) == SOCKET_ERROR)
 	{
 		throw std::exception("Error listening to socket");
 	}
@@ -64,12 +65,14 @@ void Communicator::_handleNewClient(SOCKET socket)
 	//Recieves from the buffer
 	char buffer[CLIENT_BUFFER_MAX + 1] = "";
 
+	//Sends the message
 	if (INVALID_SOCKET == send(socket, CLIENT_MSG, strlen(CLIENT_MSG), 0))
 	{
 		Exception::ex << "Error sending to socket " << socket;
 		throw Exception();
 	}
 
+	//Waits to recieve a message
 	if (INVALID_SOCKET == recv(socket, buffer, sizeof(char) * CLIENT_BUFFER_MAX, 0))
 	{
 		Exception::ex << "Error recieving from socket " << socket;
