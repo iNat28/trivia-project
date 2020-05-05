@@ -39,8 +39,8 @@ void Communicator::_bindAndListen()
 	struct sockaddr_in sa = { 0 };
 
 	sa.sin_family = AF_INET;
+	
 	//Adds the address
-
 	inet_pton(AF_INET, ADDRESS, &sa.sin_addr.s_addr);
 	//Adds the port
 	sa.sin_port = htons(PORT);
