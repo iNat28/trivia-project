@@ -14,6 +14,7 @@
 
 #define ADDRESS "127.0.0.1"
 #define PORT 40200
+#define CLIENT_BUFFER_MAX 5
 
 class Communicator
 {
@@ -26,5 +27,5 @@ private:
 	SOCKET _socket;
 
 	void _bindAndListen();
-	static void _handleNewClient();
+	static void _handleNewClient(SOCKET socket);
 };

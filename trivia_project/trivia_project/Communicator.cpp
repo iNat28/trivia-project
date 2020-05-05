@@ -26,7 +26,7 @@ void Communicator::startHandleRequests()
 		}
 
 		//Puts the client into a thread
-		client = std::thread(Communicator::_handleNewClient);
+		client = std::thread(Communicator::_handleNewClient, clientSocket);
 		client.detach();
 
 		//Adds the client's socket to the clients
@@ -59,6 +59,21 @@ void Communicator::_bindAndListen()
 	}
 }
 
-void Communicator::_handleNewClient()
+void Communicator::_handleNewClient(SOCKET socket)
 {
+	//Recieves from the buffer
+	char buffer[CLIENT_BUFFER_MAX + 1] = "";
+	if (INVALID_SOCKET == recv(socket, buffer, sizeof(char) * CLIENT_BUFFER_MAX, 0))
+	{
+		Exception::ex << "Error recieving from socket " << socket;
+		throw Exception();
+	}
+
+	if (INVALID_SOCKET == send(socket, buffer, CLIENT_BUFFER_MAX, 0))
+	{
+		Exception::ex << "Error sending to socket " << socket;
+		throw Exception();
+	}
+
+	closesocket(socket);
 }

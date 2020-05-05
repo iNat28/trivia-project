@@ -7,5 +7,5 @@
 !*.vcxproj
 !*.vcxproj.filters
 !*.sln
-!*.exe
+!*.py
 !.gitignore
