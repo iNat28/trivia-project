@@ -9,11 +9,11 @@ def main():
     try:
         sock.connect((SERVER_IP, SERVER_PORT))
         server_msg = sock.recv(5).decode()
-        if server_msg.lowercase() == "hello":
-            sock.sendall("Hello")
+        if server_msg == "Hello":
+            sock.sendall("Hello".encode())
         sock.close()
-    except:
-        print("Error while trying to connect to server")
+    except Exception as e:
+        print("Error while trying to connect to server - " + str(e))
 
 if __name__ == '__main__':
     main()
