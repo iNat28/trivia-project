@@ -5,6 +5,7 @@
 
 using std::string;
 using std::vector;
+using json = nlohmann::json;
 typedef std::uint8_t Byte;
 
 class JsonRequestPacketDeserializer
