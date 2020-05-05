@@ -22,5 +22,5 @@ void Server::adminInput()
 	}
 
 	//Closes the whole program
-	std::exit(EXIT_SUCCESS);	//Doesn't do proper clean up
+	std::exit(EXIT_SUCCESS);	//Might not do proper clean up
 }

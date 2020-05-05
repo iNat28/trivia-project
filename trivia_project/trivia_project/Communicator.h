@@ -19,10 +19,11 @@ class Communicator
 {
 public:
 	Communicator();
+	~Communicator();
 
 	void startHandleRequests();
 private:
-	std::unordered_map<SOCKET, IRequestHandler> m_clients;
+	std::unordered_map<SOCKET, IRequestHandler*> m_clients;
 	SOCKET _serverSocket;
 
 	void _bindAndListen();

@@ -9,6 +9,16 @@ Communicator::Communicator() : _serverSocket(socket(AF_INET, SOCK_STREAM, IPPROT
 	}
 }
 
+//Deconstructor
+Communicator::~Communicator()
+{
+	for (auto& requestHandlers : m_clients)
+	{
+		delete requestHandlers.second;
+	}
+}
+
+//Starts the client handle requests
 void Communicator::startHandleRequests()
 {
 	SOCKET clientSocket = 0;
@@ -31,10 +41,11 @@ void Communicator::startHandleRequests()
 		client.detach();
 
 		//Adds the client's socket to the clients
-		this->m_clients[clientSocket] = LoginRequestHandler();
+		this->m_clients[clientSocket] = new LoginRequestHandler();
 	}
 }
 
+//Binds and listens to the server socket
 void Communicator::_bindAndListen()
 {
 	struct sockaddr_in sa = { 0 };
@@ -60,6 +71,8 @@ void Communicator::_bindAndListen()
 	}
 }
 
+//Thread for handling new clients
+//Input: The client socket
 void Communicator::_handleNewClient(SOCKET socket)
 {
 	//Recieves from the buffer
@@ -79,6 +92,7 @@ void Communicator::_handleNewClient(SOCKET socket)
 		throw Exception();
 	}
 
+	//Prints CLIENT_MSG if the client sent the same message
 	if (CLIENT_MSG == std::string(buffer))
 	{
 		std::cout << CLIENT_MSG << std::endl;
