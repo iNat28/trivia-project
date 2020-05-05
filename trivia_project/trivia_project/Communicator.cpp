@@ -41,13 +41,13 @@ void Communicator::_bindAndListen()
 	sa.sin_family = AF_INET;
 	//Adds the address
 
-	//inet_pton(AF_INET, ADDRESS, &sa.sin_addr.s_addr);
+	inet_pton(AF_INET, ADDRESS, &sa.sin_addr.s_addr);
 	//Adds the port
 	sa.sin_port = htons(PORT);
 
 	//Binds the socket to the port
 	//Connects between the socket and the socket struct
-	if (bind(this->_socket, (struct sockaddr*) & sa, sizeof(sa)) == SOCKET_ERROR)
+	if (bind(this->_socket, (struct sockaddr*)&sa, sizeof(sa)) == SOCKET_ERROR)
 	{
 		throw std::exception("Error binding socket");
 	}
