@@ -1,12 +1,15 @@
+#include "JsonRequestPacketDeserializer.h"
+#include "JsonResponsePacketSerializer.h"
 #include "pch.h"
 #include "Server.h"
 #include "Communicator.h"
 #include "WSAInitializer.h"
 #include "json.hpp"
 
+
 int main()
 {
-	try
+	/*try
 	{
 		WSAInitializer wsainitializer;
 		Server server;
@@ -16,7 +19,12 @@ int main()
 	catch (const std::exception& e)
 	{
 		std::cerr << e.what() << std::endl;
-	}
-
+	}*/
+	LoginResponse loginResponse = LoginResponse();
+	loginResponse.status = 1;
+	Buffer buffer = JsonResponsePacketSerializer::serializeResponse(loginResponse);
+	//Buffer buffer = serializeResponse(loginResponse);
+	//LoginRequest loginRequest = deserializeLoginRequest(buffer);
+	
 	return 0;
 }

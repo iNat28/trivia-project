@@ -1,27 +1,28 @@
-#include "pch.h"
 #include "JsonResponsePacketSerializer.h"
+#include "pch.h"
 
-Buffer JsonResponsePacketSerializer::serializeResponse(ErrorResponse)
+Buffer JsonResponsePacketSerializer::serializeResponse(ErrorResponse errResponse)
 {
 	json j;
-	j["message"] = "ERROR";
+	j["message"] = errResponse.message;
 	Buffer v_bson = json::to_bson(j);
 	//need to choose code for each response and put it first, then add the length of the json object and then add the message
 	return v_bson;
 }
 
-Buffer JsonResponsePacketSerializer::serializeResponse(LoginResponse)
+Buffer JsonResponsePacketSerializer::serializeResponse(LoginResponse loginResponse)
 {
 	json j;
-	j["status"] = 1;
+	j["status"] = loginResponse.status;
 	Buffer v_bson = json::to_bson(j);
 	return v_bson;
 }
 
-Buffer JsonResponsePacketSerializer::serializeResponse(SignupResponse)
+Buffer JsonResponsePacketSerializer::serializeResponse(SignupResponse signupResponse)
 {
 	json j;
-	j["status"] = 1;
+	j["status"] = signupResponse.status;
 	Buffer v_bson = json::to_bson(j);
 	return v_bson;
 }
+
