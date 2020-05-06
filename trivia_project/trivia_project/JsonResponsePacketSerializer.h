@@ -1,6 +1,7 @@
 #pragma once
 #include "pch.h"
 #include "Constants.h"
+#include "JsonRequestPacketDeserializer.h"
 
 struct LoginResponse
 {
