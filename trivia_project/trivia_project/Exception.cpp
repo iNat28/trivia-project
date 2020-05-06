@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "Exception.h"
 
 std::stringstream Exception::ex;

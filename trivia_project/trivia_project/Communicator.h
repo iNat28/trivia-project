@@ -1,12 +1,10 @@
+#include "pch.h"
 #pragma once
-#include <unordered_map>
-#include <WinSock2.h>
-#include <WS2tcpip.h>
-#include <string>
-#include <thread>
 #include "Exception.h"
 #include "IRequestHandler.h"
 #include "LoginRequestHandler.h"
+#include "JsonRequestPacketDeserializer.h"
+#include "JsonResponsePacketSerializer.h"
 
 #pragma comment(lib, "Ws2_32.lib")
 
@@ -27,5 +25,6 @@ private:
 	SOCKET _serverSocket;
 
 	void _bindAndListen();
-	static void _handleNewClient(SOCKET socket);
+	static void s_handleNewClient(SOCKET socket);
+	static void s_getPartFromSocket(SOCKET socket, char* buffer, unsigned int length);
 };

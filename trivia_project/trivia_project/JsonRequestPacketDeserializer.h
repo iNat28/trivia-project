@@ -1,28 +1,25 @@
 #pragma once
-#include <string>
-#include <vector>
-#include "json.hpp"
+#include "pch.h"
+#include "Constants.h"
 
-using std::string;
-using std::vector;
-using json = nlohmann::json;
-typedef std::uint8_t Byte;
-
-class JsonRequestPacketDeserializer
-{
-	static LoginRequest deserializeLoginRequest(vector<Byte> Buffer);
-	static SignupRequest deserializeSignupRequest(vector<Byte> Buffer);
-};
+#define REQUEST_MSG_CODE_SIZE sizeof(Byte)
+#define REQUEST_MSG_LEN_SIZE 4 * sizeof(Byte)
 
 struct LoginRequest
 {
-	string username;
-	string password;
+	std::string username;
+	std::string password;
 };
 
 struct SignupRequest
 {
-	string username;
-	string password;
-	string email;
+	std::string username;
+	std::string password;
+	std::string email;
+};
+
+class JsonRequestPacketDeserializer
+{
+	static LoginRequest deserializeLoginRequest(const Buffer& buffer);
+	static SignupRequest deserializeSignupRequest(const Buffer& buffer);
 };

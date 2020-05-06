@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "Communicator.h"
 
 //Default Constructor
@@ -37,7 +38,7 @@ void Communicator::startHandleRequests()
 		}
 
 		//Puts the client into a thread
-		client = std::thread(Communicator::_handleNewClient, clientSocket);
+		client = std::thread(Communicator::s_handleNewClient, clientSocket);
 		client.detach();
 
 		//Adds the client's socket to the clients
@@ -73,10 +74,20 @@ void Communicator::_bindAndListen()
 
 //Thread for handling new clients
 //Input: The client socket
-void Communicator::_handleNewClient(SOCKET socket)
+void Communicator::s_handleNewClient(SOCKET socket)
 {
 	//Recieves from the buffer
+	char msgCodeBuffer[REQUEST_MSG_CODE_SIZE + 1] = "";
+	char msgLenBuffer[REQUEST_MSG_LEN_SIZE + 1] = "";
+	char* msgBuffer = nullptr;
+	int msgLen = 0;
 	char buffer[CLIENT_BUFFER_MAX + 1] = "";
+
+	Communicator::s_getPartFromSocket(socket, msgLenBuffer, REQUEST_MSG_CODE_SIZE);
+	Communicator::s_getPartFromSocket(socket, msgCodeBuffer, REQUEST_MSG_LEN_SIZE);
+	msgLen = atoi(msgLenBuffer);
+	msgBuffer = new char[msgLen + 1];
+	Communicator::s_getPartFromSocket(socket, msgBuffer, msgLen);
 
 	//Sends the message
 	if (INVALID_SOCKET == send(socket, CLIENT_MSG, strlen(CLIENT_MSG), 0))
@@ -85,18 +96,20 @@ void Communicator::_handleNewClient(SOCKET socket)
 		throw Exception();
 	}
 
-	//Waits to recieve a message
-	if (INVALID_SOCKET == recv(socket, buffer, sizeof(char) * CLIENT_BUFFER_MAX, 0))
+	//Prints CLIENT_MSG if the client sent the same message
+	//if (CLIENT_MSG == std::string(buffer))
+	//{
+	//	std::cout << CLIENT_MSG << std::endl;
+	//}
+
+	closesocket(socket);
+}
+
+void Communicator::s_getPartFromSocket(SOCKET socket, char* buffer, unsigned int length)
+{
+	if (INVALID_SOCKET == recv(socket, buffer, length, 0))
 	{
 		Exception::ex << "Error recieving from socket " << socket;
 		throw Exception();
 	}
-
-	//Prints CLIENT_MSG if the client sent the same message
-	if (CLIENT_MSG == std::string(buffer))
-	{
-		std::cout << CLIENT_MSG << std::endl;
-	}
-
-	closesocket(socket);
 }
