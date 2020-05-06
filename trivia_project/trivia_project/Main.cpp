@@ -20,11 +20,9 @@ int main()
 	{
 		std::cerr << e.what() << std::endl;
 	}*/
-	LoginResponse loginResponse = LoginResponse();
+	struct LoginResponse loginResponse;
 	loginResponse.status = 1;
 	Buffer buffer = JsonResponsePacketSerializer::serializeResponse(loginResponse);
-	//Buffer buffer = serializeResponse(loginResponse);
-	//LoginRequest loginRequest = deserializeLoginRequest(buffer);
 	
 	return 0;
 }

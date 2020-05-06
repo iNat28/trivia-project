@@ -1,5 +1,5 @@
-#include "JsonResponsePacketSerializer.h"
 #include "pch.h"
+#include "JsonResponsePacketSerializer.h"
 
 Buffer JsonResponsePacketSerializer::serializeResponse(ErrorResponse errResponse)
 {
