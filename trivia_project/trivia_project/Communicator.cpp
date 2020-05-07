@@ -49,7 +49,7 @@ void Communicator::startHandleRequests()
 //Binds and listens to the server socket
 void Communicator::_bindAndListen()
 {
-	struct sockaddr_in sa = { 0 };
+	sockaddr_in sa = { 0 };
 
 	sa.sin_family = AF_INET;
 	
