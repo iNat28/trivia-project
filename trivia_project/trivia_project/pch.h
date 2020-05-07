@@ -9,6 +9,7 @@
 #include <WS2tcpip.h>
 #include <thread>
 #include <sstream>
+#include <ctime>
 #include "json.hpp"
 
 using json = nlohmann::json;

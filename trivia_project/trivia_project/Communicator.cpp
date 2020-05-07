@@ -81,39 +81,38 @@ void Communicator::s_handleNewClient(SOCKET socket)
 	char msgLenBuffer[MSG_LEN_SIZE + 1] = "";
 	char* msgBuffer = nullptr;
 	int msgLen = 0;
+	LoginRequestHandler loginRequestHandler;
+	SignupRequest signupRequest;
+	RequestInfo requestInfo;
+	Buffer responseBuffer;
 
 	try {
-		LoginRequest loginRequest;
-		SignupRequest signupRequest;
-
 		Communicator::s_getFromSocket(socket, msgCodeBuffer, MSG_CODE_SIZE);
 		Communicator::s_getFromSocket(socket, msgLenBuffer, MSG_LEN_SIZE);
 		memcpy_s(&msgLen, sizeof(int), msgLenBuffer, MSG_LEN_SIZE);
 		msgBuffer = new char[size_t(msgLen + 1)];
 		Communicator::s_getFromSocket(socket, msgBuffer, msgLen);
 
-		Buffer buffer(msgBuffer, msgBuffer + msgLen);
-		Buffer responseBuffer;
+		requestInfo = { static_cast<RequestCodes>(msgCodeBuffer[0]), std::time(0), Buffer(msgBuffer, msgBuffer + msgLen) };
 
 		std::cout << "Buffers: " << msgCodeBuffer << " - " << msgLenBuffer << " - " << msgBuffer << std::endl;
 
-		switch (static_cast<RequestCodes>(msgCodeBuffer[0]))
+		switch (requestInfo.RequestId)
 		{
 		case RequestCodes::LOGIN_REQUEST:
-			loginRequest = JsonRequestPacketDeserializer::deserializeLoginRequest(buffer);
-			std::cout << "Username: " << loginRequest.username << " Password: " << loginRequest.password << std::endl;
-			responseBuffer = JsonResponsePacketSerializer::serializeResponse(LoginResponse());
+			loginRequestHandler.handleRequest(requestInfo);
+			responseBuffer = JsonResponsePacketSerializer::serializeResponse(LoginResponse{ 1 });
 			break;
 
 		case RequestCodes::SIGNUP_REQUEST:
-			signupRequest = JsonRequestPacketDeserializer::deserializeSignupRequest(buffer);
+			signupRequest = JsonRequestPacketDeserializer::deserializeSignupRequest(requestInfo.buffer);
 			std::cout << "Username: " << signupRequest.username << " Password: " << signupRequest.password << " Email: " << signupRequest.email << std::endl;
-			responseBuffer = JsonResponsePacketSerializer::serializeResponse(SignupResponse());
+			responseBuffer = JsonResponsePacketSerializer::serializeResponse(SignupResponse{ 1 });
 			break;
 		}
 
 		//Sends the message
-		Communicator::s_sendToSocket(socket, buffer.data(), buffer.size());
+		Communicator::s_sendToSocket(socket, responseBuffer.data(), responseBuffer.size());
 	}
 	catch (const std::exception & e)
 	{
@@ -124,18 +123,18 @@ void Communicator::s_handleNewClient(SOCKET socket)
 	closesocket(socket);
 }
 
-void Communicator::s_getFromSocket(SOCKET socket, char* buffer, unsigned int length)
+void Communicator::s_getFromSocket(SOCKET socket, char* buffer, size_t length)
 {
-	if (INVALID_SOCKET == recv(socket, buffer, length, 0))
+	if (INVALID_SOCKET == recv(socket, buffer, (int)length, 0))
 	{
 		Exception::ex << "Error recieving from socket " << socket;
 		throw Exception();
 	}
 }
 
-void Communicator::s_sendToSocket(SOCKET socket, char* buffer, unsigned int length)
+void Communicator::s_sendToSocket(SOCKET socket, char* buffer, size_t length)
 {
-	if (INVALID_SOCKET == send(socket, buffer, length, 0))
+	if (INVALID_SOCKET == send(socket, buffer, (int)length, 0))
 	{
 		Exception::ex << "Error sending to socket " << socket;
 		throw Exception();

@@ -26,6 +26,6 @@ private:
 
 	void _bindAndListen();
 	static void s_handleNewClient(SOCKET socket);
-	static void s_getFromSocket(SOCKET socket, char* buffer, unsigned int length);
-	static void s_sendToSocket(SOCKET socket, char* buffer, unsigned int length);
+	static void s_getFromSocket(SOCKET socket, char* buffer, size_t length);
+	static void s_sendToSocket(SOCKET socket, char* buffer, size_t length);
 };

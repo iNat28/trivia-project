@@ -13,6 +13,7 @@ bool LoginRequestHandler::isRequestRelevant(const RequestInfo& requestInfo)
 
 RequestResult LoginRequestHandler::handleRequest(const RequestInfo& requestInfo)
 {
-	//TODO
+	LoginRequest loginRequest = JsonRequestPacketDeserializer::deserializeLoginRequest(requestInfo.buffer);
+	std::cout << "Username: " << loginRequest.username << " Password: " << loginRequest.password << std::endl;
 	return RequestResult();
 }

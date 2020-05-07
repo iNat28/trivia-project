@@ -31,8 +31,8 @@ def main():
         sock.connect((SERVER_IP, SERVER_PORT))
 
         json_msg = {}
-        json_msg["username"] = "Yonatan"
-        json_msg["password"] = "325709frhpQCK"
+        json_msg["username"] = "Tani"
+        json_msg["password"] = "Feinberg"
 
         send_request(LOGIN_CODE, json_msg)
 

@@ -21,4 +21,5 @@ interface IRequestHandler
 {
 	virtual bool isRequestRelevant(const RequestInfo& requestInfo) = 0;
 	virtual RequestResult handleRequest(const RequestInfo& requestInfo) = 0;
+	//static std::unordered_map<ResponseCodes, IRequestHandler*> responseCodesHandler;
 };
