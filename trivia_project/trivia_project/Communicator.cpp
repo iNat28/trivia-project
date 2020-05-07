@@ -77,16 +77,16 @@ void Communicator::_bindAndListen()
 void Communicator::s_handleNewClient(SOCKET socket)
 {
 	//Recieves from the buffer
-	char msgCodeBuffer[REQUEST_MSG_CODE_SIZE + 1] = "";
-	char msgLenBuffer[REQUEST_MSG_LEN_SIZE + 1] = "";
+	char msgCodeBuffer[MSG_CODE_SIZE + 1] = "";
+	char msgLenBuffer[MSG_LEN_SIZE + 1] = "";
 	char* msgBuffer = nullptr;
 	int msgLen = 0;
 	char buffer[CLIENT_BUFFER_MAX + 1] = "";
 
-	Communicator::s_getPartFromSocket(socket, msgLenBuffer, REQUEST_MSG_CODE_SIZE);
-	Communicator::s_getPartFromSocket(socket, msgCodeBuffer, REQUEST_MSG_LEN_SIZE);
+	Communicator::s_getPartFromSocket(socket, msgLenBuffer, MSG_CODE_SIZE);
+	Communicator::s_getPartFromSocket(socket, msgCodeBuffer, MSG_LEN_SIZE);
 	msgLen = atoi(msgLenBuffer);
-	msgBuffer = new char[msgLen + 1];
+	msgBuffer = new char[(msgLen + 1)];
 	Communicator::s_getPartFromSocket(socket, msgBuffer, msgLen);
 
 	//Sends the message

@@ -2,9 +2,6 @@
 #include "pch.h"
 #include "Constants.h"
 
-#define REQUEST_MSG_CODE_SIZE sizeof(Byte)
-#define REQUEST_MSG_LEN_SIZE 4 * sizeof(Byte)
-
 struct LoginRequest
 {
 	std::string username;

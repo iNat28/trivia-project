@@ -20,3 +20,6 @@ enum class ResponseCodes
 
 typedef std::uint8_t Byte;
 typedef std::vector<Byte> Buffer;
+
+#define MSG_CODE_SIZE sizeof(Byte)
+#define MSG_LEN_SIZE 4 * sizeof(Byte)

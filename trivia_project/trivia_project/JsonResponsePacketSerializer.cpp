@@ -1,43 +1,47 @@
 #include "pch.h"
 #include "JsonResponsePacketSerializer.h"
 
-Buffer JsonResponsePacketSerializer::serializeResponse(ErrorResponse errResponse)
+Buffer JsonResponsePacketSerializer::serializeResponse(const ErrorResponse& errResponse)
 {
 	json j;
 	j["message"] = errResponse.message;
-	Buffer v_bson = json::to_bson(j);
-	Buffer v_cson;
-	v_cson.push_back(Byte(ResponseCodes::ERROR_RESPONSE));
-	//v_cson.push_back(Byte(j.size()));
-	int length = j.size();
-	char* chars = reinterpret_cast<char*>(&length);
-	v_cson.insert(v_cson.end(), chars, chars + sizeof(int));
-	v_cson.insert(v_cson.end(), v_bson.begin(), v_bson.end());
-	return v_cson;
+
+	return JsonResponsePacketSerializer::serializeJson(j, ResponseCodes::ERROR_RESPONSE);
 }
 
-Buffer JsonResponsePacketSerializer::serializeResponse(LoginResponse loginResponse)
+Buffer JsonResponsePacketSerializer::serializeResponse(const LoginResponse& loginResponse)
 {
 	json j;
 	j["status"] = loginResponse.status;
-	Buffer v_bson = json::to_bson(j);
-	Buffer v_cson;
-	v_cson.push_back(Byte(ResponseCodes::LOGIN_RESPONSE));
-	v_cson.push_back(Byte(j.size()));
-	v_cson.insert(v_cson.end(), v_bson.begin(), v_bson.end());
-	return v_cson;
+
+	return JsonResponsePacketSerializer::serializeJson(j, ResponseCodes::LOGIN_RESPONSE);
 }
 
-Buffer JsonResponsePacketSerializer::serializeResponse(SignupResponse signupResponse)
+Buffer JsonResponsePacketSerializer::serializeResponse(const SignupResponse& signupResponse)
 {
 	json j;
 	j["status"] = signupResponse.status;
-	Buffer v_bson = json::to_bson(j);
-	Buffer v_cson;
-	v_cson.push_back(Byte(ResponseCodes::SIGNUP_RESPONSE));
-	v_cson.push_back(Byte(j.size()));
-	v_cson.insert(v_cson.end(), v_bson.begin(), v_bson.end());
-	return v_cson;
+
+	return JsonResponsePacketSerializer::serializeJson(j, ResponseCodes::SIGNUP_RESPONSE);
 }
 
+Buffer JsonResponsePacketSerializer::serializeJson(const json& j, ResponseCodes responseCode)
+{
+	Buffer jsonBuffer = json::to_bson(j);
+	Buffer totalBuffer;
+	unsigned char sizeBuffer[MSG_LEN_SIZE] = "";
+	//unsigned char* sizeBuffer = nullptr;
+	int jsonSize = jsonBuffer.size();
+	
+	//Adds the response code
+	totalBuffer.push_back(static_cast<Byte>(responseCode));
 
+	//Adds the message lengths as bytes
+	memcpy_s(sizeBuffer, MSG_LEN_SIZE, &jsonSize, sizeof(int));
+	//sizeBuffer = reinterpret_cast<unsigned char*>(&jsonSize);
+	totalBuffer.insert(totalBuffer.end(), sizeBuffer, sizeBuffer + MSG_LEN_SIZE);
+
+	//Adds the json message
+	totalBuffer.insert(totalBuffer.end(), jsonBuffer.begin(), jsonBuffer.end());
+	return totalBuffer;
+}
