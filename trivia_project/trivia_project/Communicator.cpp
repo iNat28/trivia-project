@@ -87,16 +87,22 @@ void Communicator::s_handleNewClient(SOCKET socket)
 	Buffer responseBuffer;
 
 	try {
+		//Gets from the client
 		Communicator::s_getFromSocket(socket, msgCodeBuffer, MSG_CODE_SIZE);
 		Communicator::s_getFromSocket(socket, msgLenBuffer, MSG_LEN_SIZE);
+		
+		//Converts the message length into an int
 		memcpy_s(&msgLen, sizeof(int), msgLenBuffer, MSG_LEN_SIZE);
 		msgBuffer = new char[size_t(msgLen + 1)];
 		Communicator::s_getFromSocket(socket, msgBuffer, msgLen);
 
+		//Puts the buffers into a RequestInfo
 		requestInfo = { static_cast<RequestCodes>(msgCodeBuffer[0]), std::time(0), Buffer(msgBuffer, msgBuffer + msgLen) };
+		delete[] msgBuffer;
 
-		std::cout << "Buffers: " << msgCodeBuffer << " - " << msgLenBuffer << " - " << msgBuffer << std::endl;
-
+		//Gets which Request Code it is, and handles it appropriately
+		//TODO: Put this into a map
+		//TODO: Move Signup Request to LoginRequestHandler
 		switch (requestInfo.RequestId)
 		{
 		case RequestCodes::LOGIN_REQUEST:
@@ -106,7 +112,6 @@ void Communicator::s_handleNewClient(SOCKET socket)
 
 		case RequestCodes::SIGNUP_REQUEST:
 			signupRequest = JsonRequestPacketDeserializer::deserializeSignupRequest(requestInfo.buffer);
-			std::cout << "Username: " << signupRequest.username << " Password: " << signupRequest.password << " Email: " << signupRequest.email << std::endl;
 			responseBuffer = JsonResponsePacketSerializer::serializeResponse(SignupResponse{ 1 });
 			break;
 		}
@@ -119,7 +124,6 @@ void Communicator::s_handleNewClient(SOCKET socket)
 		std::cerr << e.what() << std::endl;
 	}
 
-	delete[] msgBuffer;
 	closesocket(socket);
 }
 

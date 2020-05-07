@@ -28,13 +28,13 @@ def send_request(code, json_msg):
 def recieve_response():
     response_code = sock.recv(1).decode()
     response_length_inbytes = sock.recv(4)
-    response_length = int.from_bytes(response_length_inbytes, byteorder='big')
-    response = sock.recv(response_length).decode()
-    json_msg = deserialize_msg(response)
+    response_length = int.from_bytes(response_length_inbytes, byteorder='little')
+    response = sock.recv(response_length)
+    json_msg = deserialize_msg(response_length_inbytes + response)
     if response_code == ERROR_CODE:
-        return json_msg["message"]
+        return json_msg
     else:
-        return json_msg["status"]
+        return json_msg
 
 
 def main():
@@ -43,7 +43,7 @@ def main():
 
         json_msg = {}
         json_msg["username"] = "Tani"
-        json_msg["password"] = "Feinberg"
+        json_msg["password"] = "12345"
 
         send_request(LOGIN_CODE, json_msg)
 
