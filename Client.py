@@ -27,6 +27,9 @@ def send_request(code, json_msg):
     sock.sendall(c)
 
 
+#def recieve_response():
+
+
 def main():
     try:
         sock.connect((SERVER_IP, SERVER_PORT))

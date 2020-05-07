@@ -20,6 +20,11 @@ int main()
 	{
 		std::cerr << e.what() << std::endl;
 	}
+	ErrorResponse errResponse;
+	errResponse.message = "error msg";
+	Buffer buffer = JsonResponsePacketSerializer::serializeResponse(errResponse);
+	
+	JsonResponsePacketSerializer::serializeResponse(LoginResponse());
 
 	return 0;
 }
