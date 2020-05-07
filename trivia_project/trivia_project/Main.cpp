@@ -6,7 +6,6 @@
 #include "WSAInitializer.h"
 #include "json.hpp"
 
-
 int main()
 {
 	try

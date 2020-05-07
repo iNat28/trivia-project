@@ -19,13 +19,9 @@ def deserialize_msg(encoded_msg):
 
 
 def send_request(code, json_msg):
-    t = bytes([code])
-    sock.sendall(t)
-    d = bytes([len(serialize_msg(json_msg))])
-    sock.sendall(d)
-    c = serialize_msg(json_msg)
-    sock.sendall(c)
-
+    sock.sendall(bytes([code]))
+    sock.sendall(bytes([len(serialize_msg(json_msg))]))
+    sock.sendall(serialize_msg(json_msg))
 
 def main():
     try:
