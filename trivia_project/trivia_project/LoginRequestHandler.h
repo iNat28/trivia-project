@@ -8,4 +8,6 @@ public:
 	//c'tor
 	LoginRequestHandler();
 
+	virtual bool isRequestRelevant(const RequestInfo& requestInfo);
+	virtual RequestResult handleRequest(const RequestInfo& requestInfo);
 };
