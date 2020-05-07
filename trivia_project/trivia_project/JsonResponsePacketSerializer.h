@@ -1,6 +1,7 @@
 #pragma once
 #include "pch.h"
 #include "Constants.h"
+#include "JsonRequestPacketDeserializer.h"
 
 struct LoginResponse
 {
@@ -21,6 +22,7 @@ struct ErrorResponse
 class JsonResponsePacketSerializer
 {
 public:
+
 	static Buffer serializeResponse(ErrorResponse errResponse);
 	static Buffer serializeResponse(LoginResponse loginResponse);
 	static Buffer serializeResponse(SignupResponse signupResponse);
