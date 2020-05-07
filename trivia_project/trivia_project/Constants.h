@@ -18,7 +18,7 @@ enum class ResponseCodes
 	SIGNUP_RESPONSE
 };
 
-typedef std::uint8_t Byte;
+typedef char Byte;
 typedef std::vector<Byte> Buffer;
 
 #define MSG_CODE_SIZE sizeof(Byte)

@@ -81,35 +81,57 @@ void Communicator::s_handleNewClient(SOCKET socket)
 	char msgLenBuffer[MSG_LEN_SIZE + 1] = "";
 	char* msgBuffer = nullptr;
 	int msgLen = 0;
-	char buffer[CLIENT_BUFFER_MAX + 1] = "";
 
-	Communicator::s_getPartFromSocket(socket, msgLenBuffer, MSG_CODE_SIZE);
-	Communicator::s_getPartFromSocket(socket, msgCodeBuffer, MSG_LEN_SIZE);
-	msgLen = atoi(msgLenBuffer);
-	msgBuffer = new char[(msgLen + 1)];
-	Communicator::s_getPartFromSocket(socket, msgBuffer, msgLen);
+	LoginRequest loginRequest;
+	SignupRequest signupRequest;
 
-	//Sends the message
-	if (INVALID_SOCKET == send(socket, CLIENT_MSG, strlen(CLIENT_MSG), 0))
+	Communicator::s_getFromSocket(socket, msgCodeBuffer, MSG_CODE_SIZE);
+	Communicator::s_getFromSocket(socket, msgLenBuffer, MSG_LEN_SIZE);
+	memcpy_s(&msgLen, sizeof(int), msgLenBuffer, MSG_LEN_SIZE);
+	msgBuffer = new char[size_t(msgLen + 1)];
+	Communicator::s_getFromSocket(socket, msgBuffer, msgLen);
+
+	Buffer buffer(msgBuffer, msgBuffer + msgLen);
+	Buffer responseBuffer;
+
+	std::cout << "Buffers: " << msgCodeBuffer << " - " << msgLenBuffer << " - " << msgBuffer << std::endl;
+
+	switch (static_cast<RequestCodes>(msgCodeBuffer[0]))
 	{
-		Exception::ex << "Error sending to socket " << socket;
-		throw Exception();
+	case RequestCodes::LOGIN_REQUEST:
+		loginRequest = JsonRequestPacketDeserializer::deserializeLoginRequest(buffer);
+		std::cout << "Username: " << loginRequest.username << " Password: " << loginRequest.password << std::endl;
+		responseBuffer = JsonResponsePacketSerializer::serializeResponse(LoginResponse());
+		break;
+
+	case RequestCodes::SIGNUP_REQUEST:
+		signupRequest = JsonRequestPacketDeserializer::deserializeSignupRequest(buffer);
+		std::cout << "Username: " << signupRequest.username << " Password: " << signupRequest.password << " Email: " << signupRequest.email << std::endl;
+		responseBuffer = JsonResponsePacketSerializer::serializeResponse(SignupResponse());
+		break;
 	}
 
-	//Prints CLIENT_MSG if the client sent the same message
-	//if (CLIENT_MSG == std::string(buffer))
-	//{
-	//	std::cout << CLIENT_MSG << std::endl;
-	//}
-
+	//Sends the message
+	Communicator::s_sendToSocket(socket, buffer.data(), buffer.size());
+	
+	delete[] msgBuffer;
 	closesocket(socket);
 }
 
-void Communicator::s_getPartFromSocket(SOCKET socket, char* buffer, unsigned int length)
+void Communicator::s_getFromSocket(SOCKET socket, char* buffer, unsigned int length)
 {
 	if (INVALID_SOCKET == recv(socket, buffer, length, 0))
 	{
 		Exception::ex << "Error recieving from socket " << socket;
+		throw Exception();
+	}
+}
+
+void Communicator::s_sendToSocket(SOCKET socket, char* buffer, unsigned int length)
+{
+	if (INVALID_SOCKET == send(socket, buffer, length, 0))
+	{
+		Exception::ex << "Error sending to socket " << socket;
 		throw Exception();
 	}
 }

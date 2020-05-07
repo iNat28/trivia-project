@@ -27,19 +27,17 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const SignupResponse& sig
 
 Buffer JsonResponsePacketSerializer::serializeJson(const json& j, ResponseCodes responseCode)
 {
-	Buffer jsonBuffer = json::to_bson(j);
+	std::vector<unsigned char> jsonBuffer = json::to_bson(j);
 	Buffer totalBuffer;
-	unsigned char sizeBuffer[MSG_LEN_SIZE] = "";
-	//unsigned char* sizeBuffer = nullptr;
+	char sizeBuffer[MSG_LEN_SIZE] = "";
 	int jsonSize = jsonBuffer.size();
 	
 	//Adds the response code
 	totalBuffer.push_back(static_cast<Byte>(responseCode));
 
 	//Adds the message lengths as bytes
-	memcpy_s(sizeBuffer, MSG_LEN_SIZE, &jsonSize, sizeof(int));
-	//sizeBuffer = reinterpret_cast<unsigned char*>(&jsonSize);
-	totalBuffer.insert(totalBuffer.end(), sizeBuffer, sizeBuffer + MSG_LEN_SIZE);
+	//memcpy_s(sizeBuffer, MSG_LEN_SIZE, &jsonSize, sizeof(int));
+	//totalBuffer.insert(totalBuffer.end(), sizeBuffer, sizeBuffer + MSG_LEN_SIZE);
 
 	//Adds the json message
 	totalBuffer.insert(totalBuffer.end(), jsonBuffer.begin(), jsonBuffer.end());
