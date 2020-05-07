@@ -8,6 +8,7 @@ Output: LoginRequest object.
 */
 LoginRequest JsonRequestPacketDeserializer::deserializeLoginRequest(const Buffer& buffer)
 {
+
 	json j_from_bson = json::from_bson(buffer);
 	LoginRequest userLoginInfo = LoginRequest();
 	userLoginInfo.username = j_from_bson["username"];
