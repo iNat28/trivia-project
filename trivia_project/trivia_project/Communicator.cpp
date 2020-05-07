@@ -82,38 +82,44 @@ void Communicator::s_handleNewClient(SOCKET socket)
 	char* msgBuffer = nullptr;
 	int msgLen = 0;
 
-	LoginRequest loginRequest;
-	SignupRequest signupRequest;
+	try {
+		LoginRequest loginRequest;
+		SignupRequest signupRequest;
 
-	Communicator::s_getFromSocket(socket, msgCodeBuffer, MSG_CODE_SIZE);
-	Communicator::s_getFromSocket(socket, msgLenBuffer, MSG_LEN_SIZE);
-	memcpy_s(&msgLen, sizeof(int), msgLenBuffer, MSG_LEN_SIZE);
-	msgBuffer = new char[size_t(msgLen + 1)];
-	Communicator::s_getFromSocket(socket, msgBuffer, msgLen);
+		Communicator::s_getFromSocket(socket, msgCodeBuffer, MSG_CODE_SIZE);
+		Communicator::s_getFromSocket(socket, msgLenBuffer, MSG_LEN_SIZE);
+		memcpy_s(&msgLen, sizeof(int), msgLenBuffer, MSG_LEN_SIZE);
+		msgBuffer = new char[size_t(msgLen + 1)];
+		Communicator::s_getFromSocket(socket, msgBuffer, msgLen);
 
-	Buffer buffer(msgBuffer, msgBuffer + msgLen);
-	Buffer responseBuffer;
+		Buffer buffer(msgBuffer, msgBuffer + msgLen);
+		Buffer responseBuffer;
 
-	std::cout << "Buffers: " << msgCodeBuffer << " - " << msgLenBuffer << " - " << msgBuffer << std::endl;
+		std::cout << "Buffers: " << msgCodeBuffer << " - " << msgLenBuffer << " - " << msgBuffer << std::endl;
 
-	switch (static_cast<RequestCodes>(msgCodeBuffer[0]))
+		switch (static_cast<RequestCodes>(msgCodeBuffer[0]))
+		{
+		case RequestCodes::LOGIN_REQUEST:
+			loginRequest = JsonRequestPacketDeserializer::deserializeLoginRequest(buffer);
+			std::cout << "Username: " << loginRequest.username << " Password: " << loginRequest.password << std::endl;
+			responseBuffer = JsonResponsePacketSerializer::serializeResponse(LoginResponse());
+			break;
+
+		case RequestCodes::SIGNUP_REQUEST:
+			signupRequest = JsonRequestPacketDeserializer::deserializeSignupRequest(buffer);
+			std::cout << "Username: " << signupRequest.username << " Password: " << signupRequest.password << " Email: " << signupRequest.email << std::endl;
+			responseBuffer = JsonResponsePacketSerializer::serializeResponse(SignupResponse());
+			break;
+		}
+
+		//Sends the message
+		Communicator::s_sendToSocket(socket, buffer.data(), buffer.size());
+	}
+	catch (const std::exception & e)
 	{
-	case RequestCodes::LOGIN_REQUEST:
-		loginRequest = JsonRequestPacketDeserializer::deserializeLoginRequest(buffer);
-		std::cout << "Username: " << loginRequest.username << " Password: " << loginRequest.password << std::endl;
-		responseBuffer = JsonResponsePacketSerializer::serializeResponse(LoginResponse());
-		break;
-
-	case RequestCodes::SIGNUP_REQUEST:
-		signupRequest = JsonRequestPacketDeserializer::deserializeSignupRequest(buffer);
-		std::cout << "Username: " << signupRequest.username << " Password: " << signupRequest.password << " Email: " << signupRequest.email << std::endl;
-		responseBuffer = JsonResponsePacketSerializer::serializeResponse(SignupResponse());
-		break;
+		std::cerr << e.what() << std::endl;
 	}
 
-	//Sends the message
-	Communicator::s_sendToSocket(socket, buffer.data(), buffer.size());
-	
 	delete[] msgBuffer;
 	closesocket(socket);
 }
