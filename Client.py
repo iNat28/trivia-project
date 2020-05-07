@@ -5,6 +5,7 @@ SERVER_IP = "localhost"
 SERVER_PORT = 40200
 LOGIN_CODE = 10
 SIGNUP_CODE = 11
+ERROR_CODE = 0
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -23,7 +24,17 @@ def send_request(code, json_msg):
     sock.sendall(len(serialize_msg(json_msg)).to_bytes(4, byteorder="little"))
     sock.sendall(serialize_msg(json_msg))
 
-#def recieve_response():
+
+def recieve_response():
+    response_code = sock.recv(1).decode()
+    response_length_inbytes = sock.recv(4)
+    response_length = int.from_bytes(response_length_inbytes, byteorder='big')
+    response = sock.recv(response_length).decode()
+    json_msg = deserialize_msg(response)
+    if response_code == ERROR_CODE:
+        return json_msg["message"]
+    else:
+        return json_msg["status"]
 
 
 def main():
@@ -36,7 +47,7 @@ def main():
 
         send_request(LOGIN_CODE, json_msg)
 
-        sock.recv(5)
+        print(recieve_response())
 
         sock.close()
     except Exception as e:
