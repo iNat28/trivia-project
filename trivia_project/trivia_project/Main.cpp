@@ -9,7 +9,7 @@
 
 int main()
 {
-	/*try
+	try
 	{
 		WSAInitializer wsainitializer;
 		Server server;
@@ -19,12 +19,7 @@ int main()
 	catch (const std::exception& e)
 	{
 		std::cerr << e.what() << std::endl;
-	}*/
-	//ErrorResponse errResponse;
-	//errResponse.message = "error msg";
-	//Buffer buffer = JsonResponsePacketSerializer::serializeResponse(errResponse);
-	
-	//Buffer buffer = JsonResponsePacketSerializer::serializeResponse(LoginResponse());
+	}
 
 	return 0;
 }

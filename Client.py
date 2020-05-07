@@ -19,17 +19,20 @@ def deserialize_msg(encoded_msg):
 
 
 def send_request(code, json_msg):
-    sock.sendall(code.encode())
-    sock.sendall(len(serialize_msg(json_msg)).encode())
-    sock.sendall(serialize_msg(json_msg).encode())
+    t = bytes([code])
+    sock.sendall(t)
+    d = bytes([len(serialize_msg(json_msg))])
+    sock.sendall(d)
+    c = serialize_msg(json_msg)
+    sock.sendall(c)
 
 
 def main():
     try:
         sock.connect((SERVER_IP, SERVER_PORT))
-        server_msg = sock.recv(5).decode()
-        if server_msg == "Hello":
-            sock.sendall("Hello".encode())
+        # server_msg = sock.recv(5).decode()
+        # if server_msg == "Hello":
+        #    sock.sendall("Hello".encode())
         json_msg = {}
         json_msg["username"] = "tani"
         json_msg["password"] = "12345"
