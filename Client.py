@@ -6,7 +6,7 @@ SERVER_PORT = 40200
 LOGIN_CODE = 10
 SIGNUP_CODE = 11
 ERROR_CODE = 0
-
+#
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 def serialize_msg(json_msg):
