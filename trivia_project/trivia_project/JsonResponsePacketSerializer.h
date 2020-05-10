@@ -33,6 +33,7 @@ public:
 	static Buffer serializeResponse(const ErrorResponse& errResponse);
 	static Buffer serializeResponse(const LoginResponse& loginResponse);
 	static Buffer serializeResponse(const SignupResponse& signupResponse);
+
 private:
 	static Buffer serializeJson(const json& j, ResponseCodes responseCode);
 };
