@@ -21,7 +21,7 @@ RequestResult LoginRequestHandler::handleRequest(const RequestInfo& requestInfo)
 		requestResult = this->_login(requestInfo);
 		break;
 	case RequestCodes::SIGNUP_REQUEST:
-		requestResult = this->_login(requestInfo);
+		requestResult = this->_signup(requestInfo);
 		break;
 	}
 
