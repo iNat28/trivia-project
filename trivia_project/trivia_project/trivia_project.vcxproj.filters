@@ -78,6 +78,9 @@
     <ClCompile Include="LoginManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SqliteDataBase.cpp">
+      <Filter>Source Files\Infrastructure</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Exception.h">
