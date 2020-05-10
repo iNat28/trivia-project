@@ -17,15 +17,14 @@ class Communicator
 {
 public:
 	Communicator();
-	~Communicator();
 
 	void startHandleRequests();
 private:
-	std::unordered_map<SOCKET, IRequestHandler*> m_clients;
+	std::unordered_map<SOCKET, std::shared_ptr<IRequestHandler>> m_clients;
 	SOCKET _serverSocket;
 
 	void _bindAndListen();
-	static void s_handleNewClient(SOCKET socket);
-	static void s_getFromSocket(SOCKET socket, char* buffer, size_t length);
-	static void s_sendToSocket(SOCKET socket, char* buffer, size_t length);
+	static void s_handleNewClient(SOCKET socket, std::shared_ptr<IRequestHandler> handler);
+	static void s_getFromSocket(SOCKET socket, char* buffer, int length);
+	static void s_sendToSocket(SOCKET socket, char* buffer, int length);
 };

@@ -3,6 +3,8 @@
 
 enum class RequestCodes
 {
+	ERROR_REQUEST = 0,
+
 	//Login codes
 	LOGIN_REQUEST = 10,
 	SIGNUP_REQUEST

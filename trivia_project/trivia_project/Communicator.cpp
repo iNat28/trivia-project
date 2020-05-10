@@ -10,15 +10,6 @@ Communicator::Communicator() : _serverSocket(socket(AF_INET, SOCK_STREAM, IPPROT
 	}
 }
 
-//Deconstructor
-Communicator::~Communicator()
-{
-	for (auto& requestHandlers : m_clients)
-	{
-		delete requestHandlers.second;
-	}
-}
-
 //Starts the client handle requests
 void Communicator::startHandleRequests()
 {
@@ -37,12 +28,14 @@ void Communicator::startHandleRequests()
 			throw std::exception("Error accepting client");
 		}
 
+		std::shared_ptr<IRequestHandler> handler = std::make_shared<LoginRequestHandler>();
+
 		//Puts the client into a thread
-		client = std::thread(Communicator::s_handleNewClient, clientSocket);
+		client = std::thread(Communicator::s_handleNewClient, clientSocket, handler);
 		client.detach();
 
 		//Adds the client's socket to the clients
-		this->m_clients[clientSocket] = new LoginRequestHandler();
+		this->m_clients[clientSocket] = handler;
 	}
 }
 
@@ -74,50 +67,42 @@ void Communicator::_bindAndListen()
 
 //Thread for handling new clients
 //Input: The client socket
-void Communicator::s_handleNewClient(SOCKET socket)
+void Communicator::s_handleNewClient(SOCKET socket, std::shared_ptr<IRequestHandler> handler)
 {
 	//Recieves from the buffer
 	char msgCodeBuffer[MSG_CODE_SIZE + 1] = "";
 	char msgLenBuffer[MSG_LEN_SIZE + 1] = "";
-	char* msgBuffer = nullptr;
 	int msgLen = 0;
-	LoginRequestHandler loginRequestHandler;
-	SignupRequest signupRequest;
 	RequestInfo requestInfo;
-	Buffer responseBuffer;
+	RequestResult requestResult;
+	std::unique_ptr<char[]> msgBuffer;
 
 	try {
-		//Gets from the client
+		//Gets from the client the code and the length of the message
 		Communicator::s_getFromSocket(socket, msgCodeBuffer, MSG_CODE_SIZE);
 		Communicator::s_getFromSocket(socket, msgLenBuffer, MSG_LEN_SIZE);
 		
 		//Converts the message length into an int
 		memcpy_s(&msgLen, sizeof(int), msgLenBuffer, MSG_LEN_SIZE);
-		msgBuffer = new char[size_t(msgLen + 1)];
-		Communicator::s_getFromSocket(socket, msgBuffer, msgLen);
+
+		//Creates the buffer to recieve from the socket
+		msgBuffer = std::make_unique<char[]>(size_t(msgLen) + 1);
+		char* msgBufferPtr = msgBuffer.get();
+		Communicator::s_getFromSocket(socket, msgBufferPtr, msgLen);
 
 		//Puts the buffers into a RequestInfo
-		requestInfo = { static_cast<RequestCodes>(msgCodeBuffer[0]), std::time(0), Buffer(msgBuffer, msgBuffer + msgLen) };
-		delete[] msgBuffer;
+		requestInfo = RequestInfo(
+			static_cast<RequestCodes>(msgCodeBuffer[0]),
+			std::time(0), //The current time
+			Buffer(msgBufferPtr, msgBufferPtr + msgLen)
+		);
+		msgBuffer.release();
 
 		//Gets which Request Code it is, and handles it appropriately
-		//TODO: Put this into a map
-		//TODO: Move Signup Request to LoginRequestHandler
-		switch (requestInfo.RequestId)
-		{
-		case RequestCodes::LOGIN_REQUEST:
-			loginRequestHandler.handleRequest(requestInfo);
-			responseBuffer = JsonResponsePacketSerializer::serializeResponse(LoginResponse{ 1 });
-			break;
-
-		case RequestCodes::SIGNUP_REQUEST:
-			signupRequest = JsonRequestPacketDeserializer::deserializeSignupRequest(requestInfo.buffer);
-			responseBuffer = JsonResponsePacketSerializer::serializeResponse(SignupResponse{ 1 });
-			break;
-		}
+		requestResult = handler->handleRequest(requestInfo);
 
 		//Sends the message
-		Communicator::s_sendToSocket(socket, responseBuffer.data(), responseBuffer.size());
+		Communicator::s_sendToSocket(socket, requestResult.response.data(), (int)requestResult.response.size());
 	}
 	catch (const std::exception & e)
 	{
@@ -127,18 +112,18 @@ void Communicator::s_handleNewClient(SOCKET socket)
 	closesocket(socket);
 }
 
-void Communicator::s_getFromSocket(SOCKET socket, char* buffer, size_t length)
+void Communicator::s_getFromSocket(SOCKET socket, char* buffer, int length)
 {
-	if (INVALID_SOCKET == recv(socket, buffer, (int)length, 0))
+	if (INVALID_SOCKET == recv(socket, buffer, length, 0))
 	{
 		Exception::ex << "Error recieving from socket " << socket;
 		throw Exception();
 	}
 }
 
-void Communicator::s_sendToSocket(SOCKET socket, char* buffer, size_t length)
+void Communicator::s_sendToSocket(SOCKET socket, char* buffer, int length)
 {
-	if (INVALID_SOCKET == send(socket, buffer, (int)length, 0))
+	if (INVALID_SOCKET == send(socket, buffer, length, 0))
 	{
 		Exception::ex << "Error sending to socket " << socket;
 		throw Exception();

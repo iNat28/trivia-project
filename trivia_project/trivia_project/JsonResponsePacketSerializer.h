@@ -5,16 +5,25 @@
 
 struct LoginResponse
 {
+	LoginResponse(unsigned int status);
+	LoginResponse();
+
 	unsigned int status;
 };
 
 struct SignupResponse
 {
+	SignupResponse(unsigned int status);
+	SignupResponse();
+
 	unsigned int status;
 };
 
 struct ErrorResponse
 {
+	ErrorResponse(std::string message);
+	ErrorResponse();
+
 	std::string message;
 };
 

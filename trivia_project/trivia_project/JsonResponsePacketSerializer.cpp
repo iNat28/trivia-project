@@ -35,11 +35,37 @@ Buffer JsonResponsePacketSerializer::serializeJson(const json& j, ResponseCodes 
 	//Adds the response code
 	totalBuffer.push_back(static_cast<Byte>(responseCode));
 
-	//Adds the message lengths as bytes
-	//memcpy_s(sizeBuffer, MSG_LEN_SIZE, &jsonSize, sizeof(int));
-	//totalBuffer.insert(totalBuffer.end(), sizeBuffer, sizeBuffer + MSG_LEN_SIZE);
-
-	//Adds the json message
+	//Adds the json message with the number of bytes
 	totalBuffer.insert(totalBuffer.end(), jsonBuffer.begin(), jsonBuffer.end());
 	return totalBuffer;
+}
+
+LoginResponse::LoginResponse(unsigned int status) :
+	status(status)
+{
+}
+
+LoginResponse::LoginResponse() :
+	status(0)
+{
+}
+
+SignupResponse::SignupResponse(unsigned int status) :
+	status(status)
+{
+}
+
+SignupResponse::SignupResponse() :
+	status(0)
+{
+}
+
+ErrorResponse::ErrorResponse(std::string message) :
+	message(message)
+{
+}
+
+ErrorResponse::ErrorResponse() :
+	message()
+{
 }

@@ -6,13 +6,19 @@ interface IRequestHandler;
 
 struct RequestInfo
 {
-	RequestCodes RequestId;
-	time_t receivalTime; //TODO might need to change type
+	RequestInfo(RequestCodes RequestId, time_t receivalTime, Buffer buffer);
+	RequestInfo();
+
+	RequestCodes requestId;
+	time_t receivalTime; 
 	Buffer buffer;
 };
 
 struct RequestResult
 {
+	RequestResult(Buffer response, IRequestHandler* newHandler);
+	RequestResult();
+
 	Buffer response;
 	IRequestHandler* newHandler;
 };
