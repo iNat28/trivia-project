@@ -5,6 +5,7 @@
 #include "LoginRequestHandler.h"
 #include "JsonRequestPacketDeserializer.h"
 #include "JsonResponsePacketSerializer.h"
+#include "RequestHandlerFactory.h"
 
 #pragma comment(lib, "Ws2_32.lib")
 
@@ -16,12 +17,13 @@
 class Communicator
 {
 public:
-	Communicator();
+	Communicator(RequestHandlerFactory& handlerFactory);
 
 	void startHandleRequests();
 private:
 	std::unordered_map<SOCKET, std::shared_ptr<IRequestHandler>> m_clients;
-	SOCKET _serverSocket;
+	RequestHandlerFactory& m_handlerFactory;
+	SOCKET m_serverSocket;
 
 	void _bindAndListen();
 	static void s_handleNewClient(SOCKET socket, std::shared_ptr<IRequestHandler> handler, std::unordered_map<SOCKET, IRequestHandler>& client);

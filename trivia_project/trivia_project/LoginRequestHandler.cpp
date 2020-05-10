@@ -1,7 +1,8 @@
 #include "pch.h"
 #include "LoginRequestHandler.h"
 
-LoginRequestHandler::LoginRequestHandler()
+LoginRequestHandler::LoginRequestHandler(RequestHandlerFactory& handlerFactor) :
+	m_handlerFactor(handlerFactor)
 {
 }
 
@@ -12,47 +13,47 @@ bool LoginRequestHandler::isRequestRelevant(const RequestInfo& requestInfo)
 
 RequestResult LoginRequestHandler::handleRequest(const RequestInfo& requestInfo)
 {
-	Buffer responseBuffer;
+	RequestResult requestResult;
 	
 	switch (requestInfo.requestId)
 	{
 	case RequestCodes::LOGIN_REQUEST:
-		responseBuffer = handleLoginRequest(requestInfo.buffer);
+		requestResult = this->_login(requestInfo);
 		break;
 	case RequestCodes::SIGNUP_REQUEST:
-		responseBuffer = handleSignupRequest(requestInfo.buffer);
+		requestResult = this->_login(requestInfo);
 		break;
 	}
 
-	return RequestResult(responseBuffer, nullptr);
+	return requestResult;
 }
 
-Buffer LoginRequestHandler::handleLoginRequest(const Buffer& buffer)
+RequestResult LoginRequestHandler::_login(const RequestInfo& requestInfo)
 {
 	unsigned int response = 1;
 
 	try {
-		LoginRequest loginRequest = JsonRequestPacketDeserializer::deserializeLoginRequest(buffer);
+		LoginRequest loginRequest = JsonRequestPacketDeserializer::deserializeLoginRequest(requestInfo.buffer);
 	}
 	catch (const std::exception & e)
 	{
 		unsigned int response = 0;
 	}
 
-	return JsonResponsePacketSerializer::serializeResponse(LoginResponse{ response });
+	return RequestResult(JsonResponsePacketSerializer::serializeResponse(LoginResponse{ response }), nullptr);
 }
 
-Buffer LoginRequestHandler::handleSignupRequest(const Buffer& buffer)
+RequestResult LoginRequestHandler::_signup(const RequestInfo& requestInfo)
 {
 	unsigned int response = 1;
 
 	try {
-		SignupRequest signupRequest = JsonRequestPacketDeserializer::deserializeSignupRequest(buffer);
+		SignupRequest signupRequest = JsonRequestPacketDeserializer::deserializeSignupRequest(requestInfo.buffer);
 	}
 	catch (const std::exception & e)
 	{
 		unsigned int response = 0;
 	}
 	
-	return JsonResponsePacketSerializer::serializeResponse(SignupResponse{ response });
+	return RequestResult(JsonResponsePacketSerializer::serializeResponse(SignupResponse{ response }), nullptr);
 }

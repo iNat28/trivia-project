@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Server.h"
 
-Server::Server()
+Server::Server() : m_handlerFactory(m_database), m_communicator(m_handlerFactory)
 {
 }
 
