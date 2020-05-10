@@ -23,6 +23,7 @@ RequestResult LoginRequestHandler::handleRequest(const RequestInfo& requestInfo)
 		responseBuffer = handleSignupRequest(requestInfo.buffer);
 		break;
 	}
+
 	return RequestResult(responseBuffer, nullptr);
 }
 
