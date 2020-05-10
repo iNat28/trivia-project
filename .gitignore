@@ -1,12 +1,12 @@
 *
-!**/trivia_project
+!/trivia_project
+!/trivia_project/trivia_project
 !*.h
 !*.cpp
 !*.c
+!*.hpp
 !*.vcxproj
 !*.vcxproj.filters
 !*.sln
-!**/x64
-!**/Debug
-!*.exe
+!*.py
 !.gitignore
