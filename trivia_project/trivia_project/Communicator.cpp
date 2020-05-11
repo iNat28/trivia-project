@@ -101,7 +101,6 @@ void Communicator::s_handleNewClient(SOCKET socket, std::shared_ptr<IRequestHand
 			std::time(0), //The current time
 			Buffer(msgBufferPtr, msgBufferPtr + msgLen)
 		);
-		msgBuffer.release();
 
 		//Gets which Request Code it is, and handles it appropriately
 		requestResult = handler->handleRequest(requestInfo);
