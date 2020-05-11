@@ -1,5 +1,5 @@
-#pragma once
 #include "pch.h"
+#pragma once
 
 enum class RequestCodes
 {

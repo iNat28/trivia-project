@@ -1,5 +1,5 @@
-#pragma once
 #include "pch.h"
+#pragma once
 
 /*
 I wanted to create an exception class that was similar to std::cout, 
