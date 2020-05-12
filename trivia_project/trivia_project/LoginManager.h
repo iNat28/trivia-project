@@ -1,9 +1,9 @@
 
 #pragma once
 #include "pch.h"
-#include "RequestHandlerFactory.h"
+#include "IDatabase.h"
 
-class RequestHandlerFactory;
+//class RequestHandlerFactory;
 
 class LoginManager
 {

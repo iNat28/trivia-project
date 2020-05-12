@@ -1,11 +1,8 @@
-
 #pragma once
 #include "pch.h"
 #include "Constants.h"
-#include "RequestHandlerFactory.h"
 
-class RequestHandlerFactory;
-interface IRequestHandler;
+class IRequestHandler;
 typedef std::shared_ptr<IRequestHandler> IRequestHandlerPtr;
 
 struct RequestInfo
@@ -27,8 +24,9 @@ struct RequestResult
 	IRequestHandlerPtr newHandler;
 };
 
-interface IRequestHandler
+class IRequestHandler
 {
+public:
 	virtual bool isRequestRelevant(const RequestInfo& requestInfo) = 0;
 	virtual RequestResult handleRequest(const RequestInfo& requestInfo) = 0;
 };

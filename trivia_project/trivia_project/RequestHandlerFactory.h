@@ -1,15 +1,12 @@
-
 #pragma once
 #include "pch.h"
-#include "LoginRequestHandler.h"
 #include "IDatabase.h"
-#include "LoginManager.h"
 #include "MenuRequestHandler.h"
+#include "LoginRequestHandler.h"
+#include "LoginManager.h"
 
 class LoginRequestHandler;
 class MenuRequestHandler;
-class LoginManager;
-interface IRequestHandler;
 
 class RequestHandlerFactory
 {
@@ -23,4 +20,3 @@ private:
 	LoginManager m_loginManager;
 	IDatabasePtr m_database;
 };
-

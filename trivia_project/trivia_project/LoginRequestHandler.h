@@ -1,10 +1,10 @@
-
 #pragma once
 #include "pch.h"
+#include "RequestHandlerFactory.h"
 #include "IRequestHandler.h"
 #include "JsonRequestPacketDeserializer.h"
 #include "JsonResponsePacketSerializer.h"
-#include "MenuRequestHandler.h"
+#include "IDatabase.h"
 
 class RequestHandlerFactory;
 
@@ -14,8 +14,8 @@ public:
 	//c'tor
 	LoginRequestHandler(IDatabasePtr database);
 
-	virtual bool isRequestRelevant(const RequestInfo& requestInfo);
-	virtual RequestResult handleRequest(const RequestInfo& requestInfo);
+	virtual bool isRequestRelevant(const RequestInfo& requestInfo) override;
+	virtual RequestResult handleRequest(const RequestInfo& requestInfo) override;
 
 private:
 	RequestHandlerFactory m_handlerFactor;
