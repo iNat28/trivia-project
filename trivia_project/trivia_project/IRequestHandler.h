@@ -1,5 +1,6 @@
-#include "pch.h"
+
 #pragma once
+#include "pch.h"
 #include "Constants.h"
 #include "RequestHandlerFactory.h"
 
@@ -13,7 +14,7 @@ struct RequestInfo
 	RequestInfo();
 
 	RequestCodes requestId;
-	time_t receivalTime; 
+	time_t receivalTime;
 	Buffer buffer;
 };
 

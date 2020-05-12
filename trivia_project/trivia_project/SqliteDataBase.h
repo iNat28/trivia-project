@@ -1,5 +1,5 @@
-#include "pch.h"
 #pragma once
+#include "pch.h"
 #include "IDatabase.h"
 #include "sqlite3.h"
 #include <map>

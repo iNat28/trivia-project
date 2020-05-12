@@ -1,5 +1,6 @@
-#include "pch.h"
+
 #pragma once
+#include "pch.h"
 #include "Communicator.h"
 #include "RequestHandlerFactory.h"
 #include "SqliteDataBase.h"
