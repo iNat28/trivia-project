@@ -1,8 +1,11 @@
 #include "pch.h"
 #pragma once
 #include "Constants.h"
+#include "RequestHandlerFactory.h"
 
+class RequestHandlerFactory;
 interface IRequestHandler;
+typedef std::shared_ptr<IRequestHandler> IRequestHandlerPtr;
 
 struct RequestInfo
 {
@@ -16,16 +19,15 @@ struct RequestInfo
 
 struct RequestResult
 {
-	RequestResult(Buffer response, IRequestHandler* newHandler);
+	RequestResult(Buffer response, IRequestHandlerPtr newHandler);
 	RequestResult();
 
 	Buffer response;
-	IRequestHandler* newHandler;
+	IRequestHandlerPtr newHandler;
 };
 
 interface IRequestHandler
 {
 	virtual bool isRequestRelevant(const RequestInfo& requestInfo) = 0;
 	virtual RequestResult handleRequest(const RequestInfo& requestInfo) = 0;
-	//static std::unordered_map<ResponseCodes, IRequestHandler*> responseCodesHandler;
 };

@@ -12,3 +12,5 @@ class IDatabase
 	virtual bool doesPasswordMatch(string username, string password) = 0;
 	virtual void addNewUser(string username, string password, string email) = 0;
 };
+
+typedef std::shared_ptr<IDatabase> IDatabasePtr;

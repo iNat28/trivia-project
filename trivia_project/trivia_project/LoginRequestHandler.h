@@ -3,7 +3,7 @@
 #include "IRequestHandler.h"
 #include "JsonRequestPacketDeserializer.h"
 #include "JsonResponsePacketSerializer.h"
-#include "RequestHandlerFactory.h"
+#include "MenuRequestHandler.h"
 
 class RequestHandlerFactory;
 
@@ -11,13 +11,13 @@ class LoginRequestHandler : public IRequestHandler
 {
 public:
 	//c'tor
-	LoginRequestHandler(RequestHandlerFactory& handlerFactor);
+	LoginRequestHandler(IDatabasePtr database);
 
 	virtual bool isRequestRelevant(const RequestInfo& requestInfo);
 	virtual RequestResult handleRequest(const RequestInfo& requestInfo);
 
 private:
-	RequestHandlerFactory& m_handlerFactor;
+	RequestHandlerFactory m_handlerFactor;
 	
 	RequestResult _login(const RequestInfo& requestInfo);
 	RequestResult _signup(const RequestInfo& requestInfo);

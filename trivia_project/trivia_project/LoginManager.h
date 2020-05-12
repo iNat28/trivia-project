@@ -2,10 +2,14 @@
 #pragma once
 #include "RequestHandlerFactory.h"
 
+class RequestHandlerFactory;
+
 class LoginManager
 {
-	LoginManager(IDatabase& database);
+public:
+	LoginManager(IDatabasePtr database);
+
 private:
-	IDatabase& m_database;
+	IDatabasePtr m_database;
 };
 

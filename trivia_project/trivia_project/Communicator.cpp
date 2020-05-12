@@ -2,7 +2,7 @@
 #include "Communicator.h"
 
 //Default Constructor
-Communicator::Communicator(RequestHandlerFactory& handlerFactory) : m_handlerFactory(handlerFactory), m_serverSocket(socket(AF_INET, SOCK_STREAM, IPPROTO_TCP))
+Communicator::Communicator(IDatabasePtr database) : m_handlerFactory(database), m_serverSocket(socket(AF_INET, SOCK_STREAM, IPPROTO_TCP))
 {
 	if (this->m_serverSocket == INVALID_SOCKET)
 	{
@@ -10,9 +10,6 @@ Communicator::Communicator(RequestHandlerFactory& handlerFactory) : m_handlerFac
 	}
 }
 
-Communicator::Communicator(RequestHandlerFactory& handlerFactory)
-{
-}
 
 //Starts the client handle requests
 void Communicator::startHandleRequests()
@@ -32,7 +29,7 @@ void Communicator::startHandleRequests()
 			throw std::exception("Error accepting client");
 		}
 
-		std::shared_ptr<IRequestHandler> handler = std::make_shared<LoginRequestHandler>();
+		IRequestHandlerPtr handler = std::make_shared<LoginRequestHandler>(m_handlerFactory.createLoginRequestHandler());
 
 		//Puts the client into a thread
 		client = std::thread(Communicator::s_handleNewClient, clientSocket, handler, this->m_clients);
@@ -71,7 +68,7 @@ void Communicator::_bindAndListen()
 
 //Thread for handling new clients
 //Input: The client socket
-void Communicator::s_handleNewClient(SOCKET socket, std::shared_ptr<IRequestHandler> handler, std::unordered_map<SOCKET, IRequestHandler>& client)
+void Communicator::s_handleNewClient(SOCKET socket, IRequestHandlerPtr handler, std::unordered_map<SOCKET, IRequestHandlerPtr>& client)
 {
 	//Recieves from the buffer
 	char msgCodeBuffer[MSG_CODE_SIZE + 1] = "";
@@ -104,6 +101,7 @@ void Communicator::s_handleNewClient(SOCKET socket, std::shared_ptr<IRequestHand
 
 		//Gets which Request Code it is, and handles it appropriately
 		requestResult = handler->handleRequest(requestInfo);
+		handler = requestResult.newHandler;
 
 		//Sends the message
 		Communicator::s_sendToSocket(socket, requestResult.response.data(), (int)requestResult.response.size());

@@ -1,20 +1,25 @@
 #include "pch.h"
 #pragma once
 #include "LoginRequestHandler.h"
-
-class IDatabase {};
+#include "IDatabase.h"
+#include "LoginManager.h"
+#include "MenuRequestHandler.h"
 
 class LoginRequestHandler;
+class MenuRequestHandler;
+class LoginManager;
+interface IRequestHandler;
 
 class RequestHandlerFactory
 {
 public:
-	RequestHandlerFactory(IDatabase& database);
+	RequestHandlerFactory(IDatabasePtr database);
 
 	LoginRequestHandler createLoginRequestHandler();
+	MenuRequestHandler createMenuRequestHandler();
 	LoginManager& getLoginManager();
 private:
 	LoginManager m_loginManager;
-	IDatabase& m_database;
+	IDatabasePtr m_database;
 };
 
