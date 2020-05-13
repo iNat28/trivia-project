@@ -22,6 +22,8 @@ private:
 	IDatabasePtr m_database;
 };
 
+
+
 class MenuRequestHandler : public IRequestHandler
 {
 public:
@@ -33,6 +35,8 @@ public:
 private:
 	RequestHandlerFactory m_handlerFactor;
 };
+
+
 
 class LoginRequestHandler : public IRequestHandler
 {
@@ -48,8 +52,4 @@ private:
 
 	RequestResult _login(const RequestInfo& requestInfo);
 	RequestResult _signup(const RequestInfo& requestInfo);
-
-	//TODO: Add map for request codes and functions
-	//using handler_func_t = Buffer(LoginRequestHandler::*)(void);
-	//std::unordered_map<RequestCodes, 
 };
