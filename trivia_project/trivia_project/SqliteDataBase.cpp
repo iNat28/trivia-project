@@ -1,7 +1,16 @@
 #include "pch.h"
 #include "SqliteDataBase.h"
+
 //variable for multiple users
 static bool moreData = false;
+
+SqliteDataBase::SqliteDataBase()
+{
+	if (openDB())
+	{
+		throw std::exception("Error opening Sqlite Database");
+	}
+}
 
 /*
 Usage: checks whether a user exists in the DB.

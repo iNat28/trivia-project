@@ -4,13 +4,13 @@
 #include "sqlite3.h"
 #include <map>
 
+//Move to class
 static std::unordered_map<string, string> users_list;
 
-class SqliteDataBase : 
-	public IDatabase
+class SqliteDataBase : public IDatabase
 {
 public:
-	SqliteDataBase() { openDB(); }
+	SqliteDataBase();
 
 	//queries
 	virtual bool doesUserExist(string username);
@@ -24,5 +24,5 @@ public:
 	const char* dbFileName;
 };
 
-
+//Move to class
 int users_callback(void* data, int argc, char** argv, char** azColName);

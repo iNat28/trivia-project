@@ -32,7 +32,8 @@ void Communicator::startHandleRequests()
 		IRequestHandlerPtr handler = std::make_shared<LoginRequestHandler>(m_handlerFactory.createLoginRequestHandler());
 
 		//Puts the client into a thread
-		client = std::thread(Communicator::s_handleNewClient, clientSocket, handler, this->m_clients);
+		s_handleNewClient(clientSocket, handler, this->m_clients);
+		//client = std::thread(Communicator::s_handleNewClient, clientSocket, handler, this->m_clients);
 		client.detach();
 
 		//Adds the client's socket to the clients
