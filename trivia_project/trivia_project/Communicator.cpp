@@ -29,7 +29,7 @@ void Communicator::startHandleRequests()
 			throw std::exception("Error accepting client");
 		}
 
-		IRequestHandlerPtr handler = std::make_shared<LoginRequestHandler>(m_handlerFactory.createLoginRequestHandler());
+		IRequestHandlerPtr handler = this->m_handlerFactory.createLoginRequestHandler();
 
 		//Puts the client into a thread
 		s_handleNewClient(clientSocket, handler, this->m_clients);

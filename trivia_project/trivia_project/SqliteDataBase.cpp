@@ -22,7 +22,7 @@ bool SqliteDataBase::doesUserExist(string username)
 	moreData = false;
 	std::string sqlStatement = "select * from users where username like '" + username + "';";
 	send_query(sqlStatement);
-
+	
 	//returns if the username can be found in the map of users.
 	return users_list.find(username) != users_list.end();
 }

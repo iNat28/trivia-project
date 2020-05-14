@@ -1,9 +1,6 @@
-
 #pragma once
 #include "pch.h"
 #include "IDatabase.h"
-
-//class RequestHandlerFactory;
 
 class LoginManager
 {

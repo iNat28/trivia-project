@@ -4,6 +4,8 @@
 #include "Exception.h"
 #include "IRequestHandler.h"
 #include "RequestHandlerFactory.h"
+#include "LoginRequestHandler.h"
+#include "MenuRequestHandler.h"
 
 #pragma comment(lib, "Ws2_32.lib")
 
