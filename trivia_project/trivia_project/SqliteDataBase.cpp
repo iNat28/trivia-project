@@ -1,6 +1,9 @@
 #include "pch.h"
 #include "SqliteDataBase.h"
 
+std::unordered_map<string, string> SqliteDataBase::users_list;
+bool SqliteDataBase::moreData = false;
+
 SqliteDataBase::SqliteDataBase()
 {
 	if (openDB())

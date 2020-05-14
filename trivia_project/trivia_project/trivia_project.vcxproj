@@ -144,7 +144,10 @@
     </ClCompile>
     <ClCompile Include="RequestHandlerFactory.cpp" />
     <ClCompile Include="Server.cpp" />
-    <ClCompile Include="sqlite3.c" />
+    <ClCompile Include="sqlite3.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="SqliteDataBase.cpp" />
     <ClCompile Include="WSAInitializer.cpp" />
   </ItemGroup>
