@@ -33,7 +33,7 @@ void Communicator::startHandleRequests()
 
 		//Puts the client into a thread
 		s_handleNewClient(clientSocket, handler, this->m_clients);
-		//client = std::thread(Communicator::s_handleNewClient, clientSocket, handler, this->m_clients);
+		client = std::thread(Communicator::s_handleNewClient, clientSocket, handler, std::ref(this->m_clients));
 		client.detach();
 
 		//Adds the client's socket to the clients
