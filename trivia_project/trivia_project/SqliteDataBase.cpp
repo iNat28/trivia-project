@@ -6,7 +6,7 @@ bool SqliteDataBase::moreData = false;
 
 SqliteDataBase::SqliteDataBase()
 {
-	if (openDB())
+	if (!openDB())
 	{
 		throw std::exception("Error opening Sqlite Database");
 	}
