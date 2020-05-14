@@ -10,6 +10,60 @@ Communicator::Communicator(IDatabasePtr database) : m_handlerFactory(database), 
 	}
 }
 
+//Thread for handling new clients
+//Input: The client socket
+void s_handleNewClient(Communicator& communicator, SOCKET socket, IRequestHandlerPtr handler)
+{
+	//Recieves from the buffer
+	char msgCodeBuffer[MSG_CODE_SIZE + 1] = "";
+	char msgLenBuffer[MSG_LEN_SIZE + 1] = "";
+	int msgLen = 0;
+	RequestInfo requestInfo;
+	RequestResult requestResult;
+	std::unique_ptr<char[]> msgBuffer;
+	char* msgBufferPtr = nullptr;
+	std::string username;
+
+	try {
+		while (true)
+		{
+			//Gets from the client the code and the length of the message
+			Communicator::s_getFromSocket(socket, msgCodeBuffer, MSG_CODE_SIZE);
+			Communicator::s_getFromSocket(socket, msgLenBuffer, MSG_LEN_SIZE);
+
+			//Converts the message length into an int
+			memcpy_s(&msgLen, sizeof(int), msgLenBuffer, MSG_LEN_SIZE);
+
+			//Creates the buffer to recieve from the socket
+			msgBuffer = std::make_unique<char[]>(size_t(msgLen) + 1);
+			msgBufferPtr = msgBuffer.get();
+			Communicator::s_getFromSocket(socket, msgBufferPtr, msgLen);
+
+			//Puts the buffers into a RequestInfo
+			requestInfo = RequestInfo(
+				static_cast<Codes>(msgCodeBuffer[0]),
+				std::time(0), //The current time
+				Buffer(msgBufferPtr, msgBufferPtr + msgLen)
+			);
+
+			//Gets which Request Code it is, and handles it appropriately
+			requestResult = handler->handleRequest(requestInfo);
+			//handler = requestResult.newHandler;
+
+			//Sends the message
+			Communicator::s_sendToSocket(socket, requestResult.response.data(), (int)requestResult.response.size());
+		}
+	}
+	catch (const std::exception & e)
+	{
+		std::cerr << "From socket " << socket << ": " << e.what() << std::endl;
+	}
+
+	//Deal with logout
+	//communicator.m_handlerFactory.getLoginManager().logout();
+	closesocket(socket);
+	communicator.m_clients.erase(socket);
+}
 
 //Starts the client handle requests
 void Communicator::startHandleRequests()
@@ -32,8 +86,7 @@ void Communicator::startHandleRequests()
 		IRequestHandlerPtr handler = this->m_handlerFactory.createLoginRequestHandler();
 
 		//Puts the client into a thread
-		s_handleNewClient(clientSocket, handler, this->m_clients);
-		client = std::thread(Communicator::s_handleNewClient, clientSocket, handler, std::ref(this->m_clients));
+		client = std::thread(s_handleNewClient, std::ref(*this), clientSocket, handler);
 		client.detach();
 
 		//Adds the client's socket to the clients
@@ -67,54 +120,6 @@ void Communicator::_bindAndListen()
 	}
 }
 
-//Thread for handling new clients
-//Input: The client socket
-void Communicator::s_handleNewClient(SOCKET socket, IRequestHandlerPtr handler, std::unordered_map<SOCKET, IRequestHandlerPtr>& client)
-{
-	//Recieves from the buffer
-	char msgCodeBuffer[MSG_CODE_SIZE + 1] = "";
-	char msgLenBuffer[MSG_LEN_SIZE + 1] = "";
-	int msgLen = 0;
-	RequestInfo requestInfo;
-	RequestResult requestResult;
-	std::unique_ptr<char[]> msgBuffer;
-	char* msgBufferPtr = nullptr;
-
-	try {
-		//Gets from the client the code and the length of the message
-		Communicator::s_getFromSocket(socket, msgCodeBuffer, MSG_CODE_SIZE);
-		Communicator::s_getFromSocket(socket, msgLenBuffer, MSG_LEN_SIZE);
-		
-		//Converts the message length into an int
-		memcpy_s(&msgLen, sizeof(int), msgLenBuffer, MSG_LEN_SIZE);
-
-		//Creates the buffer to recieve from the socket
-		msgBuffer = std::make_unique<char[]>(size_t(msgLen) + 1);
-		msgBufferPtr = msgBuffer.get();
-		Communicator::s_getFromSocket(socket, msgBufferPtr, msgLen);
-
-		//Puts the buffers into a RequestInfo
-		requestInfo = RequestInfo(
-			static_cast<RequestCodes>(msgCodeBuffer[0]),
-			std::time(0), //The current time
-			Buffer(msgBufferPtr, msgBufferPtr + msgLen)
-		);
-
-		//Gets which Request Code it is, and handles it appropriately
-		requestResult = handler->handleRequest(requestInfo);
-		handler = requestResult.newHandler;
-
-		//Sends the message
-		Communicator::s_sendToSocket(socket, requestResult.response.data(), (int)requestResult.response.size());
-	}
-	catch (const std::exception & e)
-	{
-		std::cerr << e.what() << std::endl;
-	}
-
-	closesocket(socket);
-	client.erase(socket);
-}
 
 void Communicator::s_getFromSocket(SOCKET socket, char* buffer, int length)
 {

@@ -26,7 +26,7 @@ private:
 	SOCKET m_serverSocket;
 
 	void _bindAndListen();
-	static void s_handleNewClient(SOCKET socket, IRequestHandlerPtr handler, std::unordered_map<SOCKET, IRequestHandlerPtr>& client);
+	friend void s_handleNewClient(Communicator& communicator, SOCKET socket, IRequestHandlerPtr handler);
 	static void s_getFromSocket(SOCKET socket, char* buffer, int length);
 	static void s_sendToSocket(SOCKET socket, char* buffer, int length);
 };

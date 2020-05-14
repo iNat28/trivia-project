@@ -8,21 +8,33 @@ LoginManager::LoginManager(IDatabasePtr database) :
 
 void LoginManager::signup(string username, string password, string email)
 {
-	if (!this->m_database->doesUserExist(username))
+	if (this->m_database->doesUserExist(username))
 	{
-		this->m_database->addNewUser(username, password, email);
-		LoggedUser user(username);
-		this->m_loggedUsers.push_back(user);
+		throw std::exception("User already signed up");
 	}
+
+	this->m_database->addNewUser(username, password, email);
+	LoggedUser user(username);
+	this->m_loggedUsers.push_back(user);
 }
 
 void LoginManager::login(string username, string password)
 {
-	if (!this->m_database->doesPasswordMatch(username, password))
+	if (!this->m_database->doesUserExist(username))
 	{
-		LoggedUser user(username);
-		this->m_loggedUsers.push_back(user);
+		throw std::exception("User not signed up");
 	}
+
+	for (auto loggedUser : this->m_loggedUsers)
+	{
+		if (loggedUser.getUsername() == username)
+		{
+			throw std::exception("User already logged in");
+		}
+	}
+
+	LoggedUser user(username);
+	this->m_loggedUsers.push_back(user);
 }
 
 void LoginManager::logout(string username)

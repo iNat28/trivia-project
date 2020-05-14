@@ -34,5 +34,5 @@ public:
 	static Buffer serializeResponse(const SignupResponse& signupResponse);
 
 private:
-	static Buffer serializeJson(const json& j, ResponseCodes responseCode);
+	static Buffer serializeJson(const json& j, Codes responseCode);
 };

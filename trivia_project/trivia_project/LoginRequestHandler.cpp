@@ -17,10 +17,10 @@ RequestResult LoginRequestHandler::handleRequest(const RequestInfo& requestInfo)
 
 	switch (requestInfo.requestId)
 	{
-	case RequestCodes::LOGIN_REQUEST:
+	case Codes::LOGIN:
 		requestResult = this->_login(requestInfo);
 		break;
-	case RequestCodes::SIGNUP_REQUEST:
+	case Codes::SIGNUP:
 		requestResult = this->_signup(requestInfo);
 		break;
 	}
@@ -30,42 +30,72 @@ RequestResult LoginRequestHandler::handleRequest(const RequestInfo& requestInfo)
 
 RequestResult LoginRequestHandler::_login(const RequestInfo& requestInfo)
 {
-	unsigned int response = 1;
-	IRequestHandlerPtr handler;
+	RequestResult requestResult;
 
-	try {
+	try
+	{
 		LoginRequest loginRequest = JsonRequestPacketDeserializer::deserializeLoginRequest(requestInfo.buffer);
-		handler = m_handlerFactor.createMenuRequestHandler();
-		//TODO:	Check if login was valid
-		//		If not:
-		//handler = m_handlerFactor.createLoginRequestHandler();
+		try {
+			this->m_handlerFactor.getLoginManager().login(loginRequest.username, loginRequest.password);
+			requestResult = RequestResult(JsonResponsePacketSerializer::serializeResponse(LoginResponse(1)), m_handlerFactor.createMenuRequestHandler());
+		}
+		catch (const std::exception & e)
+		{
+			requestResult = RequestResult(JsonResponsePacketSerializer::serializeResponse(ErrorResponse(e.what())), m_handlerFactor.createLoginRequestHandler());
+		}
 	}
 	catch (...)
 	{
-		unsigned int response = 0;
+		requestResult = RequestResult(JsonResponsePacketSerializer::serializeResponse(ErrorResponse("Error deserializing request")), m_handlerFactor.createLoginRequestHandler());
 	}
+	
 
-	return RequestResult(JsonResponsePacketSerializer::serializeResponse(LoginResponse{ response }), handler);
+	return requestResult;
 }
 
 RequestResult LoginRequestHandler::_signup(const RequestInfo& requestInfo)
 {
-	unsigned int response = 1;
-	IRequestHandlerPtr handler;
+	RequestResult requestResult;
 
-	try {
+	try
+	{
 		SignupRequest signupRequest = JsonRequestPacketDeserializer::deserializeSignupRequest(requestInfo.buffer);
-		handler = m_handlerFactor.createMenuRequestHandler();
-		//TODO:	Check if signup was valid
-		//		If not:
-		//handler = m_handlerFactor.createLoginRequestHandler();
+		try {
+			this->m_handlerFactor.getLoginManager().signup(signupRequest.username, signupRequest.password, signupRequest.email);
+			requestResult = RequestResult(JsonResponsePacketSerializer::serializeResponse(SignupResponse(1)), m_handlerFactor.createMenuRequestHandler());
+		}
+		catch (const std::exception & e)
+		{
+			requestResult = RequestResult(JsonResponsePacketSerializer::serializeResponse(ErrorResponse(e.what())), m_handlerFactor.createLoginRequestHandler());
+		}
 	}
 	catch (...)
 	{
-		unsigned int response = 0;
+		requestResult = RequestResult(JsonResponsePacketSerializer::serializeResponse(ErrorResponse("Error deserializing request")), m_handlerFactor.createLoginRequestHandler());
 	}
 
-	return RequestResult(JsonResponsePacketSerializer::serializeResponse(SignupResponse{ response }), handler);
+	return requestResult;
 }
 
+//
+//template <typename T>
+//RequestResult LoginRequestHandler::_loginAll(bool ifSuccess)
+//{
+//	LoginRequestHandler::ResponseCodes response = LoginRequestHandler::ResponseCodes::ERROR_RESPONSE;
+//	IRequestHandlerPtr handler;
+//	
+//	if (ifSuccess)
+//	{
+//		handler = m_handlerFactor.createMenuRequestHandler();
+//		response = LoginRequestHandler::ResponseCodes::SUCCESFUL;
+//	}
+//	else
+//	{
+//		handler = m_handlerFactor.createLoginRequestHandler();
+//		response = LoginRequestHandler::ResponseCodes::USER_ALREADY_IN;
+//	}
+//
+//	return RequestResult(JsonResponsePacketSerializer::serializeResponse(LoginResponse(static_cast<unsigned int>(response))), handler);
+//}
+//
 

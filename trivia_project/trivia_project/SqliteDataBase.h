@@ -1,6 +1,7 @@
 #pragma once
 #include "pch.h"
 #include "IDatabase.h"
+#include "Exception.h"
 #include "sqlite3.h"
 #include <map>
 
@@ -16,7 +17,7 @@ public:
 
 	static int users_callback(void* data, int argc, char** argv, char** azColName);
 
-	void send_query(std::string command);
+	void send_query(std::string command, int(*callback)(void*, int, char**, char**) = nullptr);
 
 	bool openDB();
 

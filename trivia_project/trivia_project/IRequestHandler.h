@@ -1,16 +1,17 @@
 #pragma once
 #include "pch.h"
 #include "Constants.h"
+#include "JsonResponsePacketSerializer.h"
 
 class IRequestHandler;
 typedef std::shared_ptr<IRequestHandler> IRequestHandlerPtr;
 
 struct RequestInfo
 {
-	RequestInfo(RequestCodes RequestId, time_t receivalTime, Buffer buffer);
+	RequestInfo(Codes RequestId, time_t receivalTime, Buffer buffer);
 	RequestInfo();
 
-	RequestCodes requestId;
+	Codes requestId;
 	time_t receivalTime;
 	Buffer buffer;
 };

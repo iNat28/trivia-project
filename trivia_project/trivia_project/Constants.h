@@ -2,23 +2,12 @@
 #pragma once
 #include "pch.h"
 
-enum class RequestCodes
+enum class Codes
 {
-	ERROR_REQUEST = 0,
+	ERROR_CODE,
 
-	//Login codes
-	LOGIN_REQUEST = 10,
-	SIGNUP_REQUEST
-};
-
-enum class ResponseCodes
-{
-	//Errors
-	ERROR_RESPONSE = 0,
-
-	//Login codes
-	LOGIN_RESPONSE = 10,
-	SIGNUP_RESPONSE
+	LOGIN = 10,
+	SIGNUP
 };
 
 typedef char Byte;

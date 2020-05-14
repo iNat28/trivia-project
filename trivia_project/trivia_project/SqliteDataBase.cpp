@@ -20,8 +20,8 @@ Output: bool.
 bool SqliteDataBase::doesUserExist(string username)
 {
 	moreData = false;
-	std::string sqlStatement = "select * from users where username like '" + username + "';";
-	send_query(sqlStatement);
+	std::string sqlStatement = "select * from users where username = '" + username + "';";
+	send_query(sqlStatement, users_callback);
 	
 	//returns if the username can be found in the map of users.
 	return users_list.find(username) != users_list.end();
@@ -35,8 +35,8 @@ Output: bool.
 bool SqliteDataBase::doesPasswordMatch(string username, string password)
 {
 	moreData = false;
-	std::string sqlStatement = "select * from users where username like '" + username + "';";
-	send_query(sqlStatement);
+	std::string sqlStatement = "select * from users where username = '" + username + "';";
+	send_query(sqlStatement, users_callback);
 	//returns whether the user exists and if the password matched the username
 	return doesUserExist(username) && users_list[username] == password;
 }
@@ -77,7 +77,7 @@ bool SqliteDataBase::openDB()
 	if (doesFileExist)
 	{
 		//user table
-		command = "create table users if not exists (username text primary key not null, password text not null, email text not null);";
+		command = "create table if not exists users (username text primary key not null, password text not null, email text not null);";
 		send_query(command);
 	}
 	SqliteDataBase::moreData = false;
@@ -113,8 +113,13 @@ int SqliteDataBase::users_callback(void* data, int argc, char** argv, char** azC
 	return 0;
 }
 
-void SqliteDataBase::send_query(std::string command)
+void SqliteDataBase::send_query(std::string command, int(*callback)(void*, int, char**, char**))
 {
 	char* errMessage = nullptr;
-	sqlite3_exec(this->db, command.c_str(), nullptr, nullptr, &errMessage);
+	if (SQLITE_OK != sqlite3_exec(this->db, command.c_str(), callback, nullptr, &errMessage))
+	{
+		Exception::ex << errMessage;
+		sqlite3_free(errMessage);
+		throw Exception();
+	}
 }
