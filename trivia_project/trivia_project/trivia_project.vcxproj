@@ -144,6 +144,7 @@
     </ClCompile>
     <ClCompile Include="RequestHandlerFactory.cpp" />
     <ClCompile Include="Server.cpp" />
+    <ClCompile Include="sqlite3.c" />
     <ClCompile Include="SqliteDataBase.cpp" />
     <ClCompile Include="WSAInitializer.cpp" />
   </ItemGroup>
@@ -161,6 +162,7 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="RequestHandlerFactory.h" />
     <ClInclude Include="Server.h" />
+    <ClInclude Include="sqlite3.h" />
     <ClInclude Include="SqliteDataBase.h" />
     <ClInclude Include="WSAInitializer.h" />
   </ItemGroup>

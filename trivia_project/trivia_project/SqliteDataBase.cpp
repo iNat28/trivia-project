@@ -1,9 +1,6 @@
 #include "pch.h"
 #include "SqliteDataBase.h"
 
-//variable for multiple users
-static bool moreData = false;
-
 SqliteDataBase::SqliteDataBase()
 {
 	if (openDB())
@@ -21,8 +18,8 @@ bool SqliteDataBase::doesUserExist(string username)
 {
 	moreData = false;
 	std::string sqlStatement = "select * from users where username like '" + username + "';";
-	char* errMessage = nullptr;
-	int res = sqlite3_exec(this->db, sqlStatement.c_str(), users_callback, nullptr, &errMessage);
+	send_query(sqlStatement);
+
 	//returns if the username can be found in the map of users.
 	return users_list.find(username) != users_list.end();
 }
@@ -36,8 +33,7 @@ bool SqliteDataBase::doesPasswordMatch(string username, string password)
 {
 	moreData = false;
 	std::string sqlStatement = "select * from users where username like '" + username + "';";
-	char* errMessage = nullptr;
-	int res = sqlite3_exec(this->db, sqlStatement.c_str(), users_callback, nullptr, &errMessage);
+	send_query(sqlStatement);
 	//returns whether the user exists and if the password matched the username
 	return doesUserExist(username) && users_list[username] == password;
 }
@@ -50,8 +46,7 @@ Output: void.
 void SqliteDataBase::addNewUser(string username, string password, string email)
 {
 	std::string command = "insert into users (username, password, email) values ('" + username + "', '" + password + "', '" + email + "');";
-	char* errMessage = nullptr;
-	sqlite3_exec(this->db, command.c_str(), nullptr, nullptr, &errMessage);
+	send_query(command);
 }
 
 /*
@@ -74,15 +69,15 @@ bool SqliteDataBase::openDB()
 		std::cout << "Failed to open DB" << std::endl;
 		return false;
 	}
+
 	//if the table does not exist
 	if (doesFileExist)
 	{
 		//user table
 		command = "create table users if not exists (username text primary key not null, password text not null, email text not null);";
-		char* errMessage = nullptr;
-		sqlite3_exec(this->db, command.c_str(), nullptr, nullptr, &errMessage);
+		send_query(command);
 	}
-
+	SqliteDataBase::moreData = false;
 	return true;
 }
 
@@ -91,13 +86,15 @@ Usage: the users callback.
 Input: data, argc, argv, azcolname.
 Output: int.
 */
-int users_callback(void* data, int argc, char** argv, char** azColName)
+int SqliteDataBase::users_callback(void* data, int argc, char** argv, char** azColName)
 {
 	//to make sure it doesnt clear the list when it goes back into the function to add another user.
-	if (!moreData)
-		users_list.clear();
+	if (!SqliteDataBase::moreData)
+		SqliteDataBase::users_list.clear();
+
 	string username;
 	string password;
+
 	//gets all of the usernames and password and adds them into the map.
 	for (int i = 0; i < argc; i++)
 	{
@@ -106,8 +103,15 @@ int users_callback(void* data, int argc, char** argv, char** azColName)
 		else if (std::string(azColName[i]) == "password")
 			password = argv[i];
 	}
+
 	//adds the new user to the list.
-	users_list[username] = password;
-	moreData = true;
+	SqliteDataBase::users_list[username] = password;
+	SqliteDataBase::moreData = true;
 	return 0;
+}
+
+void SqliteDataBase::send_query(std::string command)
+{
+	char* errMessage = nullptr;
+	sqlite3_exec(this->db, command.c_str(), nullptr, nullptr, &errMessage);
 }

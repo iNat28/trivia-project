@@ -4,9 +4,6 @@
 #include "sqlite3.h"
 #include <map>
 
-//Move to class
-static std::unordered_map<string, string> users_list;
-
 class SqliteDataBase : public IDatabase
 {
 public:
@@ -17,12 +14,17 @@ public:
 	virtual bool doesPasswordMatch(string username, string password);
 	virtual void addNewUser(string username, string password, string email);
 
+	static int users_callback(void* data, int argc, char** argv, char** azColName);
+
+	void send_query(std::string command);
 
 	bool openDB();
 
 	sqlite3* db;
 	const char* dbFileName;
+
+	static std::unordered_map<string, string> users_list;
+	//variable for multiple users
+	static bool moreData;
 };
 
-//Move to class
-int users_callback(void* data, int argc, char** argv, char** azColName);
