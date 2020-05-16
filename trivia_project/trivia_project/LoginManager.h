@@ -11,14 +11,14 @@ using std::string;
 class LoginManager
 {
 public:
-	LoginManager(IDatabasePtr database);
+	LoginManager(IDatabase& database);
 
 	void signup(string username, string password, string email);
 	void login(string username, string password);
 	void logout(string username);
 
 private:
-	IDatabasePtr m_database;
+	IDatabase& m_database;
 	vector<LoggedUser> m_loggedUsers;
 };
 

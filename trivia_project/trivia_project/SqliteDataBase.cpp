@@ -17,7 +17,7 @@ Usage: checks whether a user exists in the DB.
 Input: string username.
 Output: bool.
 */
-bool SqliteDataBase::doesUserExist(string username)
+bool SqliteDataBase::doesUserExist(string username) const
 {
 	moreData = false;
 	std::string sqlStatement = "select * from users where username = '" + username + "';";
@@ -32,7 +32,7 @@ Usage: checks if the password matches the username.
 Input: string username, string password.
 Output: bool.
 */
-bool SqliteDataBase::doesPasswordMatch(string username, string password)
+bool SqliteDataBase::doesPasswordMatch(string username, string password) const
 {
 	moreData = false;
 	std::string sqlStatement = "select * from users where username = '" + username + "';";
@@ -46,7 +46,7 @@ Usage: adds a new user to the DB
 Input: string username, string password, string email.
 Output: void.
 */
-void SqliteDataBase::addNewUser(string username, string password, string email)
+void SqliteDataBase::addNewUser(string username, string password, string email) const
 {
 	std::string command = "insert into users (username, password, email) values ('" + username + "', '" + password + "', '" + email + "');";
 	send_query(command);
@@ -113,7 +113,7 @@ int SqliteDataBase::users_callback(void* data, int argc, char** argv, char** azC
 	return 0;
 }
 
-void SqliteDataBase::send_query(std::string command, int(*callback)(void*, int, char**, char**))
+void SqliteDataBase::send_query(std::string command, int(*callback)(void*, int, char**, char**)) const
 {
 	char* errMessage = nullptr;
 	if (SQLITE_OK != sqlite3_exec(this->db, command.c_str(), callback, nullptr, &errMessage))

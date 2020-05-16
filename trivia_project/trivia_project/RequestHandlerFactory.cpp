@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "RequestHandlerFactory.h"
 
-RequestHandlerFactory::RequestHandlerFactory(IDatabasePtr database) : 
+RequestHandlerFactory::RequestHandlerFactory(IDatabase& database) : 
 	m_loginManager(database), m_database(database)
 {
 }

@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Server.h"
 
-Server::Server() : m_database(std::make_shared<SqliteDataBase>()), m_handlerFactory(m_database), m_communicator(m_database)
+Server::Server() : m_database(std::make_shared<SqliteDataBase>()), m_handlerFactory(*m_database), m_communicator(*m_database)
 {
 }
 

@@ -11,8 +11,8 @@ class MenuRequestHandler : public IRequestHandler
 public:
 	MenuRequestHandler(RequestHandlerFactory& handlerFactor);
 
-	virtual bool isRequestRelevant(const RequestInfo& requestInfo) override;
-	virtual RequestResult handleRequest(const RequestInfo& requestInfo) override;
+	virtual bool isRequestRelevant(const RequestInfo& requestInfo) const override;
+	virtual RequestResult handleRequest(const RequestInfo& requestInfo) const override;
 
 private:
 	RequestHandlerFactory& m_handlerFactor;

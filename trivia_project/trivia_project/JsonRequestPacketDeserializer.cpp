@@ -8,11 +8,11 @@ Output: LoginRequest object.
 */
 LoginRequest JsonRequestPacketDeserializer::deserializeLoginRequest(const Buffer& buffer)
 {
-	json j_from_bson = json::from_bson(buffer);
+	json jsonFromBson = json::from_bson(buffer);
 	LoginRequest userLoginInfo;
 
-	userLoginInfo.username = j_from_bson["username"];
-	userLoginInfo.password = j_from_bson["password"];
+	userLoginInfo.username = jsonFromBson["username"];
+	userLoginInfo.password = jsonFromBson["password"];
 
 	return userLoginInfo;
 }
@@ -23,12 +23,12 @@ Output: SignupRequest object.
 */
 SignupRequest JsonRequestPacketDeserializer::deserializeSignupRequest(const Buffer& buffer)
 {
-	json j_from_bson = json::from_bson(buffer);
+	json jsonFromBson = json::from_bson(buffer);
 	SignupRequest userSignupInfo;
 
-	userSignupInfo.username = j_from_bson["username"];
-	userSignupInfo.password = j_from_bson["password"];
-	userSignupInfo.email = j_from_bson["email"];
+	userSignupInfo.username = jsonFromBson["username"];
+	userSignupInfo.password = jsonFromBson["password"];
+	userSignupInfo.email = jsonFromBson["email"];
 
 	return userSignupInfo;
 }

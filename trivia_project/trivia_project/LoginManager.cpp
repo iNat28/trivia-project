@@ -1,49 +1,50 @@
 #include "pch.h"
 #include "LoginManager.h"
 
-LoginManager::LoginManager(IDatabasePtr database) :
+LoginManager::LoginManager(IDatabase& database) :
 	m_database(database)
 {
 }
 
 void LoginManager::signup(string username, string password, string email)
 {
-	if (this->m_database->doesUserExist(username))
+	if (this->m_database.doesUserExist(username))
 	{
-		throw std::exception("User already signed up");
+		throw Exception("User already signed up");
 	}
 
-	this->m_database->addNewUser(username, password, email);
-	LoggedUser user(username);
-	this->m_loggedUsers.push_back(user);
+	//Adds the user
+	this->m_database.addNewUser(username, password, email);
+	this->m_loggedUsers.push_back(username);
 }
 
 void LoginManager::login(string username, string password)
 {
-	if (!this->m_database->doesUserExist(username))
+	if (!this->m_database.doesUserExist(username))
 	{
-		throw std::exception("User not signed up");
+		throw Exception("User not signed up");
 	}
 
-	for (auto loggedUser : this->m_loggedUsers)
+	for (const auto& loggedUser : this->m_loggedUsers)
 	{
 		if (loggedUser.getUsername() == username)
 		{
-			throw std::exception("User already logged in");
+			throw Exception("User already logged in");
 		}
 	}
-
-	LoggedUser user(username);
-	this->m_loggedUsers.push_back(user);
+	
+	//Logins in the user
+	this->m_loggedUsers.push_back(username);
 }
 
 void LoginManager::logout(string username)
 {
-	vector<LoggedUser>::iterator it;
-	for (it = this->m_loggedUsers.begin(); it != this->m_loggedUsers.end(); it++)
+	for (auto loggedUser = this->m_loggedUsers.begin(); loggedUser != this->m_loggedUsers.end(); loggedUser++)
 	{
-		if (it->getUsername() == username)
-			this->m_loggedUsers.erase(it);
+		if (loggedUser->getUsername() == username)
+		{
+			this->m_loggedUsers.erase(loggedUser);
+		}
 	}
 }
 

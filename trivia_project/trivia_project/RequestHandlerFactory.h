@@ -14,12 +14,12 @@ class MenuRequestHandler;
 class RequestHandlerFactory
 {
 public:
-	RequestHandlerFactory(IDatabasePtr database);
+	RequestHandlerFactory(IDatabase& database);
 
 	std::shared_ptr<LoginRequestHandler> createLoginRequestHandler();
 	std::shared_ptr<MenuRequestHandler> createMenuRequestHandler();
 	LoginManager& getLoginManager();
 private:
 	LoginManager m_loginManager;
-	IDatabasePtr m_database;
+	IDatabase& m_database;
 };

@@ -12,7 +12,7 @@ public:
 	void run();
 
 private:
-	IDatabasePtr m_database;
+	std::shared_ptr<IDatabase> m_database;
 	RequestHandlerFactory m_handlerFactory;
 	Communicator m_communicator;
 

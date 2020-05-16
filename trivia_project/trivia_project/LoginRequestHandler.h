@@ -15,22 +15,16 @@ public:
 	//c'tor
 	LoginRequestHandler(RequestHandlerFactory& handlerFactor);
 
-	virtual bool isRequestRelevant(const RequestInfo& requestInfo) override;
-	virtual RequestResult handleRequest(const RequestInfo& requestInfo) override;
-	
-	enum class ResponseCodes
-	{
-		SUCCESFUL,
-		USER_DOES_NOT_EXIST,
-		USER_ALREADY_IN,
-		ERROR_RESPONSE
-	};
+	virtual bool isRequestRelevant(const RequestInfo& requestInfo) const override;
+	virtual RequestResult handleRequest(const RequestInfo& requestInfo) const override;
 private:
 	RequestHandlerFactory& m_handlerFactor;
+	enum class ResponseCodes
+	{
+		ERROR_RESPONSE,
+		SUCCESFUL
+	};
 
-	RequestResult _login(const RequestInfo& requestInfo);
-	RequestResult _signup(const RequestInfo& requestInfo);
-
-	/*template <typename response>
-	RequestResult _loginAll<response>(bool ifSuccess, const response& a);*/
+	RequestResult _login(const RequestInfo& requestInfo) const;
+	RequestResult _signup(const RequestInfo& requestInfo) const;
 };

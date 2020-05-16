@@ -2,7 +2,7 @@
 #include "Communicator.h"
 
 //Default Constructor
-Communicator::Communicator(IDatabasePtr database) : m_handlerFactory(database), m_serverSocket(socket(AF_INET, SOCK_STREAM, IPPROTO_TCP))
+Communicator::Communicator(IDatabase& database) : m_handlerFactory(database), m_serverSocket(socket(AF_INET, SOCK_STREAM, IPPROTO_TCP))
 {
 	if (this->m_serverSocket == INVALID_SOCKET)
 	{
@@ -11,7 +11,7 @@ Communicator::Communicator(IDatabasePtr database) : m_handlerFactory(database), 
 }
 
 //Thread for handling new clients
-//Input: The client socket
+//Input: A communicator object, the client socket, the handler to start with
 void s_handleNewClient(Communicator& communicator, SOCKET socket, IRequestHandlerPtr handler)
 {
 	//Recieves from the buffer
@@ -22,7 +22,6 @@ void s_handleNewClient(Communicator& communicator, SOCKET socket, IRequestHandle
 	RequestResult requestResult;
 	std::unique_ptr<char[]> msgBuffer;
 	char* msgBufferPtr = nullptr;
-	std::string username;
 
 	try {
 		while (true)
@@ -46,11 +45,10 @@ void s_handleNewClient(Communicator& communicator, SOCKET socket, IRequestHandle
 				Buffer(msgBufferPtr, msgBufferPtr + msgLen)
 			);
 
-			//Gets which Request Code it is, and handles it appropriately
+			//Handles the request, and gets the request result
 			requestResult = handler->handleRequest(requestInfo);
-			//handler = requestResult.newHandler;
 
-			//Sends the message
+			//Sends the request result response
 			Communicator::s_sendToSocket(socket, requestResult.response.data(), (int)requestResult.response.size());
 		}
 	}
@@ -59,8 +57,6 @@ void s_handleNewClient(Communicator& communicator, SOCKET socket, IRequestHandle
 		std::cerr << "From socket " << socket << ": " << e.what() << std::endl;
 	}
 
-	//Deal with logout
-	//communicator.m_handlerFactory.getLoginManager().logout();
 	closesocket(socket);
 	communicator.m_clients.erase(socket);
 }
@@ -70,6 +66,7 @@ void Communicator::startHandleRequests()
 {
 	SOCKET clientSocket = 0;
 	std::thread client;
+	IRequestHandlerPtr handler;
 
 	this->_bindAndListen();
 
@@ -83,7 +80,8 @@ void Communicator::startHandleRequests()
 			throw std::exception("Error accepting client");
 		}
 
-		IRequestHandlerPtr handler = this->m_handlerFactory.createLoginRequestHandler();
+		//Gets the login handler
+		handler = this->m_handlerFactory.createLoginRequestHandler();
 
 		//Puts the client into a thread
 		client = std::thread(s_handleNewClient, std::ref(*this), clientSocket, handler);

@@ -6,96 +6,66 @@ LoginRequestHandler::LoginRequestHandler(RequestHandlerFactory& handlerFactor) :
 {
 }
 
-bool LoginRequestHandler::isRequestRelevant(const RequestInfo& requestInfo)
+bool LoginRequestHandler::isRequestRelevant(const RequestInfo& requestInfo) const
 {
 	return true;
 }
 
-RequestResult LoginRequestHandler::handleRequest(const RequestInfo& requestInfo)
+RequestResult LoginRequestHandler::handleRequest(const RequestInfo& requestInfo) const
 {
 	RequestResult requestResult;
 
-	switch (requestInfo.requestId)
+	//If at any point the login or sign up doesn't work, an exception will be thrown, 
+	//and it will be put into an error response
+	try {
+		switch (requestInfo.requestId)
+		{
+		case Codes::LOGIN:
+			requestResult = this->_login(requestInfo);
+			break;
+		case Codes::SIGNUP:
+			requestResult = this->_signup(requestInfo);
+			break;
+		}
+	}
+	//Login manager exception caught
+	catch (const Exception& e)
 	{
-	case Codes::LOGIN:
-		requestResult = this->_login(requestInfo);
-		break;
-	case Codes::SIGNUP:
-		requestResult = this->_signup(requestInfo);
-		break;
+		requestResult = RequestResult(
+			JsonResponsePacketSerializer::serializeResponse(ErrorResponse(e.what())),
+			m_handlerFactor.createLoginRequestHandler());
+	}
+	//Other exception caught (probably because of the json)
+	catch (...)
+	{
+		requestResult = RequestResult(
+			JsonResponsePacketSerializer::serializeResponse(ErrorResponse("Unkown error occured")),
+			nullptr);
 	}
 
 	return requestResult;
 }
 
-RequestResult LoginRequestHandler::_login(const RequestInfo& requestInfo)
+RequestResult LoginRequestHandler::_login(const RequestInfo& requestInfo) const
 {
-	RequestResult requestResult;
-
-	try
-	{
-		LoginRequest loginRequest = JsonRequestPacketDeserializer::deserializeLoginRequest(requestInfo.buffer);
-		try {
-			this->m_handlerFactor.getLoginManager().login(loginRequest.username, loginRequest.password);
-			requestResult = RequestResult(JsonResponsePacketSerializer::serializeResponse(LoginResponse(1)), m_handlerFactor.createMenuRequestHandler());
-		}
-		catch (const std::exception & e)
-		{
-			requestResult = RequestResult(JsonResponsePacketSerializer::serializeResponse(ErrorResponse(e.what())), m_handlerFactor.createLoginRequestHandler());
-		}
-	}
-	catch (...)
-	{
-		requestResult = RequestResult(JsonResponsePacketSerializer::serializeResponse(ErrorResponse("Error deserializing request")), m_handlerFactor.createLoginRequestHandler());
-	}
+	LoginRequest loginRequest = JsonRequestPacketDeserializer::deserializeLoginRequest(requestInfo.buffer);
 	
+	//Throws an Exception if the login doesn't work
+	this->m_handlerFactor.getLoginManager().login(loginRequest.username, loginRequest.password);
 
-	return requestResult;
+	return RequestResult(
+		JsonResponsePacketSerializer::serializeResponse(LoginResponse(static_cast<unsigned int>(ResponseCodes::SUCCESFUL))),
+		m_handlerFactor.createMenuRequestHandler());
 }
 
-RequestResult LoginRequestHandler::_signup(const RequestInfo& requestInfo)
+RequestResult LoginRequestHandler::_signup(const RequestInfo& requestInfo) const
 {
-	RequestResult requestResult;
+	SignupRequest signupRequest = JsonRequestPacketDeserializer::deserializeSignupRequest(requestInfo.buffer);
 
-	try
-	{
-		SignupRequest signupRequest = JsonRequestPacketDeserializer::deserializeSignupRequest(requestInfo.buffer);
-		try {
-			this->m_handlerFactor.getLoginManager().signup(signupRequest.username, signupRequest.password, signupRequest.email);
-			requestResult = RequestResult(JsonResponsePacketSerializer::serializeResponse(SignupResponse(1)), m_handlerFactor.createMenuRequestHandler());
-		}
-		catch (const std::exception & e)
-		{
-			requestResult = RequestResult(JsonResponsePacketSerializer::serializeResponse(ErrorResponse(e.what())), m_handlerFactor.createLoginRequestHandler());
-		}
-	}
-	catch (...)
-	{
-		requestResult = RequestResult(JsonResponsePacketSerializer::serializeResponse(ErrorResponse("Error deserializing request")), m_handlerFactor.createLoginRequestHandler());
-	}
+	//Throws an Exception if the signup doesn't work
+	this->m_handlerFactor.getLoginManager().signup(signupRequest.username, signupRequest.password, signupRequest.email);
 
-	return requestResult;
+	return RequestResult(
+		JsonResponsePacketSerializer::serializeResponse(SignupResponse(static_cast<unsigned int>(ResponseCodes::SUCCESFUL))), 
+		m_handlerFactor.createMenuRequestHandler());
 }
-
-//
-//template <typename T>
-//RequestResult LoginRequestHandler::_loginAll(bool ifSuccess)
-//{
-//	LoginRequestHandler::ResponseCodes response = LoginRequestHandler::ResponseCodes::ERROR_RESPONSE;
-//	IRequestHandlerPtr handler;
-//	
-//	if (ifSuccess)
-//	{
-//		handler = m_handlerFactor.createMenuRequestHandler();
-//		response = LoginRequestHandler::ResponseCodes::SUCCESFUL;
-//	}
-//	else
-//	{
-//		handler = m_handlerFactor.createLoginRequestHandler();
-//		response = LoginRequestHandler::ResponseCodes::USER_ALREADY_IN;
-//	}
-//
-//	return RequestResult(JsonResponsePacketSerializer::serializeResponse(LoginResponse(static_cast<unsigned int>(response))), handler);
-//}
-//
-

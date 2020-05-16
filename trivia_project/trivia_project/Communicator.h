@@ -17,7 +17,7 @@
 class Communicator
 {
 public:
-	Communicator(IDatabasePtr database);
+	Communicator(IDatabase& database);
 
 	void startHandleRequests();
 private:
