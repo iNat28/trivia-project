@@ -1,10 +1,11 @@
-#include "pch.h"
+
 #pragma once
+#include "pch.h"
 #include "Exception.h"
 #include "IRequestHandler.h"
+#include "RequestHandlerFactory.h"
 #include "LoginRequestHandler.h"
-#include "JsonRequestPacketDeserializer.h"
-#include "JsonResponsePacketSerializer.h"
+#include "MenuRequestHandler.h"
 
 #pragma comment(lib, "Ws2_32.lib")
 
@@ -16,15 +17,16 @@
 class Communicator
 {
 public:
-	Communicator();
+	Communicator(IDatabase& database);
 
 	void startHandleRequests();
 private:
-	std::unordered_map<SOCKET, std::shared_ptr<IRequestHandler>> m_clients;
-	SOCKET _serverSocket;
+	std::unordered_map<SOCKET, IRequestHandlerPtr> m_clients;
+	RequestHandlerFactory m_handlerFactory;
+	SOCKET m_serverSocket;
 
 	void _bindAndListen();
-	static void s_handleNewClient(SOCKET socket, std::shared_ptr<IRequestHandler> handler, std::unordered_map<SOCKET, IRequestHandler>& client);
+	friend void s_handleNewClient(Communicator& communicator, SOCKET socket, IRequestHandlerPtr handler);
 	static void s_getFromSocket(SOCKET socket, char* buffer, int length);
 	static void s_sendToSocket(SOCKET socket, char* buffer, int length);
 };

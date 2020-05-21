@@ -6,7 +6,7 @@ SERVER_PORT = 40200
 LOGIN_CODE = 10
 SIGNUP_CODE = 11
 ERROR_CODE = 0
-
+#
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 def serialize_msg(json_msg):
@@ -31,10 +31,7 @@ def recieve_response():
     response_length = int.from_bytes(response_length_inbytes, byteorder='little')
     response = sock.recv(response_length)
     json_msg = deserialize_msg(response_length_inbytes + response)
-    if response_code == ERROR_CODE:
-        return json_msg
-    else:
-        return json_msg
+    return json_msg
 
 
 def main():
@@ -44,9 +41,15 @@ def main():
         json_msg = {}
         json_msg["username"] = "Tani"
         json_msg["password"] = "12345"
+        json_msg["email"] = "Tani@gmail.com"
 
         send_request(LOGIN_CODE, json_msg)
-
+        print(recieve_response())
+        send_request(SIGNUP_CODE, json_msg)
+        print(recieve_response())
+        send_request(LOGIN_CODE, json_msg)
+        print(recieve_response())
+        send_request(SIGNUP_CODE, json_msg)
         print(recieve_response())
 
         sock.close()

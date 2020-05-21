@@ -6,7 +6,7 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const ErrorResponse& errR
 	json j;
 	j["message"] = errResponse.message;
 
-	return JsonResponsePacketSerializer::serializeJson(j, ResponseCodes::ERROR_RESPONSE);
+	return JsonResponsePacketSerializer::serializeJson(j, Codes::ERROR_CODE);
 }
 
 Buffer JsonResponsePacketSerializer::serializeResponse(const LoginResponse& loginResponse)
@@ -14,7 +14,7 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const LoginResponse& logi
 	json j;
 	j["status"] = loginResponse.status;
 
-	return JsonResponsePacketSerializer::serializeJson(j, ResponseCodes::LOGIN_RESPONSE);
+	return JsonResponsePacketSerializer::serializeJson(j, Codes::LOGIN);
 }
 
 Buffer JsonResponsePacketSerializer::serializeResponse(const SignupResponse& signupResponse)
@@ -22,10 +22,10 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const SignupResponse& sig
 	json j;
 	j["status"] = signupResponse.status;
 
-	return JsonResponsePacketSerializer::serializeJson(j, ResponseCodes::SIGNUP_RESPONSE);
+	return JsonResponsePacketSerializer::serializeJson(j, Codes::SIGNUP);
 }
 
-Buffer JsonResponsePacketSerializer::serializeJson(const json& j, ResponseCodes responseCode)
+Buffer JsonResponsePacketSerializer::serializeJson(const json& j, Codes responseCode)
 {
 	std::vector<unsigned char> jsonBuffer = json::to_bson(j);
 	Buffer totalBuffer;
@@ -40,7 +40,8 @@ Buffer JsonResponsePacketSerializer::serializeJson(const json& j, ResponseCodes 
 	return totalBuffer;
 }
 
-LoginResponse::LoginResponse(unsigned int status) :
+
+LoginResponse::LoginResponse(unsigned int status) : 
 	status(status)
 {
 }

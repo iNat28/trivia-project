@@ -1,31 +1,33 @@
 #pragma once
 #include "pch.h"
 #include "Constants.h"
+#include "JsonResponsePacketSerializer.h"
 
-interface IRequestHandler;
+class IRequestHandler;
+typedef std::shared_ptr<IRequestHandler> IRequestHandlerPtr;
 
 struct RequestInfo
 {
-	RequestInfo(RequestCodes RequestId, time_t receivalTime, Buffer buffer);
+	RequestInfo(Codes RequestId, time_t receivalTime, Buffer buffer);
 	RequestInfo();
 
-	RequestCodes requestId;
-	time_t receivalTime; 
+	Codes requestId;
+	time_t receivalTime;
 	Buffer buffer;
 };
 
 struct RequestResult
 {
-	RequestResult(Buffer response, IRequestHandler* newHandler);
+	RequestResult(Buffer response, IRequestHandlerPtr newHandler);
 	RequestResult();
 
 	Buffer response;
-	IRequestHandler* newHandler;
+	IRequestHandlerPtr newHandler;
 };
 
-interface IRequestHandler
+class IRequestHandler
 {
-	virtual bool isRequestRelevant(const RequestInfo& requestInfo) = 0;
-	virtual RequestResult handleRequest(const RequestInfo& requestInfo) = 0;
-	//static std::unordered_map<ResponseCodes, IRequestHandler*> responseCodesHandler;
+public:
+	virtual bool isRequestRelevant(const RequestInfo& requestInfo) const = 0;
+	virtual RequestResult handleRequest(const RequestInfo& requestInfo) const = 0;
 };

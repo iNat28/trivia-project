@@ -1,58 +1,71 @@
 #include "pch.h"
 #include "LoginRequestHandler.h"
 
-LoginRequestHandler::LoginRequestHandler()
+LoginRequestHandler::LoginRequestHandler(RequestHandlerFactory& handlerFactor) :
+	m_handlerFactor(handlerFactor)
 {
 }
 
-bool LoginRequestHandler::isRequestRelevant(const RequestInfo& requestInfo)
+bool LoginRequestHandler::isRequestRelevant(const RequestInfo& requestInfo) const
 {
 	return true;
 }
 
-RequestResult LoginRequestHandler::handleRequest(const RequestInfo& requestInfo)
+RequestResult LoginRequestHandler::handleRequest(const RequestInfo& requestInfo) const
 {
-	Buffer responseBuffer;
-	
-	switch (requestInfo.requestId)
+	RequestResult requestResult;
+
+	//If at any point the login or sign up doesn't work, an exception will be thrown, 
+	//and it will be put into an error response
+	try {
+		switch (requestInfo.requestId)
+		{
+		case Codes::LOGIN:
+			requestResult = this->_login(requestInfo);
+			break;
+		case Codes::SIGNUP:
+			requestResult = this->_signup(requestInfo);
+			break;
+		}
+	}
+	//Login manager exception caught
+	catch (const Exception& e)
 	{
-	case RequestCodes::LOGIN_REQUEST:
-		responseBuffer = handleLoginRequest(requestInfo.buffer);
-		break;
-	case RequestCodes::SIGNUP_REQUEST:
-		responseBuffer = handleSignupRequest(requestInfo.buffer);
-		break;
+		requestResult = RequestResult(
+			JsonResponsePacketSerializer::serializeResponse(ErrorResponse(e.what())),
+			m_handlerFactor.createLoginRequestHandler());
+	}
+	//Other exception caught (probably because of the json)
+	catch (...)
+	{
+		requestResult = RequestResult(
+			JsonResponsePacketSerializer::serializeResponse(ErrorResponse("Unkown error occured")),
+			nullptr);
 	}
 
-	return RequestResult(responseBuffer, nullptr);
+	return requestResult;
 }
 
-Buffer LoginRequestHandler::handleLoginRequest(const Buffer& buffer)
+RequestResult LoginRequestHandler::_login(const RequestInfo& requestInfo) const
 {
-	unsigned int response = 1;
+	LoginRequest loginRequest = JsonRequestPacketDeserializer::deserializeLoginRequest(requestInfo.buffer);
+	
+	//Throws an Exception if the login doesn't work
+	this->m_handlerFactor.getLoginManager().login(loginRequest.username, loginRequest.password);
 
-	try {
-		LoginRequest loginRequest = JsonRequestPacketDeserializer::deserializeLoginRequest(buffer);
-	}
-	catch (const std::exception & e)
-	{
-		unsigned int response = 0;
-	}
-
-	return JsonResponsePacketSerializer::serializeResponse(LoginResponse{ response });
+	return RequestResult(
+		JsonResponsePacketSerializer::serializeResponse(LoginResponse(static_cast<unsigned int>(ResponseCodes::SUCCESFUL))),
+		m_handlerFactor.createMenuRequestHandler());
 }
 
-Buffer LoginRequestHandler::handleSignupRequest(const Buffer& buffer)
+RequestResult LoginRequestHandler::_signup(const RequestInfo& requestInfo) const
 {
-	unsigned int response = 1;
+	SignupRequest signupRequest = JsonRequestPacketDeserializer::deserializeSignupRequest(requestInfo.buffer);
 
-	try {
-		SignupRequest signupRequest = JsonRequestPacketDeserializer::deserializeSignupRequest(buffer);
-	}
-	catch (const std::exception & e)
-	{
-		unsigned int response = 0;
-	}
-	
-	return JsonResponsePacketSerializer::serializeResponse(SignupResponse{ response });
+	//Throws an Exception if the signup doesn't work
+	this->m_handlerFactor.getLoginManager().signup(signupRequest.username, signupRequest.password, signupRequest.email);
+
+	return RequestResult(
+		JsonResponsePacketSerializer::serializeResponse(SignupResponse(static_cast<unsigned int>(ResponseCodes::SUCCESFUL))), 
+		m_handlerFactor.createMenuRequestHandler());
 }
