@@ -3,7 +3,7 @@
 #include "IDatabase.h"
 #include "Exception.h"
 #include "sqlite3.h"
-#include <map>
+#define QUESTIONS_FILE  "questions.txt"
 
 class SqliteDataBase : public IDatabase
 {
@@ -19,6 +19,10 @@ public:
 
 	void send_query(std::string command, int(*callback)(void*, int, char**, char**) = nullptr) const;
 
+	void openQuestionsFile();
+	vector<map<string, string>> getQuestionsIntoVectorFormat(string questions);
+	void addToDB(vector<map<string, string>>);
+
 	bool openDB();
 
 	sqlite3* db;
@@ -28,4 +32,4 @@ public:
 	//variable for multiple users
 	static bool moreData;
 };
-
+//https://opentdb.com/api.php?amount=10

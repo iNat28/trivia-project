@@ -20,6 +20,7 @@ class Room
 {
 public:
 	Room(int id, string name);
+	Room() {}
 
 	void addUser(LoggedUser user);
 	void removeUser(LoggedUser user);

@@ -38,5 +38,3 @@ int Room::getActivity()
 {
 	return this->m_metadata.isActive;
 }
-
-

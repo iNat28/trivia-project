@@ -11,6 +11,10 @@
 #include <sstream>
 #include <ctime>
 #include <memory>
+#include <map>
+#include <fstream>
 #include "json.hpp"
-
+using std::string;
+using std::vector;
+using std::map;
 using json = nlohmann::json;
