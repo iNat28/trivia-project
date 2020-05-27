@@ -23,7 +23,7 @@ void RoomManager::deleteRoom(int id)
 			this->m_rooms.erase(it);
 	}
 }
-//lol
+
 bool RoomManager::getRoomState(int id)
 {
 	return this->m_rooms[id].getActivity();
