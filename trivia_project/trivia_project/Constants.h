@@ -17,7 +17,7 @@ enum class Codes
 	CREATE_ROOM,
 
 	//Statistics
-	HIGH_SCORE = 30
+	STATISTICS = 30
 };
 
 typedef char Byte;

@@ -6,22 +6,7 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const ErrorResponse& errR
 	json jsonToSerialize;
 	jsonToSerialize[Keys::message] = errResponse.message;
 
-	return JsonResponsePacketSerializer::serializeJson(jsonToSerialize, Codes::ERROR_CODE);
-}
-
-Buffer JsonResponsePacketSerializer::serializeResponse(const LoginResponse& loginResponse)
-{
-	return JsonResponsePacketSerializer::serializeStatusResponse(loginResponse, Codes::LOGIN);
-}
-
-Buffer JsonResponsePacketSerializer::serializeResponse(const SignupResponse& signupResponse)
-{
-	return JsonResponsePacketSerializer::serializeStatusResponse(signupResponse, Codes::SIGNUP);
-}
-
-Buffer JsonResponsePacketSerializer::serializeResponse(const LogoutResponse& logoutResponse)
-{
-	return JsonResponsePacketSerializer::serializeStatusResponse(logoutResponse, Codes::LOGOUT);
+	return JsonResponsePacketSerializer::serializeJson(jsonToSerialize, errResponse);
 }
 
 Buffer JsonResponsePacketSerializer::serializeResponse(const GetRoomResponse& getRoomResponse)
@@ -29,7 +14,7 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const GetRoomResponse& ge
 	json jsonToSerialize;
 	jsonToSerialize[Keys::rooms] = getRoomResponse.rooms;
 
-	return JsonResponsePacketSerializer::serializeJson(jsonToSerialize, Codes::GET_ROOM);
+	return JsonResponsePacketSerializer::serializeJson(jsonToSerialize, getRoomResponse);
 }
 
 Buffer JsonResponsePacketSerializer::serializeResponse(const GetPlayersInRoomResponse& getPlayersInRoomResponse)
@@ -37,50 +22,41 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const GetPlayersInRoomRes
 	json jsonToSerialize;
 	jsonToSerialize[Keys::rooms] = getPlayersInRoomResponse.rooms;
 
-	return JsonResponsePacketSerializer::serializeJson(jsonToSerialize, Codes::GET_PLAYERS_IN_ROOM);
+	return JsonResponsePacketSerializer::serializeJson(jsonToSerialize, getPlayersInRoomResponse);
 }
 
-Buffer JsonResponsePacketSerializer::serializeResponse(const JoinRoomReponse& joinRoomResponse)
-{
-	return JsonResponsePacketSerializer::serializeStatusResponse(joinRoomResponse, Codes::JOIN_ROOM);
-}
-
-Buffer JsonResponsePacketSerializer::serializeResponse(const CreateRoomReponse& createRoomResponse)
-{
-	return JsonResponsePacketSerializer::serializeStatusResponse(createRoomResponse, Codes::CREATE_ROOM);
-}
-
-Buffer JsonResponsePacketSerializer::serializeResponse(const GetStatisticsResponse& highScoreResponse)
+Buffer JsonResponsePacketSerializer::serializeResponse(const GetStatisticsResponse& getStatisticsResponse)
 {
 	json jsonToSerialize;
-	jsonToSerialize[Keys::userStatistics] = highScoreResponse.userStatistics;
-	jsonToSerialize[Keys::highScores] = highScoreResponse.highScores;
+	jsonToSerialize[Keys::userStatistics] = getStatisticsResponse.userStatistics;
+	jsonToSerialize[Keys::highScores] = getStatisticsResponse.highScores;
 
-	return JsonResponsePacketSerializer::serializeJson(jsonToSerialize, Codes::HIGH_SCORE);
+	return JsonResponsePacketSerializer::serializeJson(jsonToSerialize, getStatisticsResponse);
 }
 
-Buffer JsonResponsePacketSerializer::serializeStatusResponse(const StatusResponse& statusResponse, Codes responseCode)
+Buffer JsonResponsePacketSerializer::serializeResponse(const StatusResponse& statusResponse)
 {
 	json jsonToSerialize;
 	jsonToSerialize[Keys::status] = statusResponse.status;
 
-	return JsonResponsePacketSerializer::serializeJson(jsonToSerialize, responseCode);
+	return JsonResponsePacketSerializer::serializeJson(jsonToSerialize, statusResponse);
 }
 
-Buffer JsonResponsePacketSerializer::serializeJson(const json& j, Codes responseCode)
+Buffer JsonResponsePacketSerializer::serializeJson(const json& jsonToSerialize, const Response& response)
 {
-	std::vector<unsigned char> jsonBuffer = json::to_bson(j);
+	std::vector<unsigned char> jsonBuffer = json::to_bson(jsonToSerialize);
 	Buffer totalBuffer;
 	char sizeBuffer[MSG_LEN_SIZE] = "";
 
 	//Adds the response code
-	totalBuffer.push_back(static_cast<Byte>(responseCode));
+	totalBuffer.push_back(static_cast<Byte>(response.getResponseCode()));
 
 	//Adds the json message with the number of bytes
 	totalBuffer.insert(totalBuffer.end(), jsonBuffer.begin(), jsonBuffer.end());
 	return totalBuffer;
 }
 
+//For RoomData
 inline void to_json(json& j, const RoomData& roomData)
 {
 	j[Keys::id] = roomData.id;

@@ -7,18 +7,13 @@ class JsonResponsePacketSerializer
 {
 public:
 	static Buffer serializeResponse(const ErrorResponse& errorResponse);
-	static Buffer serializeResponse(const LoginResponse& loginResponse);
-	static Buffer serializeResponse(const SignupResponse& signupResponse);
-	static Buffer serializeResponse(const LogoutResponse& logoutResponse);
+	static Buffer serializeResponse(const StatusResponse& statusResponse);
 	static Buffer serializeResponse(const GetRoomResponse& getRoomResponse);
 	static Buffer serializeResponse(const GetPlayersInRoomResponse& getPlayersInRoomResponse);
-	static Buffer serializeResponse(const JoinRoomReponse& joinRoomResponse);
-	static Buffer serializeResponse(const CreateRoomReponse& createRoomResponse);
-	static Buffer serializeResponse(const GetStatisticsResponse& highScoreResponse);
+	static Buffer serializeResponse(const GetStatisticsResponse& getStatisticsResponse);
 
 private:
-	static Buffer serializeStatusResponse(const StatusResponse& statusResponse, Codes responseCode);
-	static Buffer serializeJson(const json& j, Codes responseCode);
+	static Buffer serializeJson(const json& jsonToSerialize, const Response& response);
 };
 
 void to_json(json& j, const RoomData& roomData);

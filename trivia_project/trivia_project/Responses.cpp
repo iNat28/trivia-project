@@ -11,9 +11,34 @@ ErrorResponse::ErrorResponse(std::string message) :
 {
 }
 
+Codes LoginResponse::getResponseCode() const
+{
+	return Codes::LOGIN;
+}
+
+Codes SignupResponse::getResponseCode() const
+{
+	return Codes::SIGNUP;
+}
+
+Codes LogoutResponse::getResponseCode() const
+{
+	return Codes::LOGOUT;
+}
+
+Codes ErrorResponse::getResponseCode() const
+{
+	return Codes::ERROR_CODE;
+}
+
 GetRoomResponse::GetRoomResponse(unsigned int status, vector<RoomData> rooms) :
 	StatusResponse(status), rooms(rooms)
 {
+}
+
+Codes GetRoomResponse::getResponseCode() const
+{
+	return Codes::GET_ROOM;
 }
 
 GetPlayersInRoomResponse::GetPlayersInRoomResponse(vector<string> users) :
@@ -21,7 +46,27 @@ GetPlayersInRoomResponse::GetPlayersInRoomResponse(vector<string> users) :
 {
 }
 
+Codes GetPlayersInRoomResponse::getResponseCode() const
+{
+	return Codes::GET_PLAYERS_IN_ROOM;
+}
+
+Codes JoinRoomReponse::getResponseCode() const
+{
+	return Codes::JOIN_ROOM;
+}
+
+Codes CreateRoomReponse::getResponseCode() const
+{
+	return Codes::CREATE_ROOM;
+}
+
 GetStatisticsResponse::GetStatisticsResponse(unsigned int status, vector<string> userStatistics, vector<string> highScores) :
 	StatusResponse(status), userStatistics(userStatistics), highScores(highScores)
 {
+}
+
+Codes GetStatisticsResponse::getResponseCode() const
+{
+	return Codes::STATISTICS;
 }
