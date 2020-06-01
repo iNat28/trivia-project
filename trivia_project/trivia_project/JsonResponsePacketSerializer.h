@@ -1,73 +1,7 @@
 #pragma once
 #include "pch.h"
+#include "Responses.h"
 #include "Constants.h"
-
-struct ErrorResponse
-{
-	ErrorResponse(std::string message);
-
-	static const char* messageKey;
-	std::string message;
-};
-
-struct StatusResponse
-{
-	StatusResponse(unsigned int status);
-
-	static const char* statusKey;
-	unsigned int status;
-};
-
-struct LoginResponse : StatusResponse
-{
-	using StatusResponse::StatusResponse;
-};
-
-struct SignupResponse : StatusResponse
-{
-	using StatusResponse::StatusResponse;
-};
-
-struct LogoutResponse : StatusResponse
-{
-	using StatusResponse::StatusResponse;
-};
-
-struct GetRoomResponse
-{
-	GetRoomResponse(vector<string> rooms);
-
-	static const char* roomsKey;
-	vector<string> rooms;
-};
-
-struct GetPlayersInRoomResponse
-{
-	GetPlayersInRoomResponse(vector<string> users);
-
-	static const char* usersKey;
-	vector<string> users;
-};
-
-struct JoinRoomReponse : StatusResponse
-{
-	using StatusResponse::StatusResponse;
-};
-
-struct CreateRoomReponse : StatusResponse
-{
-	using StatusResponse::StatusResponse;
-};
-
-struct HighScoreResponse
-{
-	HighScoreResponse(vector<string> userStatistics, vector<string> highScores);
-
-	static const char* userStatisticsKey;
-	static const char* highScoresKey;
-	vector<string> userStatistics;
-	vector<string> highScores;
-};
 
 class JsonResponsePacketSerializer
 {
@@ -80,9 +14,33 @@ public:
 	static Buffer serializeResponse(const GetPlayersInRoomResponse& getPlayersInRoomResponse);
 	static Buffer serializeResponse(const JoinRoomReponse& joinRoomResponse);
 	static Buffer serializeResponse(const CreateRoomReponse& createRoomResponse);
-	static Buffer serializeResponse(const HighScoreResponse& highScoreResponse);
+	static Buffer serializeResponse(const GetStatisticsResponse& highScoreResponse);
 
 private:
-	static Buffer serializeResponse(const StatusResponse& statusResponse, Codes responseCode);
+	static Buffer serializeStatusResponse(const StatusResponse& statusResponse, Codes responseCode);
 	static Buffer serializeJson(const json& j, Codes responseCode);
+};
+
+void to_json(json& j, const RoomData& roomData);
+void from_json(const json& j, RoomData& roomData);
+
+struct Keys
+{
+	static const char* message;
+	static const char* status;
+
+	//Rooms
+	static const char* rooms;
+	static const char* playersInRoom;
+
+	//Statistics
+	static const char* userStatistics;
+	static const char* highScores;
+
+	//RoomData
+	static const char* id;
+	static const char* name;
+	static const char* maxPlayers;
+	static const char* timePerQuestion;
+	static const char* isActive;
 };

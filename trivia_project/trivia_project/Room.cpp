@@ -1,17 +1,19 @@
+#include "pch.h"
 #include "Room.h"
 
-Room::Room(int id, string name)
+Room::Room(unsigned int id, string name) :
+	m_metadata(RoomData{id, name, 5, 20, 0})
 {
-	this->m_metadata.id = id;
-	this->m_metadata.name = name;
-	this->m_metadata.maxPlayers = 5;
-	this->m_metadata.timePerQuestion = 20;
-	this->m_metadata.isActive = 0;
+}
+
+Room::Room() :
+	Room(0, "")
+{
 }
 
 void Room::addUser(LoggedUser user)
 {
-	if (this->m_users.size < 5)
+	if (this->m_users.size() < this->m_metadata.maxPlayers)
 	{
 		this->m_users.push_back(user);
 	}
@@ -37,4 +39,9 @@ vector<LoggedUser> Room::getAllUsers()
 int Room::getActivity()
 {
 	return this->m_metadata.isActive;
+}
+
+RoomData::RoomData(unsigned int id, string name, unsigned int maxPlayers, unsigned int timePerQuestion, unsigned int isActive) :
+	id(id), name(name), maxPlayers(maxPlayers), timePerQuestion(timePerQuestion), isActive(isActive)
+{
 }
