@@ -3,26 +3,68 @@
 
 Buffer JsonResponsePacketSerializer::serializeResponse(const ErrorResponse& errResponse)
 {
-	json j;
-	j["message"] = errResponse.message;
+	json jsonToSerialize;
+	jsonToSerialize[ErrorResponse::messageKey] = errResponse.message;
 
-	return JsonResponsePacketSerializer::serializeJson(j, Codes::ERROR_CODE);
+	return JsonResponsePacketSerializer::serializeJson(jsonToSerialize, Codes::ERROR_CODE);
 }
 
 Buffer JsonResponsePacketSerializer::serializeResponse(const LoginResponse& loginResponse)
 {
-	json j;
-	j["status"] = loginResponse.status;
-
-	return JsonResponsePacketSerializer::serializeJson(j, Codes::LOGIN);
+	return JsonResponsePacketSerializer::serializeResponse(loginResponse, Codes::LOGIN);
 }
 
 Buffer JsonResponsePacketSerializer::serializeResponse(const SignupResponse& signupResponse)
 {
-	json j;
-	j["status"] = signupResponse.status;
+	return JsonResponsePacketSerializer::serializeResponse(signupResponse, Codes::SIGNUP);
+}
 
-	return JsonResponsePacketSerializer::serializeJson(j, Codes::SIGNUP);
+Buffer JsonResponsePacketSerializer::serializeResponse(const LogoutResponse& logoutResponse)
+{
+	return JsonResponsePacketSerializer::serializeResponse(logoutResponse, Codes::LOGOUT);
+}
+
+Buffer JsonResponsePacketSerializer::serializeResponse(const GetRoomResponse& getRoomResponse)
+{
+	json jsonToSerialize;
+	jsonToSerialize[GetRoomResponse::roomsKey] = getRoomResponse.rooms;
+
+	return JsonResponsePacketSerializer::serializeJson(jsonToSerialize, Codes::GET_ROOM);
+}
+
+Buffer JsonResponsePacketSerializer::serializeResponse(const GetPlayersInRoomResponse& getPlayersInRoomResponse)
+{
+	json jsonToSerialize;
+	jsonToSerialize[GetRoomResponse::roomsKey] = getPlayersInRoomResponse.users;
+
+	return JsonResponsePacketSerializer::serializeJson(jsonToSerialize, Codes::GET_PLAYERS_IN_ROOM);
+}
+
+Buffer JsonResponsePacketSerializer::serializeResponse(const JoinRoomReponse& joinRoomResponse)
+{
+	return JsonResponsePacketSerializer::serializeResponse(joinRoomResponse, Codes::JOIN_ROOM);
+}
+
+Buffer JsonResponsePacketSerializer::serializeResponse(const CreateRoomReponse& createRoomResponse)
+{
+	return JsonResponsePacketSerializer::serializeResponse(createRoomResponse, Codes::CREATE_ROOM);
+}
+
+Buffer JsonResponsePacketSerializer::serializeResponse(const HighScoreResponse& highScoreResponse)
+{
+	json jsonToSerialize;
+	jsonToSerialize[HighScoreResponse::userStatisticsKey] = highScoreResponse.userStatistics;
+	jsonToSerialize[HighScoreResponse::highScoresKey] = highScoreResponse.highScores;
+
+	return JsonResponsePacketSerializer::serializeJson(jsonToSerialize, Codes::HIGH_SCORE);
+}
+
+Buffer JsonResponsePacketSerializer::serializeResponse(const StatusResponse& statusResponse, Codes responseCode)
+{
+	json jsonToSerialize;
+	jsonToSerialize[StatusResponse::statusKey] = statusResponse.status;
+
+	return JsonResponsePacketSerializer::serializeJson(jsonToSerialize, responseCode);
 }
 
 Buffer JsonResponsePacketSerializer::serializeJson(const json& j, Codes responseCode)
@@ -31,7 +73,7 @@ Buffer JsonResponsePacketSerializer::serializeJson(const json& j, Codes response
 	Buffer totalBuffer;
 	char sizeBuffer[MSG_LEN_SIZE] = "";
 	int jsonSize = jsonBuffer.size();
-	
+
 	//Adds the response code
 	totalBuffer.push_back(static_cast<Byte>(responseCode));
 
@@ -40,24 +82,16 @@ Buffer JsonResponsePacketSerializer::serializeJson(const json& j, Codes response
 	return totalBuffer;
 }
 
+//Keys
+const char* StatusResponse::statusKey = "status";
+const char* ErrorResponse::messageKey = "message";
+const char* GetRoomResponse::roomsKey = "Rooms";
+const char* GetPlayersInRoomResponse::usersKey = "PlayersInRoom";
+const char* HighScoreResponse::userStatisticsKey = "UserStatistics";
+const char* HighScoreResponse::highScoresKey = "HighScores";
 
-LoginResponse::LoginResponse(unsigned int status) : 
+StatusResponse::StatusResponse(unsigned int status) :
 	status(status)
-{
-}
-
-LoginResponse::LoginResponse() :
-	status(0)
-{
-}
-
-SignupResponse::SignupResponse(unsigned int status) :
-	status(status)
-{
-}
-
-SignupResponse::SignupResponse() :
-	status(0)
 {
 }
 
@@ -66,7 +100,17 @@ ErrorResponse::ErrorResponse(std::string message) :
 {
 }
 
-ErrorResponse::ErrorResponse() :
-	message()
+GetRoomResponse::GetRoomResponse(vector<string> rooms) :
+	rooms(rooms)
+{
+}
+
+GetPlayersInRoomResponse::GetPlayersInRoomResponse(vector<string> users) :
+	users(users)
+{
+}
+
+HighScoreResponse::HighScoreResponse(vector<string> userStatistics, vector<string> highScores) : 
+	userStatistics(userStatistics), highScores(highScores)
 {
 }
