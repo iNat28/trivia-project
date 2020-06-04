@@ -2,6 +2,8 @@
 #include "pch.h"
 #include "IDatabase.h"
 #include "LoginManager.h"
+#include "RoomManager.h"
+#include "StatisticsManager.h"
 #include "IRequestHandler.h"
 #include "JsonRequestPacketDeserializer.h"
 #include "JsonResponsePacketSerializer.h"
@@ -18,8 +20,13 @@ public:
 
 	std::shared_ptr<LoginRequestHandler> createLoginRequestHandler();
 	std::shared_ptr<MenuRequestHandler> createMenuRequestHandler();
+	
 	LoginManager& getLoginManager();
+	RoomManager& getRoomManager();
+	StatisticsManager& getStatisticsManager();
 private:
-	LoginManager m_loginManager;
 	IDatabase& m_database;
+	LoginManager m_loginManager;
+	RoomManager m_roomManager;
+	StatisticsManager m_statisticsManager;
 };

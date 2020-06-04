@@ -3,6 +3,8 @@
 #include "Responses.h"
 #include "Constants.h"
 #include "Keys.h"
+#include "LoggedUser.h"
+#include "Room.h"
 
 class JsonResponsePacketSerializer
 {
@@ -16,6 +18,3 @@ public:
 private:
 	static Buffer serializeJson(const json& jsonToSerialize, const Response& response);
 };
-
-void to_json(json& j, const RoomData& roomData);
-void from_json(const json& j, RoomData& roomData);

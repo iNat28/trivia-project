@@ -6,6 +6,8 @@
 class StatisticsManager
 {
 public:
+	StatisticsManager(IDatabase& database);
+
 	RecordTable getStatistics();
 private:
 	IDatabase& m_database;

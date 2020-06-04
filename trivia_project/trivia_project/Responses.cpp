@@ -31,7 +31,7 @@ Codes ErrorResponse::getResponseCode() const
 	return Codes::ERROR_CODE;
 }
 
-GetRoomResponse::GetRoomResponse(unsigned int status, vector<RoomData> rooms) :
+GetRoomResponse::GetRoomResponse(unsigned int status, vector<Room> rooms) :
 	StatusResponse(status), rooms(rooms)
 {
 }
@@ -41,8 +41,8 @@ Codes GetRoomResponse::getResponseCode() const
 	return Codes::GET_ROOM;
 }
 
-GetPlayersInRoomResponse::GetPlayersInRoomResponse(vector<string> users) :
-	rooms(users)
+GetPlayersInRoomResponse::GetPlayersInRoomResponse(vector<LoggedUser> users) :
+	users(users)
 {
 }
 

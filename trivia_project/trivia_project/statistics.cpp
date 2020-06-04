@@ -5,7 +5,8 @@ GameStats::GameStats(int numPoints) : numPoints(numPoints)
 {
 }
 
-GameStats::GameStats()
+GameStats::GameStats() : 
+	numPoints(0)
 {
 }
 

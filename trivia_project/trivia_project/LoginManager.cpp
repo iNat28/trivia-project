@@ -27,7 +27,7 @@ void LoginManager::login(string username, string password)
 
 	for (const auto& loggedUser : this->m_loggedUsers)
 	{
-		if (loggedUser.getUsername() == username)
+		if (loggedUser.m_username == username)
 		{
 			throw Exception("User already logged in");
 		}
@@ -41,7 +41,7 @@ void LoginManager::logout(string username)
 {
 	for (auto loggedUser = this->m_loggedUsers.begin(); loggedUser != this->m_loggedUsers.end(); loggedUser++)
 	{
-		if (loggedUser->getUsername() == username)
+		if (loggedUser->m_username == username)
 		{
 			this->m_loggedUsers.erase(loggedUser);
 		}

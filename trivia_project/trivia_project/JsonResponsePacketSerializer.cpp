@@ -20,7 +20,7 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const GetRoomResponse& ge
 Buffer JsonResponsePacketSerializer::serializeResponse(const GetPlayersInRoomResponse& getPlayersInRoomResponse)
 {
 	json jsonToSerialize;
-	jsonToSerialize[Keys::rooms] = getPlayersInRoomResponse.rooms;
+	jsonToSerialize[Keys::rooms] = getPlayersInRoomResponse.users;
 
 	return JsonResponsePacketSerializer::serializeJson(jsonToSerialize, getPlayersInRoomResponse);
 }
@@ -54,25 +54,4 @@ Buffer JsonResponsePacketSerializer::serializeJson(const json& jsonToSerialize, 
 	//Adds the json message with the number of bytes
 	totalBuffer.insert(totalBuffer.end(), jsonBuffer.begin(), jsonBuffer.end());
 	return totalBuffer;
-}
-
-//For RoomData
-inline void to_json(json& j, const RoomData& roomData)
-{
-	j[Keys::id] = roomData.id;
-	j[Keys::name] = roomData.name;
-	j[Keys::maxPlayers] = roomData.maxPlayers;
-	j[Keys::timePerQuestion] = roomData.timePerQuestion;
-	j[Keys::isActive] = roomData.isActive;
-}
-
-inline void from_json(const json& j, RoomData& roomData)
-{
-	roomData = RoomData(
-		j[Keys::id],
-		j[Keys::name],
-		j[Keys::maxPlayers],
-		j[Keys::timePerQuestion],
-		j[Keys::isActive]
-	);
 }

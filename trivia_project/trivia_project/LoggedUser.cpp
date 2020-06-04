@@ -6,7 +6,16 @@ LoggedUser::LoggedUser(string username) :
 {
 }
 
-string LoggedUser::getUsername() const
+LoggedUser::LoggedUser()
 {
-	return this->m_username;
+}
+
+void to_json(json& j, const LoggedUser& loggedUser)
+{
+	j[Keys::username] = loggedUser.m_username;
+}
+
+void from_json(const json& j, LoggedUser& loggedUser)
+{
+	loggedUser.m_username = j[Keys::username];
 }

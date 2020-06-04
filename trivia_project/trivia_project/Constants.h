@@ -20,6 +20,12 @@ enum class Codes
 	STATISTICS = 30
 };
 
+enum class ResponseCodes
+{
+	ERROR_RESPONSE,
+	SUCCESFUL
+};
+
 typedef char Byte;
 typedef std::vector<Byte> Buffer;
 

@@ -14,8 +14,8 @@ class RoomManager
 public:
 	void createRoom(LoggedUser user);
 	void deleteRoom(int id);
-	bool getRoomState(int id);
-	vector<Room> getRooms();
+	bool getRoomState(int id) const;
+	vector<Room> getRooms() const;
 private:
 	map<int, Room> m_rooms;
 };

@@ -21,6 +21,8 @@ RequestResult LoginRequestHandler::handleRequest(const RequestInfo& requestInfo)
 		case Codes::SIGNUP:
 			requestResult = this->_signup(requestInfo);
 			break;
+		default:
+			throw Exception("Request Code not valid");
 		}
 	}
 	//Login manager exception caught

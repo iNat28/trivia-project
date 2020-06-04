@@ -24,10 +24,12 @@ struct RoomIdRequest
 
 struct GetPlayersInRoomRequest : RoomIdRequest
 {
+	using RoomIdRequest::RoomIdRequest;
 };
 
 struct JoinRoomRequest : RoomIdRequest
 {
+	using RoomIdRequest::RoomIdRequest;
 };
 
 struct CreateRoomRequest

@@ -2,7 +2,7 @@
 #include "RequestHandlerFactory.h"
 
 RequestHandlerFactory::RequestHandlerFactory(IDatabase& database) : 
-	m_loginManager(database), m_database(database)
+	m_loginManager(database), m_database(database), m_statisticsManager(database)
 {
 }
 
@@ -19,4 +19,14 @@ std::shared_ptr<MenuRequestHandler> RequestHandlerFactory::createMenuRequestHand
 LoginManager& RequestHandlerFactory::getLoginManager()
 {
 	return this->m_loginManager;
+}
+
+RoomManager& RequestHandlerFactory::getRoomManager()
+{
+	return this->m_roomManager;
+}
+
+StatisticsManager& RequestHandlerFactory::getStatisticsManager()
+{
+	return this->m_statisticsManager;
 }

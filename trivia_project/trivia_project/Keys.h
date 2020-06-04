@@ -37,6 +37,7 @@ struct Keys
 	static const char* maxPlayers;
 	static const char* timePerQuestion;
 	static const char* isActive;
+	static const char* users;
 
 	//Question
 	static const char* category;
