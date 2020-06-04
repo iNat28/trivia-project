@@ -111,6 +111,9 @@
     <ClCompile Include="statistics.cpp">
       <Filter>Source Files\Infrastructure</Filter>
     </ClCompile>
+    <ClCompile Include="Requests.cpp">
+      <Filter>Source Files\Request</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Exception.h">
@@ -181,6 +184,9 @@
     </ClInclude>
     <ClInclude Include="statistics.h">
       <Filter>Header Files\Infrastructure</Filter>
+    </ClInclude>
+    <ClInclude Include="Requests.h">
+      <Filter>Header Files\Request</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
