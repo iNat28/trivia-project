@@ -30,6 +30,7 @@ public:
 	virtual bool doesPasswordMatch(string username, string password) const override;
 	virtual void addNewUser(string username, string password, string email) const override;
 	static int users_callback(void* data, int argc, char** argv, char** azColName);
+	static int statistics_callback(void* data, int argc, char** argv, char** azColName);
 
 	void send_query(std::string command, int(*callback)(void*, int, char**, char**) = nullptr) const;
 
@@ -37,6 +38,8 @@ public:
 	vector<Question> getQuestionsIntoVectorFormat(string questionsStr);
 	void addToDB(vector<Question> questions);
 
+	//statistics
+	int getHighestRoomId();
 
 
 	bool openDB();
@@ -45,6 +48,7 @@ public:
 	const char* dbFileName;
 
 	static std::unordered_map<string, string> users_list;
+	static std::vector<std::vector<string>> games_list;
 	//variable for multiple users
 	static bool moreData;
 };

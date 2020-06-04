@@ -2,6 +2,7 @@
 #include "SqliteDataBase.h"
 
 std::unordered_map<string, string> SqliteDataBase::users_list;
+std::vector<std::vector<string>> SqliteDataBase::games_list;
 bool SqliteDataBase::moreData = false;
 
 SqliteDataBase::SqliteDataBase()
@@ -80,6 +81,10 @@ bool SqliteDataBase::openDB()
 		command = "create table if not exists users (username text primary key not null, password text not null, email text not null);";
 		send_query(command);
 
+		//statistics table
+		command = "create table if not exists statistics (username text primary key not null, roomId integer not null, averageAnswerTime text not null, numCorrectAnswer integer not null, numTotalAnswers integer not null);";
+		send_query(command);
+
 		//questions table
 		command = "create table if not exists questions (question text primary key not null, category text, difficulty text, correct_answer text not null, incorrect_answer1 text not null, incorrect_answer2 text, incorrect_answer3 text);";
 		send_query(command);
@@ -116,6 +121,11 @@ int SqliteDataBase::users_callback(void* data, int argc, char** argv, char** azC
 	//adds the new user to the list.
 	SqliteDataBase::users_list[username] = password;
 	SqliteDataBase::moreData = true;
+	return 0;
+}
+
+int SqliteDataBase::statistics_callback(void* data, int argc, char** argv, char** azColName)
+{
 	return 0;
 }
 
@@ -225,6 +235,11 @@ void SqliteDataBase::addToDB(vector<Question> questionsList)
 
 		send_query(buffer.get());
 	}
+}
+
+int SqliteDataBase::getHighestRoomId()
+{
+	return 0;
 }
 
 inline void from_json(const json& j, Question& question)
