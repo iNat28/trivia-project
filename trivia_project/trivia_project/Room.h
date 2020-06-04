@@ -1,6 +1,7 @@
 #pragma once
 #include "pch.h"
 #include "LoggedUser.h"
+#include "SqliteDataBase.h"
 
 struct RoomData 
 {
