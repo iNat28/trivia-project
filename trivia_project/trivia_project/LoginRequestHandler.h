@@ -12,10 +12,8 @@ class RequestHandlerFactory;
 class LoginRequestHandler : public IRequestHandler
 {
 public:
-	//c'tor
 	LoginRequestHandler(RequestHandlerFactory& handlerFactor);
 
-	virtual bool isRequestRelevant(const RequestInfo& requestInfo) const override;
 	virtual RequestResult handleRequest(const RequestInfo& requestInfo) const override;
 private:
 	RequestHandlerFactory& m_handlerFactor;

@@ -2,6 +2,22 @@
 
 struct Keys
 {
+	/* Responses */
+	
+	//Login
+	static const char* username;
+	static const char* password;
+	static const char* email;
+	
+	//Rooms
+	static const char* roomId;
+	static const char* roomName;
+	static const char* maxUsers;
+	static const char* questionCount;
+	static const char* answerTimeout;
+	
+	/* Responses */
+
 	static const char* message;
 	static const char* status;
 
@@ -12,6 +28,8 @@ struct Keys
 	//Statistics
 	static const char* userStatistics;
 	static const char* highScores;
+
+	/* Objects */
 
 	//RoomData
 	static const char* id;
