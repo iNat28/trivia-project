@@ -7,11 +7,6 @@ MenuRequestHandler::MenuRequestHandler(RequestHandlerFactory& handlerFactor) :
 {
 }
 
-bool MenuRequestHandler::isRequestRelevant(const RequestInfo& requestInfo) const
-{
-	return true;
-}
-
 RequestResult MenuRequestHandler::handleRequest(const RequestInfo& requestInfo) const
 {
 	return RequestResult();

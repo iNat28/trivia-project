@@ -145,6 +145,7 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="RequestHandlerFactory.cpp" />
+    <ClCompile Include="Requests.cpp" />
     <ClCompile Include="Responses.cpp" />
     <ClCompile Include="Room.cpp" />
     <ClCompile Include="RoomManager.cpp" />
@@ -154,7 +155,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="SqliteDataBase.cpp" />
-    <ClCompile Include="statistics.cpp" />
+    <ClCompile Include="Statistics.cpp" />
     <ClCompile Include="StatisticsManager.cpp" />
     <ClCompile Include="WSAInitializer.cpp" />
   </ItemGroup>
@@ -173,13 +174,14 @@
     <ClInclude Include="MenuRequestHandler.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="RequestHandlerFactory.h" />
+    <ClInclude Include="Requests.h" />
     <ClInclude Include="Responses.h" />
     <ClInclude Include="Room.h" />
     <ClInclude Include="RoomManager.h" />
     <ClInclude Include="Server.h" />
     <ClInclude Include="sqlite3.h" />
     <ClInclude Include="SqliteDataBase.h" />
-    <ClInclude Include="statistics.h" />
+    <ClInclude Include="Statistics.h" />
     <ClInclude Include="StatisticsManager.h" />
     <ClInclude Include="WSAInitializer.h" />
   </ItemGroup>

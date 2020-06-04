@@ -1,18 +1,18 @@
 #pragma once
 #include "pch.h"
 
-struct gameStats
+struct GameStats
 {
-	gameStats(int numPoints);
-	gameStats();
+	GameStats(int numPoints);
+	GameStats();
 
 	int numPoints;
 };
 
-struct recordTable
+struct RecordTable
 {
-	recordTable(vector <gameStats> table);
-	recordTable();
+	RecordTable(vector <GameStats> table);
+	RecordTable();
 
-	vector<gameStats> userRecordTable;
+	vector<GameStats> userRecordTable;
 };

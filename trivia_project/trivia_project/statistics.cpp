@@ -1,18 +1,18 @@
 #include "pch.h"
-#include "statistics.h"
+#include "Statistics.h"
 
-gameStats::gameStats(int numPoints) : numPoints(numPoints)
+GameStats::GameStats(int numPoints) : numPoints(numPoints)
 {
 }
 
-gameStats::gameStats()
+GameStats::GameStats()
 {
 }
 
-recordTable::recordTable(vector<gameStats> table) : userRecordTable(table)
+RecordTable::RecordTable(vector<GameStats> table) : userRecordTable(table)
 {
 }
 
-recordTable::recordTable()
+RecordTable::RecordTable()
 {
 }

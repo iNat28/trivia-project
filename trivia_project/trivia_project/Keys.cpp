@@ -1,6 +1,16 @@
 #include "pch.h"
 #include "Keys.h"
 
+const char* Keys::username = "username";
+const char* Keys::password = "password";
+const char* Keys::email = "email";
+
+const char* Keys::roomId = "roomId";
+const char* Keys::roomName = "roomName";
+const char* Keys::maxUsers = "maxUsers";
+const char* Keys::questionCount = "questionCount";
+const char* Keys::answerTimeout = "answerTimeout";
+
 const char* Keys::status = "status";
 const char* Keys::message = "message";
 
