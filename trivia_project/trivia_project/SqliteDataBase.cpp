@@ -82,7 +82,7 @@ bool SqliteDataBase::openDB()
 		send_query(command);
 
 		//statistics table
-		command = "create table if not exists statistics (username text primary key not null, roomId integer not null, averageAnswerTime text not null, numCorrectAnswer integer not null, numTotalAnswers integer not null);";
+		command = "create table if not exists statistics (username text primary key not null, roomId integer not null, averageAnswerTime text not null, numCorrectAnswers integer not null, numTotalAnswers integer not null, numPoints integer not null);";
 		send_query(command);
 
 		//questions table
@@ -126,6 +126,35 @@ int SqliteDataBase::users_callback(void* data, int argc, char** argv, char** azC
 
 int SqliteDataBase::statistics_callback(void* data, int argc, char** argv, char** azColName)
 {
+	if (!SqliteDataBase::moreData)
+		SqliteDataBase::games_list.clear();
+
+	string username;
+	string roomId;
+	string averageAnswerTime;
+	string numCorrectAnswers;
+	string numTotalAnswers;
+	string numPoints;
+	
+	for (int i = 0; i < argc; i++)
+	{
+		if (std::string(azColName[i]) == "username")
+			username = argv[i];
+		else if (std::string(azColName[i]) == "roomId")
+			roomId = argv[i];
+		else if (std::string(azColName[i]) == "averageAnswerTime")
+			averageAnswerTime = argv[i];
+		else if (std::string(azColName[i]) == "numCorrectAnswers")
+			numCorrectAnswers = argv[i];
+		else if (std::string(azColName[i]) == "numTotalAnswers")
+			numTotalAnswers = argv[i];
+		else if (std::string(azColName[i]) == "numPoints")
+			numPoints = argv[i];
+	}
+
+	
+	SqliteDataBase::games_list.push_back(std::vector<string>{ username, roomId, averageAnswerTime, numCorrectAnswers, numTotalAnswers, numPoints});
+	SqliteDataBase::moreData = true;
 	return 0;
 }
 
@@ -239,7 +268,25 @@ void SqliteDataBase::addToDB(vector<Question> questionsList)
 
 int SqliteDataBase::getHighestRoomId()
 {
-	return 0;
+	SqliteDataBase::moreData = false;
+	std::string sqlStatement = "select * from statistics order by roomId DESC limit 1;";
+	send_query(sqlStatement, statistics_callback);
+
+	return atoi(SqliteDataBase::games_list[0][1].c_str());
+}
+
+void SqliteDataBase::addGameStats(string username, int roomId, int averageAnswerTime, int numCorrectAnswers, int numTotalAnswers, int numPoints)
+{
+}
+
+PersonalUserGameStats SqliteDataBase::getAllTimeGameStats(string username)
+{
+	return PersonalUserGameStats();
+}
+
+RecordTable SqliteDataBase::getFiveBestUserGames(string username)
+{
+	return RecordTable();
 }
 
 inline void from_json(const json& j, Question& question)

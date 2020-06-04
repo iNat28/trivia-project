@@ -4,6 +4,7 @@
 #include "Exception.h"
 #include "sqlite3.h"
 #include "Keys.h"
+#include "Statistics.h"
 
 #define QUESTIONS_FILE  "questions.txt"
 #define BUFFER_SIZE 1024
@@ -40,6 +41,10 @@ public:
 
 	//statistics
 	int getHighestRoomId();
+	//TODO
+	void addGameStats(string username, int roomId, int averageAnswerTime, int numCorrectAnswers, int numTotalAnswers, int numPoints);
+	PersonalUserGameStats getAllTimeGameStats(string username);
+	RecordTable getFiveBestUserGames(string username);
 
 
 	bool openDB();
