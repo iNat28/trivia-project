@@ -3,7 +3,22 @@
 #include "IDatabase.h"
 #include "Exception.h"
 #include "sqlite3.h"
+#include "Keys.h"
+
 #define QUESTIONS_FILE  "questions.txt"
+#define BUFFER_SIZE 1024
+
+struct Question
+{
+	Question(string category, string difficulty, string question, string correctAnswer, std::array<string, 3> incorrectAnswers);
+	Question();
+
+	string category;
+	string difficulty;
+	string question;
+	string correctAnswer;
+	std::array<string, 3> incorrectAnswers;
+};
 
 class SqliteDataBase : public IDatabase
 {
@@ -20,8 +35,8 @@ public:
 	void send_query(std::string command, int(*callback)(void*, int, char**, char**) = nullptr) const;
 
 	void openQuestionsFile();
-	vector<map<string, string>> getQuestionsIntoVectorFormat(string questions);
-	void addToDB(vector<map<string, string>>);
+	vector<Question> getQuestionsIntoVectorFormat(string questionsStr);
+	void addToDB(vector<Question> questions);
 
 	bool openDB();
 
@@ -32,4 +47,7 @@ public:
 	//variable for multiple users
 	static bool moreData;
 };
+
+void from_json(const json& j, Question& question);
+
 //https://opentdb.com/api.php?amount=10

@@ -13,6 +13,7 @@
 #include <memory>
 #include <map>
 #include <fstream>
+#include <array>
 #include "json.hpp"
 using std::string;
 using std::vector;

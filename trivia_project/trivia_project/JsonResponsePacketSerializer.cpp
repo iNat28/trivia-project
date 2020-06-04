@@ -76,18 +76,3 @@ inline void from_json(const json& j, RoomData& roomData)
 		j[Keys::isActive]
 	);
 }
-
-const char* Keys::status = "status";
-const char* Keys::message = "message";
-
-const char* Keys::rooms = "Rooms";
-const char* Keys::playersInRoom = "PlayersInRoom";
-
-const char* Keys::userStatistics = "UserStatistics";
-const char* Keys::highScores = "HighScores";
-
-const char* Keys::id = "id";
-const char* Keys::name = "name";
-const char* Keys::maxPlayers = "maxPlayers";
-const char* Keys::timePerQuestion = "timePerQuestion";
-const char* Keys::isActive = "isActive";
