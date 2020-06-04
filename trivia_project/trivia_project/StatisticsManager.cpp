@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "StatisticsManager.h"
 
-recordTable StatisticsManager::getStatistics()
+RecordTable StatisticsManager::getStatistics()
 {
-	return recordTable();
+	return RecordTable();
 }

@@ -4,6 +4,8 @@
 #include "RequestHandlerFactory.h"
 #include "LoggedUser.h"
 #include "IDatabase.h"
+#include "RoomManager.h"
+#include "StatisticsManager.h"
 
 class RequestHandlerFactory;
 

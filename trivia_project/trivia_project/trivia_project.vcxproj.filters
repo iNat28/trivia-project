@@ -108,11 +108,11 @@
     <ClCompile Include="StatisticsManager.cpp">
       <Filter>Source Files\Managers</Filter>
     </ClCompile>
-    <ClCompile Include="statistics.cpp">
-      <Filter>Source Files\Infrastructure</Filter>
-    </ClCompile>
     <ClCompile Include="Requests.cpp">
       <Filter>Source Files\Request</Filter>
+    </ClCompile>
+    <ClCompile Include="Statistics.cpp">
+      <Filter>Source Files\Infrastructure</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -182,11 +182,11 @@
     <ClInclude Include="StatisticsManager.h">
       <Filter>Header Files\Managers</Filter>
     </ClInclude>
-    <ClInclude Include="statistics.h">
-      <Filter>Header Files\Infrastructure</Filter>
-    </ClInclude>
     <ClInclude Include="Requests.h">
       <Filter>Header Files\Request</Filter>
+    </ClInclude>
+    <ClInclude Include="Statistics.h">
+      <Filter>Header Files\Infrastructure</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
