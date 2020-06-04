@@ -66,6 +66,6 @@ RequestResult LoginRequestHandler::_signup(const RequestInfo& requestInfo) const
 	this->m_handlerFactor.getLoginManager().signup(signupRequest.username, signupRequest.password, signupRequest.email);
 
 	return RequestResult(
-		JsonResponsePacketSerializer::serializeResponse(SignupResponse(static_cast<unsigned int>(ResponseCodes::SUCCESFUL))), 
+		JsonResponsePacketSerializer::serializeResponse(SignupResponse(static_cast<unsigned int>(ResponseCodes::SUCCESFUL))),
 		m_handlerFactor.createMenuRequestHandler());
 }

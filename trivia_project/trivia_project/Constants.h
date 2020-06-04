@@ -1,4 +1,3 @@
-
 #pragma once
 #include "pch.h"
 
@@ -6,8 +5,19 @@ enum class Codes
 {
 	ERROR_CODE,
 
+	//Login
 	LOGIN = 10,
-	SIGNUP
+	SIGNUP,
+	LOGOUT,
+
+	//Room
+	GET_ROOM = 20,
+	GET_PLAYERS_IN_ROOM,
+	JOIN_ROOM,
+	CREATE_ROOM,
+
+	//Statistics
+	HIGH_SCORE = 30
 };
 
 typedef char Byte;
