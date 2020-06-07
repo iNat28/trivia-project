@@ -7,40 +7,35 @@ LoginRequestHandler::LoginRequestHandler(RequestHandlerFactory& handlerFactor) :
 }
 
 RequestResult LoginRequestHandler::handleRequest(const RequestInfo& requestInfo) const
-{
-	RequestResult requestResult;
-
-	//If at any point the login or sign up doesn't work, an exception will be thrown, 
+{//If at any point the login or sign up doesn't work, an exception will be thrown, 
 	//and it will be put into an error response
 	try {
 		switch (requestInfo.requestId)
 		{
 		case Codes::LOGIN:
-			requestResult = this->_login(requestInfo);
-			break;
+			return this->_login(requestInfo);
 		case Codes::SIGNUP:
-			requestResult = this->_signup(requestInfo);
-			break;
+			return this->_signup(requestInfo);
 		default:
 			throw Exception("Request Code not valid");
 		}
 	}
 	//Login manager exception caught
-	catch (const Exception& e)
+	catch (const Exception & e)
 	{
-		requestResult = RequestResult(
+		return RequestResult(
 			JsonResponsePacketSerializer::serializeResponse(ErrorResponse(e.what())),
-			m_handlerFactor.createLoginRequestHandler());
+			m_handlerFactor.createLoginRequestHandler()
+		);
 	}
 	//Other exception caught (probably because of the json)
-	catch (...)
+	catch (const std::exception & e)
 	{
-		requestResult = RequestResult(
-			JsonResponsePacketSerializer::serializeResponse(ErrorResponse("Unkown error occured")),
-			nullptr);
+		return RequestResult(
+			JsonResponsePacketSerializer::serializeResponse(ErrorResponse(e.what())),
+			nullptr
+		);
 	}
-
-	return requestResult;
 }
 
 RequestResult LoginRequestHandler::_login(const RequestInfo& requestInfo) const
@@ -51,8 +46,11 @@ RequestResult LoginRequestHandler::_login(const RequestInfo& requestInfo) const
 	this->m_handlerFactor.getLoginManager().login(loginRequest.username, loginRequest.password);
 
 	return RequestResult(
-		JsonResponsePacketSerializer::serializeResponse(LoginResponse(static_cast<unsigned int>(ResponseCodes::SUCCESFUL))),
-		m_handlerFactor.createMenuRequestHandler());
+		JsonResponsePacketSerializer::serializeResponse(
+			LoginResponse(static_cast<unsigned int>(ResponseCodes::SUCCESFUL))
+		),
+		m_handlerFactor.createMenuRequestHandler(loginRequest.username)
+	);
 }
 
 RequestResult LoginRequestHandler::_signup(const RequestInfo& requestInfo) const
@@ -63,6 +61,9 @@ RequestResult LoginRequestHandler::_signup(const RequestInfo& requestInfo) const
 	this->m_handlerFactor.getLoginManager().signup(signupRequest.username, signupRequest.password, signupRequest.email);
 
 	return RequestResult(
-		JsonResponsePacketSerializer::serializeResponse(SignupResponse(static_cast<unsigned int>(ResponseCodes::SUCCESFUL))),
-		m_handlerFactor.createMenuRequestHandler());
+		JsonResponsePacketSerializer::serializeResponse(
+			SignupResponse(static_cast<unsigned int>(ResponseCodes::SUCCESFUL))
+		),
+		m_handlerFactor.createMenuRequestHandler(signupRequest.username)
+	);
 }

@@ -1,4 +1,5 @@
 #pragma once
+#include "Room.h"
 
 struct LoginRequest
 {
@@ -34,10 +35,7 @@ struct JoinRoomRequest : RoomIdRequest
 
 struct CreateRoomRequest
 {
-	CreateRoomRequest(string roomName, unsigned int maxUsers, unsigned int questionCount, unsigned int answerTimeout);
+	CreateRoomRequest(RoomData roomData);
 
-	string roomName;
-	unsigned int maxUsers;
-	unsigned int questionCount;
-	unsigned int answerTimeout;
+	RoomData roomData;
 };

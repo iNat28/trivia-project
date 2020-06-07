@@ -11,9 +11,9 @@ std::shared_ptr<LoginRequestHandler> RequestHandlerFactory::createLoginRequestHa
 	return std::make_shared<LoginRequestHandler>(*this);
 }
 
-std::shared_ptr<MenuRequestHandler> RequestHandlerFactory::createMenuRequestHandler()
+std::shared_ptr<MenuRequestHandler> RequestHandlerFactory::createMenuRequestHandler(LoggedUser user)
 {
-	return std::make_shared<MenuRequestHandler>(*this);
+	return std::make_shared<MenuRequestHandler>(*this, user);
 }
 
 LoginManager& RequestHandlerFactory::getLoginManager()

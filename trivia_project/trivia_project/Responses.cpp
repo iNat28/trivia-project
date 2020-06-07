@@ -51,12 +51,12 @@ Codes GetPlayersInRoomResponse::getResponseCode() const
 	return Codes::GET_PLAYERS_IN_ROOM;
 }
 
-Codes JoinRoomReponse::getResponseCode() const
+Codes JoinRoomResponse::getResponseCode() const
 {
 	return Codes::JOIN_ROOM;
 }
 
-Codes CreateRoomReponse::getResponseCode() const
+Codes CreateRoomResponse::getResponseCode() const
 {
 	return Codes::CREATE_ROOM;
 }

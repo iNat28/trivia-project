@@ -63,14 +63,14 @@ struct GetPlayersInRoomResponse : Response
 	vector<LoggedUser> users;
 };
 
-struct JoinRoomReponse : StatusResponse
+struct JoinRoomResponse : StatusResponse
 {
 	using StatusResponse::StatusResponse;
 
 	virtual Codes getResponseCode() const override;
 };
 
-struct CreateRoomReponse : StatusResponse
+struct CreateRoomResponse : StatusResponse
 {
 	virtual Codes getResponseCode() const override;
 

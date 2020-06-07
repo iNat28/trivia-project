@@ -19,7 +19,7 @@ public:
 	RequestHandlerFactory(IDatabase& database);
 
 	std::shared_ptr<LoginRequestHandler> createLoginRequestHandler();
-	std::shared_ptr<MenuRequestHandler> createMenuRequestHandler();
+	std::shared_ptr<MenuRequestHandler> createMenuRequestHandler(LoggedUser user);
 	
 	LoginManager& getLoginManager();
 	RoomManager& getRoomManager();

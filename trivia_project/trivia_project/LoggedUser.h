@@ -7,7 +7,7 @@ struct LoggedUser
 	LoggedUser(string username);
 	LoggedUser();
 
-	string m_username;
+	string username;
 };
 
 void to_json(json& j, const LoggedUser& loggedUser);
