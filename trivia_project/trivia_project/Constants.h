@@ -1,6 +1,8 @@
 #pragma once
 #include "pch.h"
 
+//TODO: Move Codes to own file
+
 enum class Codes
 {
 	ERROR_CODE,
