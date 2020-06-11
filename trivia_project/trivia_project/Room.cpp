@@ -40,6 +40,11 @@ int Room::getActivity() const
 	return this->m_metadata.isActive;
 }
 
+const RoomData& Room::getRoomDataConst() const
+{
+	return this->m_metadata;
+}
+
 RoomData& Room::getRoomData()
 {
 	return this->m_metadata;
@@ -57,10 +62,10 @@ RoomData::RoomData() :
 
 void to_json(json& j, const Room& room)
 {
-	j[Keys::id] = room.getRoomData().id;
-	j[Keys::name] = room.getRoomData().name;
-	j[Keys::maxPlayers] = room.getRoomData().maxPlayers;
-	j[Keys::timePerQuestion] = room.getRoomData().timePerQuestion;
+	j[Keys::id] = room.getRoomDataConst().id;
+	j[Keys::name] = room.getRoomDataConst().name;
+	j[Keys::maxPlayers] = room.getRoomDataConst().maxPlayers;
+	j[Keys::timePerQuestion] = room.getRoomDataConst().timePerQuestion;
 	j[Keys::isActive] = room.getActivity();
 	j[Keys::users] = room.getAllUsers();
 }

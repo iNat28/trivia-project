@@ -31,7 +31,7 @@ public:
 	//statistics
 	int getHighestRoomId();
 	//TODO
-	void addGameStats(string username, int roomId, int averageAnswerTime, int numCorrectAnswers, int numTotalAnswers, int numPoints);
+	virtual void addGameStats(string username, GameStats gameStats) override;
 	PersonalUserGameStats getAllTimeGameStats(string username);
 	RecordTable getFiveBestUserGames(string username);
 	

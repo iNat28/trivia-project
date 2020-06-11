@@ -1,6 +1,11 @@
 #include "pch.h"
 #include "RoomManager.h"
 
+RoomManager::RoomManager(IDatabase& database) : 
+	m_database(database)
+{
+}
+
 void RoomManager::createRoom(LoggedUser user, RoomData roomData)
 {
 	Room newRoom(roomData);
@@ -22,6 +27,12 @@ void RoomManager::createRoom(LoggedUser user, RoomData roomData)
 
 void RoomManager::deleteRoom(unsigned int id)
 {
+	Room& room = getRoom(id);
+	for (auto& user : room.getAllUsers())
+	{
+		this->m_database.addGameStats(user.username, GameStats(id, user.answerTime / room.getRoomData().id, ))
+	}
+
 	if (!this->m_rooms.erase(id))
 	{
 		throw Exception("Room ID not found");

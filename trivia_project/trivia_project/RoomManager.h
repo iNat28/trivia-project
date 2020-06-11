@@ -1,17 +1,13 @@
 #pragma once
 #include "pch.h"
 #include "Room.h"
-#include <string>
-#include <iostream>
-#include <map>
-
-using std::string;
-using std::vector;
-using std::map;
+#include "IDatabase.h"
 
 class RoomManager
 {
 public:
+	RoomManager(IDatabase& database);
+
 	void createRoom(LoggedUser user, RoomData roomData);
 	void deleteRoom(unsigned int id);
 	bool getRoomState(unsigned int id) const;
@@ -20,6 +16,7 @@ public:
 	vector<Room> getRooms() const;
 private:
 	map<int, Room> m_rooms;
+	IDatabase& m_database;
 
 	const Room& _getRoom(unsigned int id) const;
 };

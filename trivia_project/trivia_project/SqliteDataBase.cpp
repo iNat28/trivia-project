@@ -275,8 +275,22 @@ int SqliteDataBase::getHighestRoomId()
 	return atoi(SqliteDataBase::games_list[0][1].c_str());
 }
 
-void SqliteDataBase::addGameStats(string username, int roomId, int averageAnswerTime, int numCorrectAnswers, int numTotalAnswers, int numPoints)
+void SqliteDataBase::addGameStats(string username, GameStats gameStats) const
 {
+	auto buffer = std::make_unique<char[]>(BUFFER_SIZE + 1);
+
+	sprintf_s(buffer.get(), BUFFER_SIZE,
+		"insert into statistics(username, roomId, averageAnswerTime, numCorrectAnswers, numTotalAnswers, numPoints) values('%s', '%d', '%s', '%s', '%s', '%s');",
+		username.c_str(),
+		gameStats.roomId,
+		question.difficulty.c_str(),
+		question.correctAnswer.c_str(),
+		question.incorrectAnswers[0].c_str(),
+		question.incorrectAnswers[1].c_str(),
+		question.incorrectAnswers[2].c_str()
+	);
+
+	send_query(buffer.get());
 }
 
 PersonalUserGameStats SqliteDataBase::getAllTimeGameStats(string username)

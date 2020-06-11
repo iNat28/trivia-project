@@ -25,6 +25,7 @@ public:
 	void removeUser(LoggedUser user);
 	vector<LoggedUser> getAllUsers() const;
 	int getActivity() const;
+	const RoomData& getRoomDataConst() const;
 	RoomData& getRoomData();
 private:
 	RoomData m_metadata;
