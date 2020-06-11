@@ -8,6 +8,9 @@ struct LoggedUser
 	LoggedUser();
 
 	string username;
+	int numCorrectanswers;
+	int answerTime;
+	int numPoints;
 };
 
 void to_json(json& j, const LoggedUser& loggedUser);
