@@ -14,4 +14,5 @@ public:
 	virtual void addNewUser(string username, string password, string email) const = 0;
 	virtual void addGameStats(UserStats gameStats) = 0;
 	virtual int getHighestRoomId() const = 0;
+	virtual PersonalUserGameStats getAllTimeGameStats(string username) const = 0;
 };

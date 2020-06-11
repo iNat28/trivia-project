@@ -8,7 +8,7 @@ class StatisticsManager
 public:
 	StatisticsManager(IDatabase& database);
 
-	RecordTable getStatistics();
+	PersonalUserGameStats getStatistics(string username);
 private:
 	IDatabase& m_database;
 };

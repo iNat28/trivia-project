@@ -21,6 +21,7 @@ struct PersonalUserGameStats
 
 	string username;
 	vector<UserStats> allGames;
+	RecordTable recordTable;
 };
 
 struct RecordTable

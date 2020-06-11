@@ -288,12 +288,12 @@ void SqliteDataBase::addGameStats(UserStats gameStats)
 	send_query(buffer.get());
 }
 
-PersonalUserGameStats SqliteDataBase::getAllTimeGameStats(string username)
+PersonalUserGameStats SqliteDataBase::getAllTimeGameStats(string username) const
 {
 	return PersonalUserGameStats();
 }
 
-RecordTable SqliteDataBase::getFiveBestUserGames(string username)
+RecordTable SqliteDataBase::getFiveBestUserGames(string username) const
 {
 	return RecordTable();
 }

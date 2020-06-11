@@ -85,6 +85,8 @@ Buffer MenuRequestHandler::_getPlayersInRoom(const RequestInfo& requestInfo) con
 Buffer MenuRequestHandler::_getStatistics(const RequestInfo& requestInfo) const
 {
 	//TODO: Wait until Statistics are finished
+
+	this->m_handlerFactor.getStatisticsManager().getStatistics();
 	return Buffer();
 }
 

@@ -32,8 +32,8 @@ public:
 	virtual int getHighestRoomId() const override;
 	//TODO
 	virtual void addGameStats(UserStats gameStats) override;
-	PersonalUserGameStats getAllTimeGameStats(string username);
-	RecordTable getFiveBestUserGames(string username);
+	virtual PersonalUserGameStats getAllTimeGameStats(string username) const override;
+	RecordTable getFiveBestUserGames(string username) const;
 	
 	bool openDB();
 

@@ -6,7 +6,7 @@ StatisticsManager::StatisticsManager(IDatabase& database) :
 {
 }
 
-RecordTable StatisticsManager::getStatistics()
+PersonalUserGameStats StatisticsManager::getStatistics(string username)
 {
-	return RecordTable();
+	return this->m_database.getAllTimeGameStats(username);
 }
