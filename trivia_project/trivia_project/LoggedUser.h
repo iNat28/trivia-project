@@ -8,7 +8,7 @@ struct LoggedUser
 	LoggedUser();
 
 	string username;
-	int numCorrectanswers;
+	int numCorrectAnswers;
 	int answerTime;
 	int numPoints;
 };
