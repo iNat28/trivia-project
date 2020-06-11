@@ -26,6 +26,7 @@ const char* Keys::maxPlayers = "maxPlayers";
 const char* Keys::timePerQuestion = "timePerQuestion";
 const char* Keys::isActive = "isActive";
 const char* Keys::users = "users";
+const char* Keys::numQuestionsAsked = "numQuestionsAsked";
 
 const char* Keys::category = "category";
 const char* Keys::difficulty = "difficulty";

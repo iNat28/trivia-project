@@ -50,13 +50,13 @@ RoomData& Room::getRoomData()
 	return this->m_metadata;
 }
 
-RoomData::RoomData(unsigned int id, string name, unsigned int maxPlayers, unsigned int timePerQuestion, unsigned int isActive) :
-	id(id), name(name), maxPlayers(maxPlayers), timePerQuestion(timePerQuestion), isActive(isActive)
+RoomData::RoomData(unsigned int id, string name, unsigned int maxPlayers, unsigned int timePerQuestion, unsigned int isActive, unsigned int numQuestionsAsked) :
+	id(id), name(name), maxPlayers(maxPlayers), timePerQuestion(timePerQuestion), isActive(isActive), numQuestionsAsked(numQuestionsAsked)
 {
 }
 
 RoomData::RoomData() :
-	id(0), maxPlayers(5), timePerQuestion(20), isActive(false)
+	id(0), maxPlayers(5), timePerQuestion(20), isActive(false), numQuestionsAsked(0)
 {
 }
 
@@ -68,6 +68,7 @@ void to_json(json& j, const Room& room)
 	j[Keys::timePerQuestion] = room.getRoomDataConst().timePerQuestion;
 	j[Keys::isActive] = room.getActivity();
 	j[Keys::users] = room.getAllUsers();
+	j[Keys::numQuestionsAsked] = room.getRoomDataConst().numQuestionsAsked;
 }
 
 void from_json(const json& j, Room& room)
@@ -77,6 +78,7 @@ void from_json(const json& j, Room& room)
 		j[Keys::name],
 		j[Keys::maxPlayers],
 		j[Keys::timePerQuestion],
-		j[Keys::isActive]
+		j[Keys::isActive],
+		j[Keys::numQuestionsAsked]
 	);
 }

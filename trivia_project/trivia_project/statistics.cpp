@@ -1,16 +1,22 @@
 #include "pch.h"
 #include "Statistics.h"
 
-GameStats::GameStats(int roomId, string averageAnswerTime, int numCorrectAnswers, int numTotalAnswers, int numPoints) : roomId(roomId), averageAnswerTime(averageAnswerTime), numCorrectAnswers(numCorrectAnswers), numTotalAnswers(numTotalAnswers), numPoints(numPoints)
+UserStats::UserStats(LoggedUser user, unsigned int roomId, unsigned int totalQuestions) :
+	user(user), roomId(roomId), totalQuestions(totalQuestions)
 {
 }
 
-GameStats::GameStats() : 
-	numPoints(0)
+UserStats::UserStats() : 
+	roomId(0), totalQuestions(0)
 {
 }
 
-RecordTable::RecordTable(string username, std::array<GameStats, 5> table) : username(username), userRecordTable(table)
+unsigned int UserStats::getAverageAnswerTime()
+{
+	return this->user.answerTime / this->totalQuestions;
+}
+
+RecordTable::RecordTable(string username, std::array<UserStats, 5> table) : username(username), userRecordTable(table)
 {
 }
 
@@ -18,7 +24,7 @@ RecordTable::RecordTable()
 {
 }
 
-PersonalUserGameStats::PersonalUserGameStats(string username, vector<GameStats> allGames) : username(username), allGames(allGames)
+PersonalUserGameStats::PersonalUserGameStats(string username, vector<UserStats> allGames) : username(username), allGames(allGames)
 {
 }
 

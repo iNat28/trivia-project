@@ -85,6 +85,7 @@ Buffer MenuRequestHandler::_getPlayersInRoom(const RequestInfo& requestInfo) con
 Buffer MenuRequestHandler::_getStatistics(const RequestInfo& requestInfo) const
 {
 	//TODO: Wait until Statistics are finished
+	return Buffer();
 }
 
 Buffer MenuRequestHandler::_joinRoom(const RequestInfo& requestInfo) const
@@ -102,7 +103,7 @@ Buffer MenuRequestHandler::_createRoom(const RequestInfo& requestInfo) const
 {
 	CreateRoomRequest createRoomRequest = JsonRequestPacketDeserializer::deserializeCreateRoomRequest(requestInfo.buffer);
 
-	this->m_handlerFactor.getRoomManager().createRoom(this->m_user, createRoomRequest.roomData);
+	this->m_handlerFactor.getRoomManager().createRoom(this->m_user.username, createRoomRequest.roomData);
 
 	return JsonResponsePacketSerializer::serializeResponse(
 		CreateRoomResponse(static_cast<unsigned int>(ResponseCodes::SUCCESFUL))

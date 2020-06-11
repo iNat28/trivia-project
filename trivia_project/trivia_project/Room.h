@@ -5,7 +5,7 @@
 
 struct RoomData 
 {
-	RoomData(unsigned int id, string name, unsigned int maxPlayers, unsigned int timePerQuestion, unsigned int isActive);
+	RoomData(unsigned int id, string name, unsigned int maxPlayers, unsigned int timePerQuestion, unsigned int isActive, unsigned int numQuestionsAsked);
 	RoomData();
 
 	unsigned int id;
@@ -13,6 +13,7 @@ struct RoomData
 	unsigned int maxPlayers;
 	unsigned int timePerQuestion;
 	unsigned int isActive;
+	unsigned int numQuestionsAsked;
 };
 
 class Room
@@ -30,7 +31,6 @@ public:
 private:
 	RoomData m_metadata;
 	vector<LoggedUser> m_users;
-	int numQuestionsAsked;
 };
 
 void to_json(json& j, const Room& room);

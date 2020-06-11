@@ -38,6 +38,7 @@ struct Keys
 	static const char* timePerQuestion;
 	static const char* isActive;
 	static const char* users;
+	static const char* numQuestionsAsked;
 
 	//Question
 	static const char* category;

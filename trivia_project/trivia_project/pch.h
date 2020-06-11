@@ -14,6 +14,7 @@
 #include <map>
 #include <fstream>
 #include <array>
+#include <io.h>
 #include "json.hpp"
 
 using std::string;

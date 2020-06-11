@@ -6,21 +6,12 @@ RoomManager::RoomManager(IDatabase& database) :
 {
 }
 
-void RoomManager::createRoom(LoggedUser user, RoomData roomData)
+void RoomManager::createRoom(string username, RoomData roomData)
 {
 	Room newRoom(roomData);
 	
-	newRoom.getRoomData().name = user.username + "'s game";
-	
-	if (!this->m_rooms.empty())
-	{
-		//Gets the last id in the rooms
-		newRoom.getRoomData().id = (--this->m_rooms.end())->first + 1;
-	}
-	else
-	{
-		newRoom.getRoomData().id = 1;
-	}
+	newRoom.getRoomData().name = username + "'s game";
+	newRoom.getRoomData().id = this->m_database.getHighestRoomId();
 
 	this->m_rooms[roomData.id] = newRoom;
 }
@@ -30,7 +21,9 @@ void RoomManager::deleteRoom(unsigned int id)
 	Room& room = getRoom(id);
 	for (auto& user : room.getAllUsers())
 	{
-		this->m_database.addGameStats(user.username, GameStats(id, user.answerTime / room.getRoomData().id, ))
+		this->m_database.addGameStats(
+			UserStats(user, id, room.getRoomData().numQuestionsAsked)
+		);
 	}
 
 	if (!this->m_rooms.erase(id))

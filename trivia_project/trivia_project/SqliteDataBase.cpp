@@ -1,12 +1,13 @@
 #include "pch.h"
 #include "SqliteDataBase.h"
 
-std::unordered_map<string, string> SqliteDataBase::users_list;
-std::vector<std::vector<string>> SqliteDataBase::games_list;
+std::unordered_map<string, string> SqliteDataBase::m_usersList;
+std::vector<UserStats> SqliteDataBase::m_gamesList;
 bool SqliteDataBase::moreData = false;
 
 SqliteDataBase::SqliteDataBase()
 {
+	//TODO: Move exception to openDB
 	if (!openDB())
 	{
 		throw std::exception("Error opening Sqlite Database");
@@ -25,7 +26,7 @@ bool SqliteDataBase::doesUserExist(string username) const
 	send_query(sqlStatement, users_callback);
 	
 	//returns if the username can be found in the map of users.
-	return users_list.find(username) != users_list.end();
+	return m_usersList.find(username) != m_usersList.end();
 }
 
 /*
@@ -39,7 +40,7 @@ bool SqliteDataBase::doesPasswordMatch(string username, string password) const
 	std::string sqlStatement = "select * from users where username = '" + username + "';";
 	send_query(sqlStatement, users_callback);
 	//returns whether the user exists and if the password matched the username
-	return doesUserExist(username) && users_list[username] == password;
+	return doesUserExist(username) && m_usersList[username] == password;
 }
 
 /*
@@ -82,7 +83,7 @@ bool SqliteDataBase::openDB()
 		send_query(command);
 
 		//statistics table
-		command = "create table if not exists statistics (username text primary key not null, roomId integer not null, averageAnswerTime text not null, numCorrectAnswers integer not null, numTotalAnswers integer not null, numPoints integer not null);";
+		command = "create table if not exists statistics (username text primary key not null, roomId integer not null, answerTime integer not null, numCorrectAnswers integer not null, numTotalAnswers integer not null, numPoints integer not null);";
 		send_query(command);
 
 		//questions table
@@ -104,7 +105,7 @@ int SqliteDataBase::users_callback(void* data, int argc, char** argv, char** azC
 {
 	//to make sure it doesnt clear the list when it goes back into the function to add another user.
 	if (!SqliteDataBase::moreData)
-		SqliteDataBase::users_list.clear();
+		SqliteDataBase::m_usersList.clear();
 
 	string username;
 	string password;
@@ -119,7 +120,7 @@ int SqliteDataBase::users_callback(void* data, int argc, char** argv, char** azC
 	}
 
 	//adds the new user to the list.
-	SqliteDataBase::users_list[username] = password;
+	SqliteDataBase::m_usersList[username] = password;
 	SqliteDataBase::moreData = true;
 	return 0;
 }
@@ -127,33 +128,27 @@ int SqliteDataBase::users_callback(void* data, int argc, char** argv, char** azC
 int SqliteDataBase::statistics_callback(void* data, int argc, char** argv, char** azColName)
 {
 	if (!SqliteDataBase::moreData)
-		SqliteDataBase::games_list.clear();
+		SqliteDataBase::m_gamesList.clear();
 
-	string username;
-	string roomId;
-	string averageAnswerTime;
-	string numCorrectAnswers;
-	string numTotalAnswers;
-	string numPoints;
+	UserStats userStats;
 	
 	for (int i = 0; i < argc; i++)
 	{
 		if (std::string(azColName[i]) == "username")
-			username = argv[i];
+			userStats.user.username = argv[i];
 		else if (std::string(azColName[i]) == "roomId")
-			roomId = argv[i];
-		else if (std::string(azColName[i]) == "averageAnswerTime")
-			averageAnswerTime = argv[i];
+			userStats.roomId = atoi(argv[i]);
+		else if (std::string(azColName[i]) == "answerTime")
+			userStats.user.answerTime = atoi(argv[i]);
 		else if (std::string(azColName[i]) == "numCorrectAnswers")
-			numCorrectAnswers = argv[i];
+			userStats.user.numCorrectAnswers = atoi(argv[i]);
 		else if (std::string(azColName[i]) == "numTotalAnswers")
-			numTotalAnswers = argv[i];
+			userStats.totalQuestions = atoi(argv[i]);
 		else if (std::string(azColName[i]) == "numPoints")
-			numPoints = argv[i];
+			userStats.user.numPoints = atoi(argv[i]);
 	}
-
-	
-	SqliteDataBase::games_list.push_back(std::vector<string>{ username, roomId, averageAnswerTime, numCorrectAnswers, numTotalAnswers, numPoints});
+		
+	SqliteDataBase::m_gamesList.push_back(userStats);
 	SqliteDataBase::moreData = true;
 	return 0;
 }
@@ -266,28 +261,28 @@ void SqliteDataBase::addToDB(vector<Question> questionsList)
 	}
 }
 
-int SqliteDataBase::getHighestRoomId()
+int SqliteDataBase::getHighestRoomId() const
 {
 	SqliteDataBase::moreData = false;
+	//TODO: Change to integer callback
 	std::string sqlStatement = "select * from statistics order by roomId DESC limit 1;";
 	send_query(sqlStatement, statistics_callback);
 
-	return atoi(SqliteDataBase::games_list[0][1].c_str());
+	return SqliteDataBase::m_gamesList[0].roomId;
 }
 
-void SqliteDataBase::addGameStats(string username, GameStats gameStats) const
+void SqliteDataBase::addGameStats(UserStats gameStats)
 {
 	auto buffer = std::make_unique<char[]>(BUFFER_SIZE + 1);
 
 	sprintf_s(buffer.get(), BUFFER_SIZE,
-		"insert into statistics(username, roomId, averageAnswerTime, numCorrectAnswers, numTotalAnswers, numPoints) values('%s', '%d', '%s', '%s', '%s', '%s');",
-		username.c_str(),
+		"insert into statistics(username, roomId, answerTime, numCorrectAnswers, numTotalAnswers, numPoints) values('%s', '%d', '%d', '%d', '%d', '%d');",
+		gameStats.user.username.c_str(),
 		gameStats.roomId,
-		question.difficulty.c_str(),
-		question.correctAnswer.c_str(),
-		question.incorrectAnswers[0].c_str(),
-		question.incorrectAnswers[1].c_str(),
-		question.incorrectAnswers[2].c_str()
+		gameStats.user.answerTime,
+		gameStats.user.numCorrectAnswers,
+		gameStats.totalQuestions,
+		gameStats.user.numPoints
 	);
 
 	send_query(buffer.get());

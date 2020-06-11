@@ -44,10 +44,12 @@ CreateRoomRequest JsonRequestPacketDeserializer::deserializeCreateRoomRequest(co
 {
 	json jsonFromBson = json::from_bson(buffer);
 
-	return CreateRoomRequest(
+	return CreateRoomRequest(RoomData(
+		jsonFromBson[Keys::id],
 		jsonFromBson[Keys::roomName],
 		jsonFromBson[Keys::maxUsers],
-		jsonFromBson[Keys::questionCount],
-		jsonFromBson[Keys::answerTimeout]
-	);
+		jsonFromBson[Keys::timePerQuestion],
+		jsonFromBson[Keys::isActive],
+		jsonFromBson[Keys::numQuestionsAsked]
+	));
 }

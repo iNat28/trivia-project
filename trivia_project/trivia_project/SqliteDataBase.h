@@ -29,9 +29,9 @@ public:
 	void addToDB(vector<Question> questions);
 
 	//statistics
-	int getHighestRoomId();
+	virtual int getHighestRoomId() const override;
 	//TODO
-	virtual void addGameStats(string username, GameStats gameStats) override;
+	virtual void addGameStats(UserStats gameStats) override;
 	PersonalUserGameStats getAllTimeGameStats(string username);
 	RecordTable getFiveBestUserGames(string username);
 	
@@ -40,8 +40,8 @@ public:
 	sqlite3* db;
 	const char* dbFileName;
 
-	static std::unordered_map<string, string> users_list;
-	static std::vector<std::vector<string>> games_list;
+	static std::unordered_map<string, string> m_usersList;
+	static std::vector<UserStats> m_gamesList;
 	//variable for multiple users
 	static bool moreData;
 };
