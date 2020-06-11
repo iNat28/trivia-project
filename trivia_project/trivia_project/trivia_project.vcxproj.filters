@@ -120,6 +120,9 @@
     <ClCompile Include="pch.cpp">
       <Filter>Source Files\Utilities</Filter>
     </ClCompile>
+    <ClCompile Include="Question.cpp">
+      <Filter>Source Files\Infrastructure</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="JsonResponsePacketSerializer.h">
@@ -193,6 +196,9 @@
     </ClInclude>
     <ClInclude Include="pch.h">
       <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Question.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
