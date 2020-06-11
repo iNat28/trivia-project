@@ -5,22 +5,10 @@
 #include "sqlite3.h"
 #include "Keys.h"
 #include "Statistics.h"
+#include "Question.h"
 
 #define QUESTIONS_FILE  "questions.txt"
 #define BUFFER_SIZE 1024
-
-//TODO: Move to own file
-struct Question
-{
-	Question(string category, string difficulty, string question, string correctAnswer, std::array<string, 3> incorrectAnswers);
-	Question();
-
-	string category;
-	string difficulty;
-	string question;
-	string correctAnswer;
-	std::array<string, 3> incorrectAnswers;
-};
 
 class SqliteDataBase : public IDatabase
 {
@@ -46,8 +34,7 @@ public:
 	void addGameStats(string username, int roomId, int averageAnswerTime, int numCorrectAnswers, int numTotalAnswers, int numPoints);
 	PersonalUserGameStats getAllTimeGameStats(string username);
 	RecordTable getFiveBestUserGames(string username);
-
-
+	
 	bool openDB();
 
 	sqlite3* db;
@@ -58,8 +45,5 @@ public:
 	//variable for multiple users
 	static bool moreData;
 };
-
-//TODO: Move to Question file
-void from_json(const json& j, Question& question);
 
 //https://opentdb.com/api.php?amount=10
