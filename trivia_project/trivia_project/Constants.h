@@ -1,6 +1,8 @@
 #pragma once
 #include "pch.h"
 
+//TODO: Move Codes to own file
+
 enum class Codes
 {
 	ERROR_CODE,
@@ -18,6 +20,12 @@ enum class Codes
 
 	//Statistics
 	STATISTICS = 30
+};
+
+enum class ResponseCodes
+{
+	ERROR_RESPONSE,
+	SUCCESFUL
 };
 
 typedef char Byte;

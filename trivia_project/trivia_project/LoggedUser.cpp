@@ -2,11 +2,20 @@
 #include "LoggedUser.h"
 
 LoggedUser::LoggedUser(string username) : 
-	m_username(username)
+	username(username)
 {
 }
 
-string LoggedUser::getUsername() const
+LoggedUser::LoggedUser()
 {
-	return this->m_username;
+}
+
+void to_json(json& j, const LoggedUser& loggedUser)
+{
+	j[Keys::username] = loggedUser.username;
+}
+
+void from_json(const json& j, LoggedUser& loggedUser)
+{
+	loggedUser.username = j[Keys::username];
 }

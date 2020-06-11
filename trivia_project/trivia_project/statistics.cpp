@@ -5,7 +5,8 @@ GameStats::GameStats(int roomId, string averageAnswerTime, int numCorrectAnswers
 {
 }
 
-GameStats::GameStats()
+GameStats::GameStats() : 
+	numPoints(0)
 {
 }
 

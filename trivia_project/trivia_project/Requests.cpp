@@ -16,7 +16,7 @@ RoomIdRequest::RoomIdRequest(unsigned int roomId) :
 {
 }
 
-CreateRoomRequest::CreateRoomRequest(string roomName, unsigned int maxUsers, unsigned int questionCount, unsigned int answerTimeout) : 
-	roomName(roomName), maxUsers(maxUsers), questionCount(questionCount), answerTimeout(answerTimeout)
+CreateRoomRequest::CreateRoomRequest(RoomData roomData) :
+	roomData(roomData)
 {
 }

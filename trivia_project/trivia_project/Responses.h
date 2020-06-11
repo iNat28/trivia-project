@@ -47,30 +47,30 @@ struct LogoutResponse : StatusResponse
 
 struct GetRoomResponse : StatusResponse
 {
-	GetRoomResponse(unsigned int status, vector<RoomData> rooms);
+	GetRoomResponse(unsigned int status, vector<Room> rooms);
 
 	virtual Codes getResponseCode() const override;
 
-	vector<RoomData> rooms;
+	vector<Room> rooms;
 };
 
 struct GetPlayersInRoomResponse : Response
 {
-	GetPlayersInRoomResponse(vector<string> rooms);
+	GetPlayersInRoomResponse(vector<LoggedUser> rooms);
 
 	virtual Codes getResponseCode() const override;
 
-	vector<string> rooms;
+	vector<LoggedUser> users;
 };
 
-struct JoinRoomReponse : StatusResponse
+struct JoinRoomResponse : StatusResponse
 {
 	using StatusResponse::StatusResponse;
 
 	virtual Codes getResponseCode() const override;
 };
 
-struct CreateRoomReponse : StatusResponse
+struct CreateRoomResponse : StatusResponse
 {
 	virtual Codes getResponseCode() const override;
 
