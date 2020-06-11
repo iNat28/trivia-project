@@ -15,7 +15,11 @@
 #include <fstream>
 #include <array>
 #include "json.hpp"
+
 using std::string;
 using std::vector;
 using std::map;
+using std::cout;
+using std::cin;
+using std::endl;
 using json = nlohmann::json;

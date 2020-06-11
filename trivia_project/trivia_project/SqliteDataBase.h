@@ -9,6 +9,7 @@
 #define QUESTIONS_FILE  "questions.txt"
 #define BUFFER_SIZE 1024
 
+//TODO: Move to own file
 struct Question
 {
 	Question(string category, string difficulty, string question, string correctAnswer, std::array<string, 3> incorrectAnswers);
@@ -58,6 +59,7 @@ public:
 	static bool moreData;
 };
 
+//TODO: Move to Question file
 void from_json(const json& j, Question& question);
 
 //https://opentdb.com/api.php?amount=10
