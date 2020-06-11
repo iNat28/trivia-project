@@ -30,6 +30,7 @@ public:
 private:
 	RoomData m_metadata;
 	vector<LoggedUser> m_users;
+	int numQuestionsAsked;
 };
 
 void to_json(json& j, const Room& room);
