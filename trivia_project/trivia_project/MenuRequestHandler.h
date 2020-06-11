@@ -17,6 +17,8 @@ public:
 private:
 	RequestHandlerFactory& m_handlerFactor;
 	LoggedUser m_user;
+	using requests_func_t = Buffer(MenuRequestHandler::*)(const RequestInfo&)const;
+	static const map<Codes, MenuRequestHandler::requests_func_t> m_requests;
 
 	Buffer _signout(const RequestInfo& requestInfo) const;
 	Buffer _getRooms(const RequestInfo& requestInfo) const;

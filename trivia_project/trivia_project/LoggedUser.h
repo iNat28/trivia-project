@@ -14,4 +14,3 @@ struct LoggedUser
 };
 
 void to_json(json& j, const LoggedUser& loggedUser);
-void from_json(const json& j, LoggedUser& loggedUser);

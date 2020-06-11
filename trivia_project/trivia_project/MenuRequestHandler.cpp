@@ -11,37 +11,14 @@ MenuRequestHandler::MenuRequestHandler(RequestHandlerFactory& handlerFactor, Log
 RequestResult MenuRequestHandler::handleRequest(const RequestInfo& requestInfo) const
 {
 	Buffer requestResultBuffer;
+	MenuRequestHandler::requests_func_t handler = nullptr;
 
-	//TODO: Move this and Login Request Handler switch cases to Map of codes and functions
-
-	//If at any point the login or sign up doesn't work, an exception will be thrown, 
+	//If at any point the requests don't work, an exception will be thrown, 
 	//and it will be put into an error response
 	try {
-		switch (requestInfo.requestId)
-		{
-		case Codes::LOGOUT:
-			requestResultBuffer = this->_signout(requestInfo);
-			break;
-		case Codes::GET_ROOM:
-			requestResultBuffer = this->_getRooms(requestInfo);
-			break;
-		case Codes::GET_PLAYERS_IN_ROOM:
-			requestResultBuffer = this->_getPlayersInRoom(requestInfo);
-			break;
-		case Codes::STATISTICS:
-			requestResultBuffer = this->_getStatistics(requestInfo);
-			break;
-		case Codes::JOIN_ROOM:
-			requestResultBuffer = this->_joinRoom(requestInfo);
-			break;
-		case Codes::CREATE_ROOM:
-			requestResultBuffer = this->_createRoom(requestInfo);
-			break;
-		default:
-			throw Exception("Request Code not valid");
-		}
+		handler = m_requests.at(requestInfo.requestId);
+		requestResultBuffer = (this->*handler)(requestInfo);
 	}
-	//Manager exception caught
 	catch (const std::exception& e)
 	{
 		return RequestResult(
@@ -112,3 +89,12 @@ Buffer MenuRequestHandler::_createRoom(const RequestInfo& requestInfo) const
 		CreateRoomResponse(static_cast<unsigned int>(ResponseCodes::SUCCESFUL))
 	);
 }
+
+const map<Codes, MenuRequestHandler::requests_func_t> MenuRequestHandler::m_requests = {
+	{ Codes::LOGOUT, &MenuRequestHandler::_signout },
+	{ Codes::GET_ROOM, &MenuRequestHandler::_getRooms },
+	{ Codes::GET_PLAYERS_IN_ROOM, &MenuRequestHandler::_getPlayersInRoom },
+	{ Codes::STATISTICS, &MenuRequestHandler::_getStatistics },
+	{ Codes::JOIN_ROOM, &MenuRequestHandler::_joinRoom },
+	{ Codes::CREATE_ROOM, &MenuRequestHandler::_createRoom }
+};

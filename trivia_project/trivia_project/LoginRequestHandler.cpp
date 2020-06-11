@@ -7,18 +7,14 @@ LoginRequestHandler::LoginRequestHandler(RequestHandlerFactory& handlerFactor) :
 }
 
 RequestResult LoginRequestHandler::handleRequest(const RequestInfo& requestInfo) const
-{//If at any point the login or sign up doesn't work, an exception will be thrown, 
+{
+	LoginRequestHandler::requests_func_t handler = nullptr;
+
+	//If at any point the requests don't work, an exception will be thrown, 
 	//and it will be put into an error response
 	try {
-		switch (requestInfo.requestId)
-		{
-		case Codes::LOGIN:
-			return this->_login(requestInfo);
-		case Codes::SIGNUP:
-			return this->_signup(requestInfo);
-		default:
-			throw Exception("Request Code not valid");
-		}
+		handler = m_requests.at(requestInfo.requestId);
+		return (this->*handler)(requestInfo);
 	}
 	//Login manager exception caught
 	catch (const Exception & e)
@@ -67,3 +63,8 @@ RequestResult LoginRequestHandler::_signup(const RequestInfo& requestInfo) const
 		m_handlerFactor.createMenuRequestHandler(signupRequest.username)
 	);
 }
+
+const map<Codes, LoginRequestHandler::requests_func_t> LoginRequestHandler::m_requests = {
+	{ Codes::LOGIN, &LoginRequestHandler::_login },
+	{ Codes::SIGNUP, &LoginRequestHandler::_signup }
+};

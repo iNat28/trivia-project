@@ -15,8 +15,7 @@ void to_json(json& j, const UserStats& userStats)
 {
 	j[Keys::roomId] = userStats.roomId;
 	j[Keys::numQuestionsAsked] = userStats.totalQuestions;
-	//TODO: Add key
-	j["user"] = userStats.user;
+	j[Keys::user] = userStats.user;
 }
 
 unsigned int UserStats::getAverageAnswerTime()

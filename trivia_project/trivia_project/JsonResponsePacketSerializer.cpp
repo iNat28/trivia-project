@@ -30,8 +30,7 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const GetStatisticsRespon
 	json jsonToSerialize;
 	jsonToSerialize[Keys::username] = getStatisticsResponse.personalUserGameStats.username;
 	jsonToSerialize[Keys::users] = getStatisticsResponse.personalUserGameStats.recordTable.userRecordTable;
-	//TODO: Move to key
-	jsonToSerialize["allGames"] = getStatisticsResponse.personalUserGameStats.allGames;
+	jsonToSerialize[Keys::totalGames] = getStatisticsResponse.personalUserGameStats.allGames;
 	jsonToSerialize[Keys::status] = getStatisticsResponse.status;
 
 	return JsonResponsePacketSerializer::serializeJson(jsonToSerialize, getStatisticsResponse);

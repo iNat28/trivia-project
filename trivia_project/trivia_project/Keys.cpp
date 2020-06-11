@@ -17,8 +17,8 @@ const char* Keys::message = "message";
 const char* Keys::rooms = "Rooms";
 const char* Keys::playersInRoom = "PlayersInRoom";
 
-const char* Keys::userStatistics = "UserStatistics";
-const char* Keys::highScores = "HighScores";
+const char* Keys::totalGames = "totalGames";
+const char* Keys::user = "user";
 
 const char* Keys::id = "id";
 const char* Keys::name = "name";

@@ -26,8 +26,8 @@ struct Keys
 	static const char* playersInRoom;
 
 	//Statistics
-	static const char* userStatistics;
-	static const char* highScores;
+	static const char* totalGames;
+	static const char* user;
 
 	/* Objects */
 

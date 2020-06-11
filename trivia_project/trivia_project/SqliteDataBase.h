@@ -21,8 +21,9 @@ public:
 	virtual void addNewUser(string username, string password, string email) const override;
 	static int users_callback(void* data, int argc, char** argv, char** azColName);
 	static int statistics_callback(void* data, int argc, char** argv, char** azColName);
+	static int int_callback(void* data, int argc, char** argv, char** azColName);
 
-	void send_query(std::string command, int(*callback)(void*, int, char**, char**) = nullptr) const;
+	void send_query(std::string command, int(*callback)(void*, int, char**, char**) = nullptr, void* data = nullptr) const;
 
 	void openQuestionsFile();
 	vector<Question> getQuestionsIntoVectorFormat(string questionsStr);
@@ -30,12 +31,11 @@ public:
 
 	//statistics
 	virtual int getHighestRoomId() const override;
-	//TODO
 	virtual void addGameStats(UserStats gameStats) override;
 	virtual PersonalUserGameStats getAllTimeGameStats(string username) const override;
 	RecordTable getFiveBestUserGames(string username) const;
 	
-	bool openDB();
+	void openDB();
 
 	sqlite3* db;
 	const char* dbFileName;
