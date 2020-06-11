@@ -84,10 +84,11 @@ Buffer MenuRequestHandler::_getPlayersInRoom(const RequestInfo& requestInfo) con
 
 Buffer MenuRequestHandler::_getStatistics(const RequestInfo& requestInfo) const
 {
-	//TODO: Wait until Statistics are finished
-
-	this->m_handlerFactor.getStatisticsManager().getStatistics();
-	return Buffer();
+	return JsonResponsePacketSerializer::serializeResponse(
+		GetStatisticsResponse(static_cast<unsigned int>(ResponseCodes::SUCCESFUL),
+			this->m_handlerFactor.getStatisticsManager().getStatistics(this->m_user.username)
+		)
+	);
 }
 
 Buffer MenuRequestHandler::_joinRoom(const RequestInfo& requestInfo) const

@@ -11,12 +11,20 @@ UserStats::UserStats() :
 {
 }
 
+void to_json(json& j, const UserStats& userStats)
+{
+	j[Keys::roomId] = userStats.roomId;
+	j[Keys::numQuestionsAsked] = userStats.totalQuestions;
+	//TODO: Add key
+	j["user"] = userStats.user;
+}
+
 unsigned int UserStats::getAverageAnswerTime()
 {
 	return this->user.answerTime / this->totalQuestions;
 }
 
-RecordTable::RecordTable(string username, std::array<UserStats, 5> table) : username(username), userRecordTable(table)
+RecordTable::RecordTable(std::array<UserStats, 5> table) : userRecordTable(table)
 {
 }
 

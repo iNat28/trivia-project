@@ -14,6 +14,14 @@ struct UserStats
 	unsigned int totalQuestions;
 };
 
+struct RecordTable
+{
+	RecordTable(std::array<UserStats, 5> table);
+	RecordTable();
+
+	std::array<UserStats, 5> userRecordTable;
+};
+
 struct PersonalUserGameStats
 {
 	PersonalUserGameStats(string username, vector<UserStats> allGames);
@@ -24,11 +32,4 @@ struct PersonalUserGameStats
 	RecordTable recordTable;
 };
 
-struct RecordTable
-{
-	RecordTable(string username, std::array<UserStats, 5> table);
-	RecordTable();
-
-	string username;
-	std::array<UserStats, 5> userRecordTable;
-};
+void to_json(json& j, const UserStats& userStats);

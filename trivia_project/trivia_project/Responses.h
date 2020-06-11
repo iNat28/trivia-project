@@ -79,10 +79,9 @@ struct CreateRoomResponse : StatusResponse
 
 struct GetStatisticsResponse : StatusResponse
 {
-	GetStatisticsResponse(unsigned int status, vector<string> userStatistics, vector<string> highScores);
+	GetStatisticsResponse(unsigned int status, PersonalUserGameStats personalUserGameStats);
 
 	virtual Codes getResponseCode() const override;
 
-	vector<string> userStatistics;
-	vector<string> highScores;
+	PersonalUserGameStats personalUserGameStats;
 };

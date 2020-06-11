@@ -61,8 +61,8 @@ Codes CreateRoomResponse::getResponseCode() const
 	return Codes::CREATE_ROOM;
 }
 
-GetStatisticsResponse::GetStatisticsResponse(unsigned int status, vector<string> userStatistics, vector<string> highScores) :
-	StatusResponse(status), userStatistics(userStatistics), highScores(highScores)
+GetStatisticsResponse::GetStatisticsResponse(unsigned int status, PersonalUserGameStats personalUserGameStats) :
+	StatusResponse(status), personalUserGameStats(personalUserGameStats)
 {
 }
 
