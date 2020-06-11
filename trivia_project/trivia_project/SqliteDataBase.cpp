@@ -290,10 +290,39 @@ void SqliteDataBase::addGameStats(UserStats gameStats)
 
 PersonalUserGameStats SqliteDataBase::getAllTimeGameStats(string username) const
 {
-	return PersonalUserGameStats();
+	PersonalUserGameStats allUserGameStats;
+	SqliteDataBase::moreData = false;
+	auto buffer = std::make_unique<char[]>(BUFFER_SIZE + 1);
+
+	sprintf_s(buffer.get(), BUFFER_SIZE, "select * from statistics where username = '%s';",
+		username);
+	send_query(buffer.get(), statistics_callback);
+	
+	for (auto& game : m_gamesList)
+	{
+		allUserGameStats.allGames.push_back(game);
+	}
+	
+	allUserGameStats.recordTable = getFiveBestUserGames(username);
+
+	return allUserGameStats;
 }
 
 RecordTable SqliteDataBase::getFiveBestUserGames(string username) const
 {
-	return RecordTable();
+	RecordTable records;
+	SqliteDataBase::moreData = false;
+	auto buffer = std::make_unique<char[]>(BUFFER_SIZE + 1);
+
+	sprintf_s(buffer.get(), BUFFER_SIZE, "select * from statistics where username = '%s' order by numPoints DESC limit 5;",
+		username);
+	send_query(buffer.get(), statistics_callback);
+
+	int i = 0;
+	for (auto& game : m_gamesList)
+	{
+		records.userRecordTable[i] = game;
+		i++;
+	}
+	return records;
 }
