@@ -43,7 +43,7 @@ Room& RoomManager::getRoom(unsigned int id)
 	{
 		return this->m_rooms.at(id);
 	}
-	catch (const std::exception & e)
+	catch (const std::exception&)
 	{
 		throw Exception("Room ID not found");
 	}
@@ -72,7 +72,7 @@ const Room& RoomManager::_getRoom(unsigned int id) const
 	{
 		return this->m_rooms.at(id);
 	}
-	catch (const std::exception & e)
+	catch (const std::exception&)
 	{
 		throw Exception("Room ID not found");
 	}
