@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="SignUp" Height="450" Width="800">
     <Grid>
-        <Button x:Name="BackButton" Content="Back" HorizontalAlignment="Left" Height="44" Margin="220,343,0,0" VerticalAlignment="Top" Width="125"/>
+        <Button x:Name="BackButton" Content="Back" HorizontalAlignment="Left" Height="44" Margin="220,343,0,0" VerticalAlignment="Top" Width="125" Click="BackButton_Click"/>
         <TextBox x:Name="usernameInput" HorizontalAlignment="Left" Height="47" Margin="333,104,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="229"/>
         <TextBox x:Name="passwordInput" HorizontalAlignment="Left" Height="44" Margin="333,176,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="229"/>
         <TextBox x:Name="emailInput" HorizontalAlignment="Left" Height="44" Margin="333,244,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="229"/>
