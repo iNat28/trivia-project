@@ -24,5 +24,26 @@ namespace client
         {
             InitializeComponent();
         }
+
+        private void loginButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.Hide();
+            //TODO: Send to front end
+            Main main = new Main();
+            main.Show();
+            this.Close();
+        }
+
+        private void signUpButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.Hide();
+            SignUp signUp = new SignUp();
+            signUp.Show();
+        }
+
+        private void exitButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
     }
 }
