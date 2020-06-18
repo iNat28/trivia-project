@@ -14,7 +14,7 @@
         <TextBlock HorizontalAlignment="Left" Height="29" Margin="220,122,0,0" TextWrapping="Wrap" Text="Username:" VerticalAlignment="Top" Width="74"/>
         <TextBlock HorizontalAlignment="Left" Height="29" Margin="220,191,0,0" TextWrapping="Wrap" Text="Password:" VerticalAlignment="Top" Width="74"/>
         <TextBlock HorizontalAlignment="Left" Height="44" Margin="220,259,0,0" TextWrapping="Wrap" Text="Email:" VerticalAlignment="Top" Width="74"/>
-        <Button x:Name="SignupButton" Content="Signup" HorizontalAlignment="Left" Height="44" Margin="445,343,0,0" VerticalAlignment="Top" Width="117"/>
+        <Button x:Name="SignupButton" Content="Signup" HorizontalAlignment="Left" Height="44" Margin="445,343,0,0" VerticalAlignment="Top" Width="117" Click="SignupButton_Click"/>
 
     </Grid>
 </Window>

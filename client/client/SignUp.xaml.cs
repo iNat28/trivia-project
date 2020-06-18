@@ -29,5 +29,14 @@ namespace client
         {
             this.Close();
         }
+
+        private void SignupButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.Hide();
+            //TODO: Send to front end
+            Main main = new Main();
+            main.ShowDialog();
+            this.Close();
+        }
     }
 }
