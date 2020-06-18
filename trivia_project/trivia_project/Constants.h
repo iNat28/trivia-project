@@ -1,13 +1,31 @@
-
 #pragma once
 #include "pch.h"
+
+//TODO: Move Codes to own file
 
 enum class Codes
 {
 	ERROR_CODE,
 
+	//Login
 	LOGIN = 10,
-	SIGNUP
+	SIGNUP,
+	LOGOUT,
+
+	//Room
+	GET_ROOM = 20,
+	GET_PLAYERS_IN_ROOM,
+	JOIN_ROOM,
+	CREATE_ROOM,
+
+	//Statistics
+	STATISTICS = 30
+};
+
+enum class ResponseCodes
+{
+	ERROR_RESPONSE,
+	SUCCESFUL
 };
 
 typedef char Byte;

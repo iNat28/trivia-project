@@ -1,12 +1,21 @@
 #include "pch.h"
 #include "LoggedUser.h"
 
-LoggedUser::LoggedUser(string username)
+LoggedUser::LoggedUser(string username) : 
+	username(username), numCorrectAnswers(0), answerTime(0), numPoints(0)
 {
-	this->m_username = username;
 }
 
-string LoggedUser::getUsername() const
+LoggedUser::LoggedUser()
 {
-	return this->m_username;
+}
+//TODO: add the rest of the vars into the json funcions and into the keys
+void to_json(json& j, const LoggedUser& loggedUser)
+{
+	j[Keys::username] = loggedUser.username;
+}
+
+void from_json(const json& j, LoggedUser& loggedUser)
+{
+	loggedUser.username = j[Keys::username];
 }

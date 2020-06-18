@@ -1,15 +1,16 @@
 #pragma once
-#include <iostream>
+#include "pch.h"
+#include "Keys.h"
 
-using std::string;
-
-class LoggedUser
+struct LoggedUser
 {
-public:
 	LoggedUser(string username);
+	LoggedUser();
 
-	string getUsername() const;
-private:
-	string m_username;
+	string username;
+	int numCorrectAnswers;
+	int answerTime;
+	int numPoints;
 };
 
+void to_json(json& j, const LoggedUser& loggedUser);

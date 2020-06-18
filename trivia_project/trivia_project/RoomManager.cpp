@@ -1,41 +1,79 @@
 #include "pch.h"
 #include "RoomManager.h"
 
-void RoomManager::createRoom(LoggedUser user)
+RoomManager::RoomManager(IDatabase& database) : 
+	m_database(database)
 {
-	map<int, Room>::iterator it;
-	int id = 1;
-	string name = user.getUsername() + "'s game";
-	for (it = this->m_rooms.begin(); it != this->m_rooms.end(); it++)
-	{
-		id = it->first;
-	}
-	Room newRoom(id, name);
-	this->m_rooms[id] = newRoom;
 }
 
-void RoomManager::deleteRoom(int id)
+void RoomManager::createRoom(string username, RoomData roomData)
 {
-	map<int, Room>::iterator it;
-	for (it = this->m_rooms.begin(); it != this->m_rooms.end(); it++)
-	{
-		if (it->first == id)
-			this->m_rooms.erase(it);
-	}
-}
-//lol
-bool RoomManager::getRoomState(int id)
-{
-	return this->m_rooms[id].getActivity();
+	Room newRoom(roomData);
+	
+	newRoom.getRoomData().name = username + "'s game";
+	newRoom.getRoomData().id = this->m_database.getHighestRoomId();
+
+	this->m_rooms[roomData.id] = newRoom;
 }
 
-vector<Room> RoomManager::getRooms()
+void RoomManager::deleteRoom(unsigned int id)
+{
+	Room& room = getRoom(id);
+	for (auto& user : room.getAllUsers())
+	{
+		this->m_database.addGameStats(
+			UserStats(user, id, room.getRoomData().numQuestionsAsked)
+		);
+	}
+
+	if (!this->m_rooms.erase(id))
+	{
+		throw Exception("Room ID not found");
+	}
+}
+
+bool RoomManager::getRoomState(unsigned int id) const
+{
+	return this->_getRoom(id).getActivity();
+}
+
+Room& RoomManager::getRoom(unsigned int id)
+{
+	try
+	{
+		return this->m_rooms.at(id);
+	}
+	catch (const std::exception&)
+	{
+		throw Exception("Room ID not found");
+	}
+}
+
+vector<LoggedUser> RoomManager::getUsersInRoom(unsigned int id) const
+{
+	return this->_getRoom(id).getAllUsers();
+}
+
+vector<Room> RoomManager::getRooms() const
 {
 	vector<Room> rooms;
-	map<int, Room>::iterator it;
-	for (it = this->m_rooms.begin(); it != this->m_rooms.end(); it++)
+
+	for (const auto& room : this->m_rooms)
 	{
-		rooms.push_back(it->second);
+		rooms.push_back(room.second);
 	}
+
 	return rooms;
+}
+
+const Room& RoomManager::_getRoom(unsigned int id) const
+{
+	try
+	{
+		return this->m_rooms.at(id);
+	}
+	catch (const std::exception&)
+	{
+		throw Exception("Room ID not found");
+	}
 }

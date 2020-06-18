@@ -1,22 +1,23 @@
 #pragma once
 #include "pch.h"
 #include "Room.h"
-#include <string>
-#include <iostream>
-#include <map>
-
-using std::string;
-using std::vector;
-using std::map;
+#include "IDatabase.h"
 
 class RoomManager
 {
 public:
-	void createRoom(LoggedUser user);
-	void deleteRoom(int id);
-	bool getRoomState(int id);
-	vector<Room> getRooms();
+	RoomManager(IDatabase& database);
+
+	void createRoom(string username, RoomData roomData);
+	void deleteRoom(unsigned int id);
+	bool getRoomState(unsigned int id) const;
+	Room& getRoom(unsigned int id);
+	vector<LoggedUser> getUsersInRoom(unsigned int id) const;
+	vector<Room> getRooms() const;
 private:
 	map<int, Room> m_rooms;
+	IDatabase& m_database;
+
+	const Room& _getRoom(unsigned int id) const;
 };
 

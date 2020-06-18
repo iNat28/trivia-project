@@ -3,70 +3,57 @@
 
 Buffer JsonResponsePacketSerializer::serializeResponse(const ErrorResponse& errResponse)
 {
-	json j;
-	j["message"] = errResponse.message;
+	json jsonToSerialize;
+	jsonToSerialize[Keys::message] = errResponse.message;
 
-	return JsonResponsePacketSerializer::serializeJson(j, Codes::ERROR_CODE);
+	return JsonResponsePacketSerializer::serializeJson(jsonToSerialize, errResponse);
 }
 
-Buffer JsonResponsePacketSerializer::serializeResponse(const LoginResponse& loginResponse)
+Buffer JsonResponsePacketSerializer::serializeResponse(const GetRoomResponse& getRoomResponse)
 {
-	json j;
-	j["status"] = loginResponse.status;
+	json jsonToSerialize;
+	jsonToSerialize[Keys::rooms] = getRoomResponse.rooms;
 
-	return JsonResponsePacketSerializer::serializeJson(j, Codes::LOGIN);
+	return JsonResponsePacketSerializer::serializeJson(jsonToSerialize, getRoomResponse);
 }
 
-Buffer JsonResponsePacketSerializer::serializeResponse(const SignupResponse& signupResponse)
+Buffer JsonResponsePacketSerializer::serializeResponse(const GetPlayersInRoomResponse& getPlayersInRoomResponse)
 {
-	json j;
-	j["status"] = signupResponse.status;
+	json jsonToSerialize;
+	jsonToSerialize[Keys::rooms] = getPlayersInRoomResponse.users;
 
-	return JsonResponsePacketSerializer::serializeJson(j, Codes::SIGNUP);
+	return JsonResponsePacketSerializer::serializeJson(jsonToSerialize, getPlayersInRoomResponse);
 }
 
-Buffer JsonResponsePacketSerializer::serializeJson(const json& j, Codes responseCode)
+Buffer JsonResponsePacketSerializer::serializeResponse(const GetStatisticsResponse& getStatisticsResponse)
 {
-	std::vector<unsigned char> jsonBuffer = json::to_bson(j);
+	json jsonToSerialize;
+	jsonToSerialize[Keys::username] = getStatisticsResponse.personalUserGameStats.username;
+	jsonToSerialize[Keys::users] = getStatisticsResponse.personalUserGameStats.recordTable.userRecordTable;
+	jsonToSerialize[Keys::totalGames] = getStatisticsResponse.personalUserGameStats.allGames;
+	jsonToSerialize[Keys::status] = getStatisticsResponse.status;
+
+	return JsonResponsePacketSerializer::serializeJson(jsonToSerialize, getStatisticsResponse);
+}
+
+Buffer JsonResponsePacketSerializer::serializeResponse(const StatusResponse& statusResponse)
+{
+	json jsonToSerialize;
+	jsonToSerialize[Keys::status] = statusResponse.status;
+
+	return JsonResponsePacketSerializer::serializeJson(jsonToSerialize, statusResponse);
+}
+
+Buffer JsonResponsePacketSerializer::serializeJson(const json& jsonToSerialize, const Response& response)
+{
+	std::vector<unsigned char> jsonBuffer = json::to_bson(jsonToSerialize);
 	Buffer totalBuffer;
 	char sizeBuffer[MSG_LEN_SIZE] = "";
-	int jsonSize = jsonBuffer.size();
-	
+
 	//Adds the response code
-	totalBuffer.push_back(static_cast<Byte>(responseCode));
+	totalBuffer.push_back(static_cast<Byte>(response.getResponseCode()));
 
 	//Adds the json message with the number of bytes
 	totalBuffer.insert(totalBuffer.end(), jsonBuffer.begin(), jsonBuffer.end());
 	return totalBuffer;
-}
-
-
-LoginResponse::LoginResponse(unsigned int status) : 
-	status(status)
-{
-}
-
-LoginResponse::LoginResponse() :
-	status(0)
-{
-}
-
-SignupResponse::SignupResponse(unsigned int status) :
-	status(status)
-{
-}
-
-SignupResponse::SignupResponse() :
-	status(0)
-{
-}
-
-ErrorResponse::ErrorResponse(std::string message) :
-	message(message)
-{
-}
-
-ErrorResponse::ErrorResponse() :
-	message()
-{
 }

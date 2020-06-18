@@ -1,38 +1,20 @@
 #pragma once
 #include "pch.h"
+#include "Responses.h"
 #include "Constants.h"
-
-struct LoginResponse
-{
-	LoginResponse(unsigned int status);
-	LoginResponse();
-
-	unsigned int status;
-};
-
-struct SignupResponse
-{
-	SignupResponse(unsigned int status);
-	SignupResponse();
-
-	unsigned int status;
-};
-
-struct ErrorResponse
-{
-	ErrorResponse(std::string message);
-	ErrorResponse();
-
-	std::string message;
-};
+#include "Keys.h"
+#include "LoggedUser.h"
+#include "Room.h"
 
 class JsonResponsePacketSerializer
 {
 public:
-	static Buffer serializeResponse(const ErrorResponse& errResponse);
-	static Buffer serializeResponse(const LoginResponse& loginResponse);
-	static Buffer serializeResponse(const SignupResponse& signupResponse);
+	static Buffer serializeResponse(const ErrorResponse& errorResponse);
+	static Buffer serializeResponse(const StatusResponse& statusResponse);
+	static Buffer serializeResponse(const GetRoomResponse& getRoomResponse);
+	static Buffer serializeResponse(const GetPlayersInRoomResponse& getPlayersInRoomResponse);
+	static Buffer serializeResponse(const GetStatisticsResponse& getStatisticsResponse);
 
 private:
-	static Buffer serializeJson(const json& j, Codes responseCode);
+	static Buffer serializeJson(const json& jsonToSerialize, const Response& response);
 };

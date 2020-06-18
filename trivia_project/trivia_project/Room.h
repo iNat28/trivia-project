@@ -1,32 +1,37 @@
 #pragma once
 #include "pch.h"
-#include <string>
-#include <vector>
-#include <iostream>
 #include "LoggedUser.h"
-using std::string;
-using std::vector;
+#include "SqliteDataBase.h"
 
 struct RoomData 
 {
-	int id;
+	RoomData(unsigned int id, string name, unsigned int maxPlayers, unsigned int timePerQuestion, unsigned int isActive, unsigned int numQuestionsAsked);
+	RoomData();
+
+	unsigned int id;
 	string name;
-	int maxPlayers;
-	int timePerQuestion;
-	int isActive;
+	unsigned int maxPlayers;
+	unsigned int timePerQuestion;
+	unsigned int isActive;
+	unsigned int numQuestionsAsked;
 };
 
 class Room
 {
 public:
-	Room(int id, string name);
+	Room(RoomData roomData);
+	Room();
 
 	void addUser(LoggedUser user);
 	void removeUser(LoggedUser user);
-	vector<LoggedUser> getAllUsers();
-	int getActivity();
-
+	vector<LoggedUser> getAllUsers() const;
+	int getActivity() const;
+	const RoomData& getRoomDataConst() const;
+	RoomData& getRoomData();
 private:
 	RoomData m_metadata;
 	vector<LoggedUser> m_users;
 };
+
+void to_json(json& j, const Room& room);
+void from_json(const json& j, Room& room);

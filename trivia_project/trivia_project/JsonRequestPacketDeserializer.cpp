@@ -9,12 +9,11 @@ Output: LoginRequest object.
 LoginRequest JsonRequestPacketDeserializer::deserializeLoginRequest(const Buffer& buffer)
 {
 	json jsonFromBson = json::from_bson(buffer);
-	LoginRequest userLoginInfo;
-
-	userLoginInfo.username = jsonFromBson["username"];
-	userLoginInfo.password = jsonFromBson["password"];
-
-	return userLoginInfo;
+	
+	return LoginRequest(
+		jsonFromBson[Keys::username],
+		jsonFromBson[Keys::password]
+	);
 }
 /*
 Usage: this fucntion gets a vector of bytes and makes it into a signup struct using deserialization.
@@ -24,11 +23,33 @@ Output: SignupRequest object.
 SignupRequest JsonRequestPacketDeserializer::deserializeSignupRequest(const Buffer& buffer)
 {
 	json jsonFromBson = json::from_bson(buffer);
-	SignupRequest userSignupInfo;
+	
+	return SignupRequest(
+		jsonFromBson[Keys::username],
+		jsonFromBson[Keys::password],
+		jsonFromBson[Keys::email]
+	);
+}
 
-	userSignupInfo.username = jsonFromBson["username"];
-	userSignupInfo.password = jsonFromBson["password"];
-	userSignupInfo.email = jsonFromBson["email"];
+RoomIdRequest JsonRequestPacketDeserializer::deserializeRoomIdRequest(const Buffer& buffer)
+{
+	json jsonFromBson = json::from_bson(buffer);
 
-	return userSignupInfo;
+	return RoomIdRequest(
+		jsonFromBson[Keys::roomId]
+	);
+}
+
+CreateRoomRequest JsonRequestPacketDeserializer::deserializeCreateRoomRequest(const Buffer& buffer)
+{
+	json jsonFromBson = json::from_bson(buffer);
+
+	return CreateRoomRequest(RoomData(
+		jsonFromBson[Keys::id],
+		jsonFromBson[Keys::roomName],
+		jsonFromBson[Keys::maxUsers],
+		jsonFromBson[Keys::timePerQuestion],
+		jsonFromBson[Keys::isActive],
+		jsonFromBson[Keys::numQuestionsAsked]
+	));
 }
