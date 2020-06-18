@@ -19,6 +19,7 @@ namespace client
     /// </summary>
     public partial class SignUp : Window
     {
+        //TODO: Add verify password
         public SignUp()
         {
             InitializeComponent();
