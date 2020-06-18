@@ -30,7 +30,7 @@ namespace client
             this.Hide();
             //TODO: Send to front end
             Main main = new Main();
-            main.Show();
+            main.ShowDialog();
             this.Close();
         }
 
@@ -38,7 +38,8 @@ namespace client
         {
             this.Hide();
             SignUp signUp = new SignUp();
-            signUp.Show();
+            signUp.ShowDialog();
+            this.Show();
         }
 
         private void exitButton_Click(object sender, RoutedEventArgs e)
