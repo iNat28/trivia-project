@@ -19,5 +19,5 @@
 !*.xaml
 !*.config
 !*.settings
-!*..csproj
+!*.csproj
 !.gitignore
