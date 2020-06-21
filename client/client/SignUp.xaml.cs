@@ -17,10 +17,10 @@ namespace client
     /// <summary>
     /// Interaction logic for SignUp.xaml
     /// </summary>
-    public partial class SignUp : Window
+    public partial class SignUpWindow : Window
     {
         //TODO: Add verify password
-        public SignUp()
+        public SignUpWindow()
         {
             InitializeComponent();
         }
@@ -34,7 +34,7 @@ namespace client
         {
             this.Hide();
             //TODO: Send to front end
-            Main main = new Main();
+            MainWindow main = new MainWindow();
             main.ShowDialog();
             this.Close();
         }

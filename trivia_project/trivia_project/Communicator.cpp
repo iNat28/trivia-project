@@ -34,9 +34,10 @@ void s_handleNewClient(Communicator& communicator, SOCKET socket, IRequestHandle
 			memcpy_s(&msgLen, sizeof(int), msgLenBuffer, MSG_LEN_SIZE);
 
 			//Creates the buffer to recieve from the socket
-			msgBuffer = std::make_unique<char[]>(size_t(msgLen) + 1);
+			msgBuffer = std::make_unique<char[]>(size_t(msgLen) + MSG_LEN_SIZE + 1);
 			msgBufferPtr = msgBuffer.get();
-			Communicator::s_getFromSocket(socket, msgBufferPtr, msgLen);
+			Communicator::s_getFromSocket(socket, msgBufferPtr + MSG_LEN_SIZE, msgLen);
+			memcpy_s(msgBufferPtr, MSG_LEN_SIZE, msgLenBuffer, MSG_LEN_SIZE);
 
 			//Puts the buffers into a RequestInfo
 			requestInfo = RequestInfo(

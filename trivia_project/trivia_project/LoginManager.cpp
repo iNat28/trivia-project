@@ -32,7 +32,12 @@ void LoginManager::login(string username, string password)
 			throw Exception("User already logged in");
 		}
 	}
-	
+
+	if (!this->m_database.doesPasswordMatch(username, password))
+	{
+		throw Exception("User password is incorrect");
+	}
+
 	//Logins in the user
 	this->m_loggedUsers.push_back(username);
 }
