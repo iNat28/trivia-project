@@ -48,7 +48,8 @@ namespace client
 
                 if (Stream.Response(response, Codes.SIGNUP, errorOutput))
                 {
-                    Utils.OpenWindow(this, new MainWindow((string)signUp["username"]));
+                    User.username = (string)signUp["username"];
+                    Utils.OpenWindow(this, new MainWindow());
                 }
             }
             catch (Exception exception)

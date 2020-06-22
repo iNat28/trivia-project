@@ -76,7 +76,6 @@ RequestResult MenuRequestHandler::_getStatistics(const RequestInfo& requestInfo)
 		),
 		this->m_handlerFactor.createMenuRequestHandler(this->m_user)
 	);
-
 }
 
 RequestResult MenuRequestHandler::_joinRoom(const RequestInfo& requestInfo) const

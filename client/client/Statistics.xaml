@@ -9,7 +9,7 @@
     <Grid>
         <Button x:Name="MyStatusButton" Content="My Status" HorizontalAlignment="Left" VerticalAlignment="Top" Width="102" Margin="334,80,0,0" Height="50" Click="MyStatusButton_Click"/>
         <Button x:Name="HighScoresButton" Content="High Scores" HorizontalAlignment="Left" Margin="334,166,0,0" VerticalAlignment="Top" Width="102" Height="51" Click="HighScoresButton_Click"/>
-        <Button x:Name="backButton" Content="Back" HorizontalAlignment="Left" Margin="334,315,0,0" VerticalAlignment="Top" Width="102" Height="52" Click="backButton_Click"/>
+        <Button x:Name="backButton" Content="Back" HorizontalAlignment="Left" Margin="334,315,0,0" VerticalAlignment="Top" Width="102" Height="52" Click="BackButton_Click"/>
 
     </Grid>
 </Window>

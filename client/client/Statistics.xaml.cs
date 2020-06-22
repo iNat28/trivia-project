@@ -20,28 +20,28 @@ namespace client
     /// </summary>
     public partial class Statistics : Window
     {
-        private readonly string username;
-        public Statistics(string username)
+        public Statistics()
         {
-            this.username = username;
             InitializeComponent();
         }
 
         private void MyStatusButton_Click(object sender, RoutedEventArgs e)
         {
             //moves to my status page
+            Utils.OpenWindow(this, new MyStatus());
         }
 
         private void HighScoresButton_Click(object sender, RoutedEventArgs e)
         {
             //moves to high scores page
+            Utils.OpenWindow(this, new HighScoreWindow());
         }
 
-        private void backButton_Click(object sender, RoutedEventArgs e)
+        private void BackButton_Click(object sender, RoutedEventArgs e)
         {
             //moves back to main window
-          
-            Utils.OpenWindow(this, new MainWindow(this.username));
+            
+            Utils.OpenWindow(this, new MainWindow());
         }
     }
 }

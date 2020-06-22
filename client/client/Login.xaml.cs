@@ -46,7 +46,8 @@ namespace client
 
                 if(Stream.Response(response, Codes.LOGIN, errorOutput))
                 {
-                    Utils.OpenWindow(this, new MainWindow((string)login["username"]));
+                    User.username = (string)login["username"];
+                    Utils.OpenWindow(this, new MainWindow());
                 }
             }
             catch (Exception exception)

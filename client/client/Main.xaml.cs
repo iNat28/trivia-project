@@ -20,13 +20,10 @@ namespace client
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly string username;
-
-        public MainWindow(string username)
+        public MainWindow()
         {
-            this.username = username;
             InitializeComponent();
-            UsernameHeader.Text += this.username;
+            UsernameHeader.Text = "Hello " + User.username;
         }
 
         protected override void OnClosed(EventArgs e)
@@ -35,7 +32,7 @@ namespace client
 
             JObject jObject = new JObject
             {
-                ["username"] = username
+                ["username"] = User.username
             };
             Stream.Send(jObject, Codes.LOGOUT);
             Stream.Close();
@@ -45,7 +42,7 @@ namespace client
         {
             JObject jObject = new JObject
             {
-                ["username"] = username
+                ["username"] = User.username
             };
             Stream.Send(jObject, Codes.LOGOUT);
             Utils.OpenWindow(this, new LoginWindow());
@@ -63,7 +60,7 @@ namespace client
 
         private void StatisticsButton_Click(object sender, RoutedEventArgs e)
         {
-            Utils.OpenWindow(this, new Statistics(this.username));
+            Utils.OpenWindow(this, new Statistics());
         }
     }
 }
