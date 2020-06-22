@@ -23,6 +23,7 @@ private:
 	RequestResult _signout(const RequestInfo& requestInfo) const;
 	RequestResult _getRooms(const RequestInfo& requestInfo) const;
 	RequestResult _getPlayersInRoom(const RequestInfo& requestInfo) const;
+	//TODO: Change to 2 functions
 	RequestResult _getStatistics(const RequestInfo& requestInfo) const;
 	RequestResult _joinRoom(const RequestInfo& requestInfo) const;
 	RequestResult _createRoom(const RequestInfo& requestInfo) const;

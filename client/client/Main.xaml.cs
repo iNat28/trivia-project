@@ -20,6 +20,8 @@ namespace client
     /// </summary>
     public partial class MainWindow : Window
     {
+        public static bool toClose = true;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -30,12 +32,15 @@ namespace client
         {
             base.OnClosed(e);
 
-            JObject jObject = new JObject
+            if (toClose)
             {
-                ["username"] = User.username
-            };
-            Stream.Send(jObject, Codes.LOGOUT);
-            Stream.Close();
+                JObject jObject = new JObject
+                {
+                    ["username"] = User.username
+                };
+                Stream.Send(jObject, Codes.LOGOUT);
+                Stream.Close();
+            }
         }
 
         private void SignoutButton_Click(object sender, RoutedEventArgs e)

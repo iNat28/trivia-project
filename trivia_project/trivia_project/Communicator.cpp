@@ -48,6 +48,10 @@ void s_handleNewClient(Communicator& communicator, SOCKET socket, IRequestHandle
 
 			//Handles the request, and gets the request result
 			requestResult = handler->handleRequest(requestInfo);
+			if (handler == nullptr)
+			{
+				throw Exception("Null handler");
+			}
 			handler = requestResult.newHandler;
 
 			//Sends the request result response

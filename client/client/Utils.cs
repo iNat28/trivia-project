@@ -11,8 +11,10 @@ namespace client
     {
         public static void OpenWindow(Window windowToHide, Window windowToOpen)
         {
+            MainWindow.toClose = false;
             windowToHide.Close();
             windowToOpen.ShowDialog();
+            MainWindow.toClose = true;
         }
     }
 

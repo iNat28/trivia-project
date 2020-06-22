@@ -78,7 +78,7 @@ void SqliteDataBase::openDB()
 		send_query(command);
 
 		//statistics table
-		command = "create table if not exists statistics (username text primary key not null, roomId integer not null, answerTime integer not null, numCorrectAnswers integer not null, numTotalAnswers integer not null, numPoints integer not null);";
+		command = "create table if not exists statistics (username text primary key not null, numPoints integer not null, numTotalGames integer not null, numCorrectAnswers integer not null, numTotalAnswers integer not null, averageAnswerTime integer not null);";
 		send_query(command);
 
 		//questions table
@@ -130,17 +130,17 @@ int SqliteDataBase::statistics_callback(void* data, int argc, char** argv, char*
 	for (int i = 0; i < argc; i++)
 	{
 		if (std::string(azColName[i]) == "username")
-			userStats.user.username = argv[i];
-		else if (std::string(azColName[i]) == "roomId")
-			userStats.roomId = atoi(argv[i]);
-		else if (std::string(azColName[i]) == "answerTime")
-			userStats.user.answerTime = atoi(argv[i]);
-		else if (std::string(azColName[i]) == "numCorrectAnswers")
-			userStats.user.numCorrectAnswers = atoi(argv[i]);
-		else if (std::string(azColName[i]) == "numTotalAnswers")
-			userStats.totalQuestions = atoi(argv[i]);
+			userStats.username = argv[i];
 		else if (std::string(azColName[i]) == "numPoints")
-			userStats.user.numPoints = atoi(argv[i]);
+			userStats.numPoints = atoi(argv[i]);
+		else if (std::string(azColName[i]) == "numTotalGames")
+			userStats.averageAnswerTime = atoi(argv[i]);
+		else if (std::string(azColName[i]) == "numCorrectAnswers")
+			userStats.numCorrectAnswers = atoi(argv[i]);
+		else if (std::string(azColName[i]) == "numWrongAnswers")
+			userStats.numWrongAnswers = atoi(argv[i]);
+		else if (std::string(azColName[i]) == "averageAnswerTime")
+			userStats.averageAnswerTime = atoi(argv[i]);
 	}
 		
 	SqliteDataBase::m_gamesList.push_back(userStats);
@@ -238,13 +238,16 @@ void SqliteDataBase::addGameStats(UserStats gameStats)
 	send_query(buffer.str().c_str());
 }
 
+//TODO:
 PersonalUserGameStats SqliteDataBase::getAllTimeGameStats(string username) const
 {
 	PersonalUserGameStats allUserGameStats;
 	SqliteDataBase::moreData = false;
 	sstream buffer;
 
-	buffer << "select * from statistics where username = '" << username << "')";
+	allUserGameStats.username = username;
+
+	buffer << "select * from statistics where username = '" << username << '\'';
 	send_query(buffer.str().c_str(), statistics_callback);
 	
 	for (auto& game : m_gamesList)
@@ -257,20 +260,22 @@ PersonalUserGameStats SqliteDataBase::getAllTimeGameStats(string username) const
 	return allUserGameStats;
 }
 
-RecordTable SqliteDataBase::getFiveBestUserGames(string username) const
+std::vector<UserHighScore> SqliteDataBase::getFiveBestUserGames() const
 {
-	RecordTable records;
+	std::vector<UserHighScore> highScores;
 	SqliteDataBase::moreData = false;
 	sstream buffer;
 
-	buffer << "select * from statistics where username = '" << username << "' order by numPoints DESC limit 5;";
+	//TODO: Move three to const
+	buffer << "select numPoints from statistics order by numPoints DESC limit 3;";
 	send_query(buffer.str().c_str(), statistics_callback);
 
 	int i = 0;
 	for (auto& game : m_gamesList)
 	{
-		records.userRecordTable[i] = game;
+		highScores[i] = UserHighScore(game.user.username, game.user.numPoints);
 		i++;
 	}
-	return records;
+
+	return highScores;
 }

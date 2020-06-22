@@ -31,9 +31,10 @@ public:
 
 	//statistics
 	virtual int getHighestRoomId() const override;
-	virtual void addGameStats(UserStats gameStats) override;
+	virtual void addGameStats(UserStats userStats) override;
+	//TODO: Change to UserStats
 	virtual PersonalUserGameStats getAllTimeGameStats(string username) const override;
-	RecordTable getFiveBestUserGames(string username) const;
+	std::vector<UserHighScore> getFiveBestUserGames() const;
 	
 	void openDB();
 

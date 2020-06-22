@@ -6,16 +6,19 @@ UserStats::UserStats(LoggedUser user, unsigned int roomId, unsigned int totalQue
 {
 }
 
-UserStats::UserStats() : 
-	roomId(0), totalQuestions(0)
+UserStats::UserStats(string username, int numPoints, int numTotalGames, int numCorrectAnswers, int numWrongAnswers, int averageAnswerTime) :
+	username(username), numPoints(numPoints), numTotalGames(numTotalGames), numCorrectAnswers(numCorrectAnswers), numWrongAnswers(numWrongAnswers), averageAnswerTime(averageAnswerTime)
+{
+}
+
+UserStats::UserStats() :
+	numPoints(0), numTotalGames(0), numCorrectAnswers(0), numWrongAnswers(0), averageAnswerTime(0)
 {
 }
 
 void to_json(json& j, const UserStats& userStats)
 {
-	j[Keys::roomId] = userStats.roomId;
-	j[Keys::numQuestionsAsked] = userStats.totalQuestions;
-	j[Keys::user] = userStats.user;
+	
 }
 
 unsigned int UserStats::getAverageAnswerTime()
