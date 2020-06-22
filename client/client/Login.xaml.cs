@@ -31,69 +31,49 @@ namespace client
         }
 
         //Move to functions and classes
-        private void loginButton_Click(object sender, RoutedEventArgs e)
+        private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                TcpClient client = new TcpClient();
-                client.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 40200));
-                NetworkStream clientStream = client.GetStream();
-
-                JObject login = new JObject();
-                login["username"] = usernameInput.Text;
-                login["password"] = passwordInput.Password;
-
-                MemoryStream memoryStream = new MemoryStream();
-                BsonDataWriter bsonWriter = new BsonDataWriter(memoryStream);
-                login.WriteTo(bsonWriter);
-
-                byte[] buffer = new byte[] { Convert.ToByte(10) };
-                clientStream.Write(buffer, 0, buffer.Length);
-                clientStream.Write(memoryStream.ToArray(), 0, (int)memoryStream.Length);
-                clientStream.Flush();
-
-                byte[] bufferRead = new byte[5];
-                clientStream.Read(bufferRead, 0, bufferRead.Length);
-                int code = Convert.ToInt32(bufferRead[0]);
-                int size = BitConverter.ToInt32(bufferRead, 1);
-                byte[] response = new byte[size + 4];
-                Array.Copy(bufferRead, 1, response, 0, 4);
-                clientStream.Read(response, 4, response.Length - 4);
-
-                JObject jObject = (JObject)JToken.ReadFrom(new BsonDataReader(new MemoryStream(response)));
-                
-                switch(code)
+                JObject login = new JObject
                 {
-                    case 0:
-                        errorOutput.Text = (string)jObject["message"];
+                    ["username"] = usernameInput.Text,
+                    ["password"] = passwordInput.Password
+                };
+
+                Stream.Send(login, Codes.LOGIN);
+
+                Response response = Stream.Recieve();
+                
+                switch((Codes)response.code)
+                {
+                    case Codes.ERROR_CODE:
+                        errorOutput.Text = (string)response.jObject["message"];
                         break;
-                    case 10:
-                        this.Hide();
-                        MainWindow main = new MainWindow();
-                        main.ShowDialog();
-                        this.Close();
+                    case Codes.LOGIN:
+                        Utils.OpenWindow(this, new MainWindow((string)login["username"]));
                         break;
                     default:
-                        errorOutput.Text = jObject.ToString();
+                        errorOutput.Text = response.jObject.ToString();
                         break;
                 }
-
             }
             catch (SocketException socketException)
             {
                 errorOutput.Text = socketException.Message;
             }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception.Message);
+            }
         }
 
-        private void signUpButton_Click(object sender, RoutedEventArgs e)
+        private void SignUpButton_Click(object sender, RoutedEventArgs e)
         {
-            this.Hide();
-            SignUpWindow signUp = new SignUpWindow();
-            signUp.ShowDialog();
-            this.Show();
+            Utils.OpenWindow(this, new SignUpWindow());
         }
 
-        private void exitButton_Click(object sender, RoutedEventArgs e)
+        private void ExitButton_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }

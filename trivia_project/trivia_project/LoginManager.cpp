@@ -44,11 +44,15 @@ void LoginManager::login(string username, string password)
 
 void LoginManager::logout(string username)
 {
-	for (auto loggedUser = this->m_loggedUsers.begin(); loggedUser != this->m_loggedUsers.end(); loggedUser++)
+	for (auto loggedUser = this->m_loggedUsers.begin(); loggedUser != this->m_loggedUsers.end(); )
 	{
 		if (loggedUser->username == username)
 		{
-			this->m_loggedUsers.erase(loggedUser);
+			loggedUser = this->m_loggedUsers.erase(loggedUser);
+		}
+		else
+		{
+			++loggedUser;
 		}
 	}
 }

@@ -48,6 +48,7 @@ void s_handleNewClient(Communicator& communicator, SOCKET socket, IRequestHandle
 
 			//Handles the request, and gets the request result
 			requestResult = handler->handleRequest(requestInfo);
+			handler = requestResult.newHandler;
 
 			//Sends the request result response
 			Communicator::s_sendToSocket(socket, requestResult.response.data(), (int)requestResult.response.size());

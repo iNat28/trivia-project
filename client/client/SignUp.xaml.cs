@@ -27,16 +27,13 @@ namespace client
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            Utils.OpenWindow(this, new LoginWindow());
         }
 
         private void SignupButton_Click(object sender, RoutedEventArgs e)
         {
-            this.Hide();
             //TODO: Send to front end
-            MainWindow main = new MainWindow();
-            main.ShowDialog();
-            this.Close();
+            Utils.OpenWindow(this, new MainWindow(usernameInput.Text));
         }
     }
 }

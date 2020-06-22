@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Newtonsoft.Json.Linq;
 
 namespace client
 {
@@ -19,9 +20,24 @@ namespace client
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        private readonly string username;
+
+        public MainWindow(string username)
         {
+            this.username = username;
             InitializeComponent();
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
+
+            JObject jObject = new JObject
+            {
+                ["username"] = username
+            };
+            Stream.Send(jObject, Codes.LOGOUT);
+            Stream.Close();
         }
     }
 }

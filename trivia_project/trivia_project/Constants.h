@@ -5,7 +5,7 @@
 
 enum class Codes
 {
-	ERROR_CODE,
+	ERROR_CODE = 0,
 
 	//Login
 	LOGIN = 10,
