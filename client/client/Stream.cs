@@ -44,6 +44,7 @@ namespace client
 
         public static void Close()
         {
+            client.Close();
             tcpClient = null;
             client = null;
         }
