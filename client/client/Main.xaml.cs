@@ -26,6 +26,7 @@ namespace client
         {
             this.username = username;
             InitializeComponent();
+            UsernameHeader.Text += this.username;
         }
 
         protected override void OnClosed(EventArgs e)
@@ -38,6 +39,31 @@ namespace client
             };
             Stream.Send(jObject, Codes.LOGOUT);
             Stream.Close();
+        }
+
+        private void SignoutButton_Click(object sender, RoutedEventArgs e)
+        {
+            JObject jObject = new JObject
+            {
+                ["username"] = username
+            };
+            Stream.Send(jObject, Codes.LOGOUT);
+            Utils.OpenWindow(this, new LoginWindow());
+        }
+
+        private void CreateRoomButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void JoinRoomButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void StatisticsButton_Click(object sender, RoutedEventArgs e)
+        {
+            Utils.OpenWindow(this, new Statistics(this.username));
         }
     }
 }

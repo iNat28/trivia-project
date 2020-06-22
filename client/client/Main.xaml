@@ -5,8 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:client"
         mc:Ignorable="d"
-        Title="Main" Height="450" Width="800">
+        Title="Main" Height="467.85" Width="989.75">
     <Grid>
-        
+        <TextBlock x:Name="UsernameHeader" HorizontalAlignment="Left" Height="36" Margin="468,49,0,0" TextWrapping="Wrap" Text="Hello " VerticalAlignment="Top" Width="107"/>
+        <Button x:Name="SignoutButton" Content="Sign Out" HorizontalAlignment="Left" Margin="451,122,0,0" VerticalAlignment="Top" Width="94" Height="32" Click="SignoutButton_Click"/>
+        <Button x:Name="CreateRoomButton" Content="Create Room" HorizontalAlignment="Left" Margin="451,181,0,0" VerticalAlignment="Top" Width="94" Height="32" Click="CreateRoomButton_Click"/>
+        <Button x:Name="JoinRoomButton" Content="Join Room" HorizontalAlignment="Left" Margin="451,242,0,0" VerticalAlignment="Top" Width="94" Height="32" Click="JoinRoomButton_Click"/>
+        <Button x:Name="StatisticsButton" Content="Statistics" HorizontalAlignment="Left" Margin="451,299,0,0" VerticalAlignment="Top" Width="94" Height="32" Click="StatisticsButton_Click"/>
+
     </Grid>
 </Window>
