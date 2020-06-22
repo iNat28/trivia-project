@@ -8,13 +8,14 @@
         Title="SignUp" Height="450" Width="800">
     <Grid>
         <Button x:Name="BackButton" Content="Back" HorizontalAlignment="Left" Height="44" Margin="220,343,0,0" VerticalAlignment="Top" Width="125" Click="BackButton_Click"/>
-        <TextBox x:Name="usernameInput" HorizontalAlignment="Left" Height="47" Margin="333,104,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="229"/>
-        <TextBox x:Name="emailInput" HorizontalAlignment="Left" Height="44" Margin="333,244,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="229"/>
-        <TextBlock HorizontalAlignment="Left" Height="29" Margin="220,122,0,0" TextWrapping="Wrap" Text="Username:" VerticalAlignment="Top" Width="74"/>
-        <TextBlock HorizontalAlignment="Left" Height="29" Margin="220,191,0,0" TextWrapping="Wrap" Text="Password:" VerticalAlignment="Top" Width="74"/>
-        <TextBlock HorizontalAlignment="Left" Height="44" Margin="220,259,0,0" TextWrapping="Wrap" Text="Email:" VerticalAlignment="Top" Width="74"/>
+        <TextBox x:Name="usernameInput" HorizontalAlignment="Left" Height="47" Margin="333,61,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="229"/>
+        <TextBox x:Name="emailInput" HorizontalAlignment="Left" Height="44" Margin="333,201,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="229"/>
+        <TextBlock HorizontalAlignment="Left" Height="29" Margin="220,79,0,0" TextWrapping="Wrap" Text="Username:" VerticalAlignment="Top" Width="74"/>
+        <TextBlock HorizontalAlignment="Left" Height="29" Margin="220,148,0,0" TextWrapping="Wrap" Text="Password:" VerticalAlignment="Top" Width="74"/>
+        <TextBlock HorizontalAlignment="Left" Height="44" Margin="220,216,0,0" TextWrapping="Wrap" Text="Email:" VerticalAlignment="Top" Width="74"/>
         <Button x:Name="SignupButton" Content="Signup" HorizontalAlignment="Left" Height="44" Margin="445,343,0,0" VerticalAlignment="Top" Width="117" Click="SignupButton_Click"/>
-        <PasswordBox x:Name="passwordInput" HorizontalAlignment="Left" Height="44" Margin="333,176,0,0" VerticalAlignment="Top" Width="229"/>
+        <PasswordBox x:Name="passwordInput" HorizontalAlignment="Left" Height="44" Margin="333,133,0,0" VerticalAlignment="Top" Width="229"/>
+        <TextBlock x:Name="errorOutput" HorizontalAlignment="Left" Margin="220,265,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="57" Width="342"/>
 
     </Grid>
 </Window>
