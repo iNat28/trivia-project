@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Newtonsoft.Json.Linq;
 
 namespace client
 {
@@ -32,8 +33,28 @@ namespace client
 
         private void SignupButton_Click(object sender, RoutedEventArgs e)
         {
-            //TODO: Send to front end
-            Utils.OpenWindow(this, new MainWindow(usernameInput.Text));
+            try
+            {
+                JObject signUp = new JObject
+                {
+                    ["username"] = usernameInput.Text,
+                    ["password"] = passwordInput.Password,
+                    ["email"] = emailInput.Text
+                };
+
+                Stream.Send(signUp, Codes.SIGNUP);
+
+                Response response = Stream.Recieve();
+
+                if (Stream.Response(response, Codes.SIGNUP, errorOutput))
+                {
+                    Utils.OpenWindow(this, new MainWindow((string)signUp["username"]));
+                }
+            }
+            catch (Exception exception)
+            {
+                errorOutput.Text = exception.Message;
+            }
         }
     }
 }

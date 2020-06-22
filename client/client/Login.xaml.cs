@@ -16,7 +16,6 @@ using System.Net.Sockets;
 using System.Net;
 using System.IO;
 using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Bson;
 
 namespace client
 {
@@ -44,27 +43,15 @@ namespace client
                 Stream.Send(login, Codes.LOGIN);
 
                 Response response = Stream.Recieve();
-                
-                switch((Codes)response.code)
+
+                if(Stream.Response(response, Codes.LOGIN, errorOutput))
                 {
-                    case Codes.ERROR_CODE:
-                        errorOutput.Text = (string)response.jObject["message"];
-                        break;
-                    case Codes.LOGIN:
-                        Utils.OpenWindow(this, new MainWindow((string)login["username"]));
-                        break;
-                    default:
-                        errorOutput.Text = response.jObject.ToString();
-                        break;
+                    Utils.OpenWindow(this, new MainWindow((string)login["username"]));
                 }
-            }
-            catch (SocketException socketException)
-            {
-                errorOutput.Text = socketException.Message;
             }
             catch (Exception exception)
             {
-                Console.WriteLine(exception.Message);
+                errorOutput.Text = exception.Message;
             }
         }
 

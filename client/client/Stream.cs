@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Net.Sockets;
 using System.Net;
 using Newtonsoft.Json.Bson;
@@ -14,7 +15,7 @@ namespace client
     public struct Response
     {
         public JObject jObject;
-        public byte code;
+        public Codes code;
     }
 
     public static class Stream
@@ -72,7 +73,7 @@ namespace client
             
             //Converts the read buffer to the message code and size
             //If buffer code size is changed, then this needs to be changed
-            response.code = bufferRead[0]; 
+            response.code = (Codes)bufferRead[0]; 
             bufferSize = BitConverter.ToInt32(bufferRead, MSG_CODE_SIZE);
 
             bufferBson = new byte[bufferSize + MSG_LEN_SIZE];
@@ -84,6 +85,28 @@ namespace client
             response.jObject = (JObject)JToken.ReadFrom(new BsonDataReader(new MemoryStream(bufferBson)));
 
             return response;
+        }
+
+        public static bool Response(Response response, Codes code, TextBlock errorOutput)
+        {
+            string error = "";
+            bool ifSuccess = false;
+
+            if (response.code == Codes.ERROR_CODE)
+            {
+                error = (string)response.jObject["message"];
+            }
+            else if (response.code == code)
+            {
+                ifSuccess = true;
+            }
+            else
+            {
+                error = response.jObject.ToString();
+            }
+
+            errorOutput.Text = error;
+            return ifSuccess;
         }
     }
 }
