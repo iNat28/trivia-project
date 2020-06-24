@@ -33,8 +33,8 @@ public:
 	virtual int getHighestRoomId() const override;
 	virtual void addGameStats(UserStats userStats) override;
 	//TODO: Change to UserStats
-	virtual PersonalUserGameStats getAllTimeGameStats(string username) const override;
-	std::vector<UserHighScore> getFiveBestUserGames() const;
+	virtual UserStats getUserStats(string username) const override;
+	virtual std::vector<UserHighScore> getHighScores() const override;
 	
 	void openDB();
 

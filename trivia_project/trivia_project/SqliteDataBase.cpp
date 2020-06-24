@@ -48,6 +48,9 @@ void SqliteDataBase::addNewUser(string username, string password, string email) 
 {
 	std::string command = "insert into users (username, password, email) values ('" + username + "', '" + password + "', '" + email + "');";
 	send_query(command);
+	command = "insert into statistics (username, numPoints, numTotalGames, numCorrectAnswers, numWrongAnswers, averageAnswerTime) values ('" +
+		username + "', 0, 0, 0, 0, 0);";
+	send_query(command);
 }
 
 /*
@@ -78,7 +81,7 @@ void SqliteDataBase::openDB()
 		send_query(command);
 
 		//statistics table
-		command = "create table if not exists statistics (username text primary key not null, numPoints integer not null, numTotalGames integer not null, numCorrectAnswers integer not null, numTotalAnswers integer not null, averageAnswerTime integer not null);";
+		command = "create table if not exists statistics (username text primary key not null, numPoints integer not null, numTotalGames integer not null, numCorrectAnswers integer not null, numWrongAnswers integer not null, averageAnswerTime integer not null);";
 		send_query(command);
 
 		//questions table
@@ -223,44 +226,46 @@ int SqliteDataBase::getHighestRoomId() const
 	return highestRoomId;
 }
 
-void SqliteDataBase::addGameStats(UserStats gameStats)
+void SqliteDataBase::addGameStats(UserStats userStats)
 {
 	sstream buffer;
-
-	buffer << "insert into statistics(username, roomId, answerTime, numCorrectAnswers, numTotalAnswers, numPoints) values('" <<
-		gameStats.user.username << "', " <<
-		gameStats.roomId << "', " <<
-		gameStats.user.answerTime << "', " <<
-		gameStats.user.numCorrectAnswers << "', " <<
-		gameStats.totalQuestions << "', " <<
-		gameStats.user.numPoints << "')";
+	
+	UserStats otherUserStats = SqliteDataBase::getUserStats(userStats.username);
+	
+	userStats.averageAnswerTime = 
+		(otherUserStats.averageAnswerTime	* (otherUserStats.numCorrectAnswers + otherUserStats.numWrongAnswers) +
+		userStats.averageAnswerTime			* (userStats.numCorrectAnswers + userStats.numWrongAnswers)) 
+		/ 
+		(otherUserStats.numCorrectAnswers + otherUserStats.numWrongAnswers + userStats.numCorrectAnswers + userStats.numWrongAnswers);
+	userStats.numPoints += otherUserStats.numPoints;
+	userStats.numTotalGames += otherUserStats.numTotalGames;
+	userStats.numCorrectAnswers += otherUserStats.numCorrectAnswers;
+	userStats.numWrongAnswers += otherUserStats.numWrongAnswers;
+	
+	buffer << "update statistics set" <<
+		", numPoints = " << userStats.numPoints <<
+		", numTotalGames = " << userStats.numTotalGames <<
+		", numCorrectAnswers = " << userStats.numCorrectAnswers <<
+		", numWrongAnswers = " << userStats.numWrongAnswers <<
+		", averageAnswerTime = " << userStats.averageAnswerTime <<
+		" where username = " << userStats.username << ';';
 
 	send_query(buffer.str().c_str());
 }
 
 //TODO:
-PersonalUserGameStats SqliteDataBase::getAllTimeGameStats(string username) const
+UserStats SqliteDataBase::getUserStats(string username) const
 {
-	PersonalUserGameStats allUserGameStats;
 	SqliteDataBase::moreData = false;
 	sstream buffer;
-
-	allUserGameStats.username = username;
 
 	buffer << "select * from statistics where username = '" << username << '\'';
 	send_query(buffer.str().c_str(), statistics_callback);
 	
-	for (auto& game : m_gamesList)
-	{
-		allUserGameStats.allGames.push_back(game);
-	}
-	
-	allUserGameStats.recordTable = getFiveBestUserGames(username);
-
-	return allUserGameStats;
+	return m_gamesList[0];
 }
 
-std::vector<UserHighScore> SqliteDataBase::getFiveBestUserGames() const
+std::vector<UserHighScore> SqliteDataBase::getHighScores() const
 {
 	std::vector<UserHighScore> highScores;
 	SqliteDataBase::moreData = false;
@@ -273,7 +278,7 @@ std::vector<UserHighScore> SqliteDataBase::getFiveBestUserGames() const
 	int i = 0;
 	for (auto& game : m_gamesList)
 	{
-		highScores[i] = UserHighScore(game.user.username, game.user.numPoints);
+		highScores[i] = UserHighScore(game.username, game.numPoints);
 		i++;
 	}
 
