@@ -15,19 +15,29 @@ using System.Windows.Shapes;
 namespace client
 {
     /// <summary>
-    /// Interaction logic for HighScoreWindow.xaml
+    /// Interaction logic for JoinRoom.xaml
     /// </summary>
-    public partial class HighScoreWindow : Window
+    public partial class JoinRoom : Window
     {
-        public HighScoreWindow()
+        public JoinRoom()
         {
             InitializeComponent();
         }
 
+        private void JoinRoomButton_Click(object sender, RoutedEventArgs e)
+        {
+            if(this.RoomsList.SelectedItem != null)
+                Utils.OpenWindow(this, new Room(false, this.RoomsList.SelectedItem.ToString(), 0, 0));
+        }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
-            Utils.OpenWindow(this, new Statistics());
+            Utils.OpenWindow(this, new MainWindow());
+        }
+
+        private void RoomsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 }

@@ -15,19 +15,24 @@ using System.Windows.Shapes;
 namespace client
 {
     /// <summary>
-    /// Interaction logic for HighScoreWindow.xaml
+    /// Interaction logic for CreateRoom.xaml
     /// </summary>
-    public partial class HighScoreWindow : Window
+    public partial class CreateRoom : Window
     {
-        public HighScoreWindow()
+        public CreateRoom()
         {
             InitializeComponent();
         }
 
+        private void CreateRoomButton_Click(object sender, RoutedEventArgs e)
+        {
+            if(!(this.RoomName.Text == "") && !(this.MaxPlayers.Text == "") && !(this.AnswerTime.Text == ""))
+                Utils.OpenWindow(this, new Room(true, this.RoomName.Text, Convert.ToInt32(this.MaxPlayers.Text), Convert.ToInt32(this.AnswerTime.Text)));
+        }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
-            Utils.OpenWindow(this, new Statistics());
+            Utils.OpenWindow(this, new MainWindow());
         }
     }
 }
