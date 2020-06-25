@@ -17,11 +17,14 @@ namespace client
     /// <summary>
     /// Interaction logic for Room.xaml
     /// </summary>
-    public partial class Room : Window
+    public partial class Room : LogoutWindow
     {
         public Room(bool isAdmin, string roomName, int maxPlayers, int answerTime)
         {
             InitializeComponent();
+
+            User.errorOutput = this.errorOutput;
+
             if (isAdmin)
                 this.LeaveRoomButton.Visibility = Visibility.Hidden;
             else

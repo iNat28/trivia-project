@@ -24,6 +24,7 @@ namespace client
         {
             InitializeComponent();
             UsernameHeader.Text = "Hello " + User.username;
+            User.errorOutput = this.errorOutput;
         }
 
         private void SignoutButton_Click(object sender, RoutedEventArgs e)

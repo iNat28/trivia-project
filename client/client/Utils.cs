@@ -13,6 +13,7 @@ namespace client
         {
             LogoutWindow.toClose = false;
             windowToHide.Close();
+            User.errorOutput = null;
             windowToOpen.ShowDialog();
             LogoutWindow.toClose = true;
         }

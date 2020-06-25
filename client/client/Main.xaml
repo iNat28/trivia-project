@@ -12,6 +12,7 @@
         <Button x:Name="CreateRoomButton" Content="Create Room" HorizontalAlignment="Left" Margin="451,181,0,0" VerticalAlignment="Top" Width="94" Height="32" Click="CreateRoomButton_Click"/>
         <Button x:Name="JoinRoomButton" Content="Join Room" HorizontalAlignment="Left" Margin="451,242,0,0" VerticalAlignment="Top" Width="94" Height="32" Click="JoinRoomButton_Click"/>
         <Button x:Name="StatisticsButton" Content="Statistics" HorizontalAlignment="Left" Margin="451,299,0,0" VerticalAlignment="Top" Width="94" Height="32" Click="StatisticsButton_Click"/>
+        <TextBlock x:Name="errorOutput" HorizontalAlignment="Left" Margin="108,122,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="209" Width="237"/>
 
     </Grid>
 </src:LogoutWindow>

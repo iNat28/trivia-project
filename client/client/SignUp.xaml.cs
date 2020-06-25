@@ -24,6 +24,8 @@ namespace client
         public SignUpWindow()
         {
             InitializeComponent();
+
+            User.errorOutput = this.errorOutput;
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
@@ -33,28 +35,21 @@ namespace client
 
         private void SignupButton_Click(object sender, RoutedEventArgs e)
         {
-            try
+            JObject signUp = new JObject
             {
-                JObject signUp = new JObject
-                {
-                    ["username"] = usernameInput.Text,
-                    ["password"] = passwordInput.Password,
-                    ["email"] = emailInput.Text
-                };
+                ["username"] = usernameInput.Text,
+                ["password"] = passwordInput.Password,
+                ["email"] = emailInput.Text
+            };
 
-                Stream.Send(signUp, Codes.SIGNUP);
+            Stream.Send(signUp, Codes.SIGNUP);
 
-                Response response = Stream.Recieve();
+            Response response = Stream.Recieve();
 
-                if (Stream.Response(response, Codes.SIGNUP, errorOutput))
-                {
-                    User.username = (string)signUp["username"];
-                    Utils.OpenWindow(this, new MainWindow());
-                }
-            }
-            catch (Exception exception)
+            if (Stream.Response(response, Codes.SIGNUP, errorOutput))
             {
-                errorOutput.Text = exception.Message;
+                User.username = (string)signUp["username"];
+                Utils.OpenWindow(this, new MainWindow());
             }
         }
     }

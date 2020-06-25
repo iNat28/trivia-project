@@ -22,21 +22,14 @@ namespace client
     {
         public MyStatus()
         {
-            try
-            {
-                InitializeComponent();
+            InitializeComponent();
 
-                Stream.Send(new JObject(), Codes.USER_STATS);
+            Stream.Send(new JObject(), Codes.USER_STATS);
 
-                Response response = Stream.Recieve();
-                if (Stream.Response(response, Codes.USER_STATS, errorOutput))
-                {
-                    errorOutput.Text = response.jObject.ToString();
-                }
-            }
-            catch (Exception exception)
+            Response response = Stream.Recieve();
+            if (Stream.Response(response, Codes.USER_STATS, errorOutput))
             {
-                errorOutput.Text = exception.Message;
+                errorOutput.Text = response.jObject.ToString();
             }
         }
 

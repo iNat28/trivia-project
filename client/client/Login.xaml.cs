@@ -27,32 +27,27 @@ namespace client
         public LoginWindow()
         {
             InitializeComponent();
+
+            User.errorOutput = this.errorOutput;
         }
 
         //Move to functions and classes
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
-            try
+            JObject login = new JObject
             {
-                JObject login = new JObject
-                {
-                    ["username"] = usernameInput.Text,
-                    ["password"] = passwordInput.Password
-                };
+                ["username"] = usernameInput.Text,
+                ["password"] = passwordInput.Password
+            };
 
-                Stream.Send(login, Codes.LOGIN);
+            Stream.Send(login, Codes.LOGIN);
 
-                Response response = Stream.Recieve();
+            Response response = Stream.Recieve();
 
-                if(Stream.Response(response, Codes.LOGIN, errorOutput))
-                {
-                    User.username = (string)login["username"];
-                    Utils.OpenWindow(this, new MainWindow());
-                }
-            }
-            catch (Exception exception)
+            if(Stream.Response(response, Codes.LOGIN, errorOutput))
             {
-                errorOutput.Text = exception.Message;
+                User.username = (string)login["username"];
+                Utils.OpenWindow(this, new MainWindow());
             }
         }
 
