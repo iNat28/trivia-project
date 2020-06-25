@@ -46,12 +46,13 @@ void s_handleNewClient(Communicator& communicator, SOCKET socket, IRequestHandle
 				Buffer(msgBufferPtr, msgBufferPtr + msgLen)
 			);
 
-			//Handles the request, and gets the request result
-			requestResult = handler->handleRequest(requestInfo);
 			if (handler == nullptr)
 			{
 				throw Exception("Null handler");
 			}
+			//Handles the request, and gets the request result
+			requestResult = handler->handleRequest(requestInfo);
+			
 			handler = requestResult.newHandler;
 
 			//Sends the request result response
