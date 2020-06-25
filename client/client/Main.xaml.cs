@@ -38,12 +38,12 @@ namespace client
 
         private void CreateRoomButton_Click(object sender, RoutedEventArgs e)
         {
-
+            Utils.OpenWindow(this, new CreateRoom());
         }
 
         private void JoinRoomButton_Click(object sender, RoutedEventArgs e)
         {
-
+            Utils.OpenWindow(this, new JoinRoom());
         }
 
         private void StatisticsButton_Click(object sender, RoutedEventArgs e)
