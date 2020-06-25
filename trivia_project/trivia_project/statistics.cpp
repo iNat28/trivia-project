@@ -17,16 +17,22 @@ UserHighScore::UserHighScore(string username, int numPoints) :
 }
 
 UserHighScore::UserHighScore() : 
-	username(0), numPoints(0)
+	numPoints(0)
 {
 }
 
 void to_json(json& j, const UserHighScore& userHighScore)
 {
-
+	j[Keys::username] = userHighScore.username;
+	j[Keys::numPoints] = userHighScore.numPoints;
 }
 
 void to_json(json& j, const UserStats& userStats)
 {
-
+	j[Keys::username] = userStats.username;
+	j[Keys::numPoints] = userStats.numPoints;
+	j[Keys::numTotalGames] = userStats.numTotalGames;
+	j[Keys::numCorrectAnswers] = userStats.numCorrectAnswers;
+	j[Keys::numWrongAnswers] = userStats.numWrongAnswers;
+	j[Keys::averageAnswerTime] = userStats.averageAnswerTime;
 }

@@ -18,7 +18,7 @@ namespace client
     /// <summary>
     /// Interaction logic for Statistics.xaml
     /// </summary>
-    public partial class Statistics : Window
+    public partial class Statistics : LogoutWindow
     {
         public Statistics()
         {

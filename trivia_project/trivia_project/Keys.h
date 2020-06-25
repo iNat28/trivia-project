@@ -16,6 +16,9 @@ struct Keys
 	static const char* questionCount;
 	static const char* answerTimeout;
 	
+	//Statistics
+	static const char* userStats;
+	
 	/* Responses */
 
 	static const char* message;
@@ -26,8 +29,11 @@ struct Keys
 	static const char* playersInRoom;
 
 	//Statistics
-	static const char* totalGames;
-	static const char* user;
+	static const char* numPoints;
+	static const char* numTotalGames;
+	static const char* numCorrectAnswers;
+	static const char* numWrongAnswers;
+	static const char* averageAnswerTime;
 
 	/* Objects */
 
@@ -49,4 +55,3 @@ struct Keys
 	static const char* incorrectAnswer2;
 	static const char* incorrectAnswer3;
 };
-
