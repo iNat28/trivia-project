@@ -21,10 +21,10 @@ namespace client
     public partial class JoinRoom : Window
     {
         private int roomId;
+        
         public JoinRoom()
         {
             InitializeComponent();
-
            
             Stream.Send(new JObject(), Codes.GET_ROOM);
 
