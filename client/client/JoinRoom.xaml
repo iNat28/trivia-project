@@ -10,6 +10,7 @@
         <Button x:Name="JoinRoomButton" Content="Join Room" HorizontalAlignment="Left" Margin="314,260,0,0" VerticalAlignment="Top" Width="168" Height="54" Click="JoinRoomButton_Click"/>
         <Button x:Name="BackButton" Content="Back" HorizontalAlignment="Left" Margin="341,347,0,0" VerticalAlignment="Top" Width="115" Height="36" Click="BackButton_Click"/>
         <ListBox x:Name="RoomsList" HorizontalAlignment="Left" Height="149" Margin="286,58,0,0" VerticalAlignment="Top" Width="224" SelectionChanged="RoomsList_SelectionChanged"/>
+        <TextBlock x:Name="ErrorBox" HorizontalAlignment="Left" Margin="581,231,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="152" Width="168"/>
 
     </Grid>
 </Window>
