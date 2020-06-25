@@ -23,7 +23,7 @@ RequestResult MenuRequestHandler::handleRequest(const RequestInfo& requestInfo) 
 	{
 		return RequestResult(
 			JsonResponsePacketSerializer::serializeResponse(ErrorResponse(e.what())),
-			nullptr
+			this->m_handlerFactor.createMenuRequestHandler(this->m_user)
 		);
 	}
 }

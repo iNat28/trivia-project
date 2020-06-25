@@ -50,7 +50,7 @@ namespace client
 
                 Response response = Stream.Recieve();
 
-                if (Stream.Response(response, Codes.CREATE_ROOM, this.ErrorBox))
+                if (Stream.Response(response, Codes.CREATE_ROOM, this.errorOutput))
                     Utils.OpenWindow(this, new Room(true, this.RoomName.Text, Convert.ToInt32(this.MaxPlayers.Text), Convert.ToInt32(this.AnswerTime.Text)));
             }
         }
