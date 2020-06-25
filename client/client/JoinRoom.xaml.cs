@@ -24,6 +24,7 @@ namespace client
         
         public JoinRoom()
         {
+            //should get the list of rooms and display them in the list box
             InitializeComponent();
            
             Stream.Send(new JObject(), Codes.GET_ROOM);
