@@ -39,10 +39,11 @@ namespace client
 
                 JObject jObject = new JObject
                 {
-                    ["roomId"] = 0,
-                    ["roomName"] = this.RoomName.Text,
+                    ["id"] = 0,
+                    ["name"] = this.RoomName.Text,
                     ["maxPlayers"] = Convert.ToInt32(this.MaxPlayers.Text),
-                    ["isActive"] = false,
+                    ["timePerQuestion"] = Convert.ToInt32(this.AnswerTime.Text),
+                    ["isActive"] = 0,
                     ["numQuestionsAsked"] = 0
                 };
                 

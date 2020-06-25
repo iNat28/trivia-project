@@ -6,11 +6,10 @@ RoomManager::RoomManager(IDatabase& database) :
 {
 }
 
-void RoomManager::createRoom(string username, RoomData roomData)
+void RoomManager::createRoom(RoomData roomData)
 {
 	Room newRoom(roomData);
 	
-	newRoom.getRoomData().name = username + "'s game";
 	newRoom.getRoomData().id = this->m_database.getHighestRoomId();
 
 	this->m_rooms[roomData.id] = newRoom;
