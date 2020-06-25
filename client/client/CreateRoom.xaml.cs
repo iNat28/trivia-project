@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,11 +24,33 @@ namespace client
         {
             InitializeComponent();
         }
-
+        //unsigned int id;
+        //string name;
+        //unsigned int maxPlayers;
+        //unsigned int timePerQuestion;
+        //unsigned int isActive;
+        //unsigned int numQuestionsAsked;
         private void CreateRoomButton_Click(object sender, RoutedEventArgs e)
         {
-            if(!(this.RoomName.Text == "") && !(this.MaxPlayers.Text == "") && !(this.AnswerTime.Text == ""))
-                Utils.OpenWindow(this, new Room(true, this.RoomName.Text, Convert.ToInt32(this.MaxPlayers.Text), Convert.ToInt32(this.AnswerTime.Text)));
+            if (!(this.RoomName.Text == "") && !(this.MaxPlayers.Text == "") && !(this.AnswerTime.Text == ""))
+            {
+
+                JObject jObject = new JObject
+                {
+                    ["roomId"] = 0,
+                    ["roomName"] = this.RoomName.Text,
+                    ["maxPlayers"] = Convert.ToInt32(this.MaxPlayers.Text),
+                    ["isActive"] = false,
+                    ["numQuestionsAsked"] = 0
+                };
+                
+                Stream.Send(jObject, Codes.CREATE_ROOM);
+
+                Response response = Stream.Recieve();
+
+                if (Stream.Response(response, Codes.CREATE_ROOM, this.ErrorBox))
+                    Utils.OpenWindow(this, new Room(true, this.RoomName.Text, Convert.ToInt32(this.MaxPlayers.Text), Convert.ToInt32(this.AnswerTime.Text)));
+            }
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)

@@ -47,7 +47,7 @@ namespace client
                 Stream.Send(jObject, Codes.JOIN_ROOM);
 
                 Response response = Stream.Recieve();
-
+                
                 if (Stream.Response(response, Codes.JOIN_ROOM, this.ErrorBox))
                 {
                     Utils.OpenWindow(this, new Room(false, this.RoomsList.SelectedItem.ToString(), 0, 0));
@@ -62,7 +62,7 @@ namespace client
 
         private void RoomsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            //should get the list of rooms and then get the id of the room with the same name.
         }
     }
 }

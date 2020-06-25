@@ -15,6 +15,7 @@
         <TextBox x:Name="AnswerTime" HorizontalAlignment="Left" Height="23" Margin="375,153,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
         <TextBox x:Name="MaxPlayers" HorizontalAlignment="Left" Height="23" Margin="375,200,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
         <Button x:Name="CreateRoomButton" Content="Create Room" HorizontalAlignment="Left" Margin="298,263,0,0" VerticalAlignment="Top" Width="161" Height="46" Click="CreateRoomButton_Click"/>
+        <TextBlock x:Name="ErrorBox" HorizontalAlignment="Left" Margin="577,230,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="147" Width="159"/>
 
     </Grid>
 </Window>
