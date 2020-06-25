@@ -17,11 +17,13 @@ namespace client
     /// <summary>
     /// Interaction logic for CreateRoom.xaml
     /// </summary>
-    public partial class CreateRoom : Window
+    public partial class CreateRoom : LogoutWindow
     {
         public CreateRoom()
         {
             InitializeComponent();
+
+            User.errorOutput = this.errorOutput;
         }
 
         private void CreateRoomButton_Click(object sender, RoutedEventArgs e)

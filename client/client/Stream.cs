@@ -34,9 +34,16 @@ namespace client
             {
                 if (client == null)
                 {
-                    tcpClient = new TcpClient();
-                    tcpClient.Connect(new IPEndPoint(IPAddress.Parse(IP_ADDRESS), PORT));
-                    client = tcpClient.GetStream();
+                    try
+                    {
+                        tcpClient = new TcpClient();
+                        tcpClient.Connect(new IPEndPoint(IPAddress.Parse(IP_ADDRESS), PORT));
+                        client = tcpClient.GetStream();
+                    }
+                    catch(Exception e)
+                    {
+                        User.PrintError(e);
+                    }
                 }
 
                 return client;
@@ -45,44 +52,65 @@ namespace client
 
         public static void Close()
         {
-            client.Close();
-            tcpClient = null;
-            client = null;
+            try
+            {
+                client.Close();
+                tcpClient = null;
+                client = null;
+            }
+            catch (Exception e)
+            {
+                User.PrintError(e);
+            }
         }
 
         public static void Send(JObject jObject, Codes code)
         {
-            MemoryStream memoryStream = new MemoryStream();
-            BsonDataWriter bsonWriter = new BsonDataWriter(memoryStream);
-            jObject.WriteTo(bsonWriter);
+            try
+            {
+                MemoryStream memoryStream = new MemoryStream();
+                BsonDataWriter bsonWriter = new BsonDataWriter(memoryStream);
+                jObject.WriteTo(bsonWriter);
 
-            byte[] buffer = new byte[] { Convert.ToByte(code) };
-            Client.Write(buffer, 0, buffer.Length);
-            Client.Write(memoryStream.ToArray(), 0, (int)memoryStream.Length);
-            Client.Flush();
+                byte[] buffer = new byte[] { Convert.ToByte(code) };
+                Client.Write(buffer, 0, buffer.Length);
+                Client.Write(memoryStream.ToArray(), 0, (int)memoryStream.Length);
+                Client.Flush();
+            }
+            catch (Exception e)
+            {
+                User.PrintError(e);
+            }
         }
 
         public static Response Recieve()
         {
             Response response = new Response();
-            int bufferSize;
-            byte[] bufferBson;
-            byte[] bufferRead = new byte[MSG_CODE_SIZE + MSG_LEN_SIZE];
+            try
+            {
+                int bufferSize;
+                byte[] bufferBson;
+                byte[] bufferRead = new byte[MSG_CODE_SIZE + MSG_LEN_SIZE];
 
-            Client.Read(bufferRead, 0, bufferRead.Length);
+                Client.Read(bufferRead, 0, bufferRead.Length);
             
-            //Converts the read buffer to the message code and size
-            //If buffer code size is changed, then this needs to be changed
-            response.code = (Codes)bufferRead[0]; 
-            bufferSize = BitConverter.ToInt32(bufferRead, MSG_CODE_SIZE);
+                //Converts the read buffer to the message code and size
+                //If buffer code size is changed, then this needs to be changed
+                response.code = (Codes)bufferRead[0]; 
+                bufferSize = BitConverter.ToInt32(bufferRead, MSG_CODE_SIZE);
 
-            bufferBson = new byte[bufferSize + MSG_LEN_SIZE];
-            //Copies the Bson length to the bson buffer
-            Array.Copy(bufferRead, MSG_CODE_SIZE, bufferBson, 0, MSG_LEN_SIZE);
+                bufferBson = new byte[bufferSize + MSG_LEN_SIZE];
+                //Copies the Bson length to the bson buffer
+                Array.Copy(bufferRead, MSG_CODE_SIZE, bufferBson, 0, MSG_LEN_SIZE);
 
-            Client.Read(bufferBson, MSG_LEN_SIZE, bufferBson.Length - MSG_LEN_SIZE);
+                Client.Read(bufferBson, MSG_LEN_SIZE, bufferBson.Length - MSG_LEN_SIZE);
 
-            response.jObject = (JObject)JToken.ReadFrom(new BsonDataReader(new MemoryStream(bufferBson)));
+                response.jObject = (JObject)JToken.ReadFrom(new BsonDataReader(new MemoryStream(bufferBson)));
+            }
+            catch (Exception e)
+            {
+                User.PrintError(e);
+            }
 
             return response;
         }
@@ -90,23 +118,31 @@ namespace client
         public static bool Response(Response response, Codes code, TextBlock errorOutput)
         {
             string error = "";
-            bool ifSuccess = false;
 
-            if (response.code == Codes.ERROR_CODE)
+            try
             {
-                error = (string)response.jObject["message"];
+                if (response.code == code)
+                {
+                    return true;
+                }
+                
+                if (response.code == Codes.ERROR_CODE)
+                {
+                    error = (string)response.jObject["message"];
+                }
+                else
+                {
+                    error = response.jObject.ToString();
+                }
+
+                errorOutput.Text = error;
             }
-            else if (response.code == code)
+            catch (Exception e)
             {
-                ifSuccess = true;
-            }
-            else
-            {
-                error = response.jObject.ToString();
+                User.PrintError(e);
             }
 
-            errorOutput.Text = error;
-            return ifSuccess;
+            return false;
         }
     }
 }

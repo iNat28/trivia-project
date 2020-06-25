@@ -22,21 +22,16 @@ namespace client
     {
         public HighScoreWindow()
         {
-            try
-            {
-                InitializeComponent();
+            User.errorOutput = this.errorOutput;
 
-                Stream.Send(new JObject(), Codes.HIGH_SCORES);
+            InitializeComponent();
 
-                Response response = Stream.Recieve();
-                if (Stream.Response(response, Codes.HIGH_SCORES, errorOutput))
-                {
-                    errorOutput.Text = response.jObject.ToString();
-                }
-            }
-            catch (Exception exception)
+            Stream.Send(new JObject(), Codes.HIGH_SCORES);
+
+            Response response = Stream.Recieve();
+            if (Stream.Response(response, Codes.HIGH_SCORES, errorOutput))
             {
-                errorOutput.Text = exception.Message;
+                errorOutput.Text = response.jObject.ToString();
             }
         }
 
