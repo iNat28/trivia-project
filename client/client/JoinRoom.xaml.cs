@@ -63,6 +63,7 @@ namespace client
         private void RoomsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             //should get the list of rooms and then get the id of the room with the same name.
+
         }
     }
 }
