@@ -39,12 +39,12 @@ namespace client
 
                 JObject jObject = new JObject
                 {
-                    ["id"] = 0,
-                    ["name"] = this.RoomName.Text,
-                    ["maxPlayers"] = Convert.ToInt32(this.MaxPlayers.Text),
-                    ["timePerQuestion"] = Convert.ToInt32(this.AnswerTime.Text),
-                    ["isActive"] = 0,
-                    ["numQuestionsAsked"] = 0
+                    [Keys.id] = 0,
+                    [Keys.roomName] = this.RoomName.Text,
+                    [Keys.maxUsers] = Convert.ToInt32(this.MaxPlayers.Text),
+                    [Keys.timePerQuestion] = Convert.ToInt32(this.AnswerTime.Text),
+                    [Keys.isActive] = 0,
+                    [Keys.numQuestionsAsked] = 0
                 };
                 
                 Stream.Send(jObject, Codes.CREATE_ROOM);

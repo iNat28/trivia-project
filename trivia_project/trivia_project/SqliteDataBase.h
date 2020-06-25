@@ -45,6 +45,7 @@ public:
 	static std::vector<UserStats> m_gamesList;
 	//variable for multiple users
 	static bool moreData;
+	static int highestRoomId;
 };
 
 //https://opentdb.com/api.php?amount=10

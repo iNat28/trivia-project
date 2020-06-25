@@ -4,6 +4,7 @@
 std::unordered_map<string, string> SqliteDataBase::m_usersList;
 std::vector<UserStats> SqliteDataBase::m_gamesList;
 bool SqliteDataBase::moreData = false;
+int SqliteDataBase::highestRoomId = 1;
 
 SqliteDataBase::SqliteDataBase()
 {
@@ -217,13 +218,7 @@ void SqliteDataBase::addToDB(vector<Question> questionsList)
 
 int SqliteDataBase::getHighestRoomId() const
 {
-	int highestRoomId = 0;
-
-	SqliteDataBase::moreData = false;
-	std::string sqlStatement = "select * from statistics order by roomId DESC limit 1;";
-	send_query(sqlStatement, int_callback, &highestRoomId);
-
-	return highestRoomId;
+	return this->highestRoomId++;
 }
 
 void SqliteDataBase::addGameStats(UserStats userStats)

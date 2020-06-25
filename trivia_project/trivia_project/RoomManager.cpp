@@ -12,7 +12,7 @@ void RoomManager::createRoom(RoomData roomData)
 	
 	newRoom.getRoomData().id = this->m_database.getHighestRoomId();
 
-	this->m_rooms[roomData.id] = newRoom;
+	this->m_rooms[newRoom.getRoomData().id] = newRoom;
 }
 
 void RoomManager::deleteRoom(unsigned int id)

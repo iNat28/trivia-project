@@ -31,9 +31,14 @@ namespace client
 
             Response response = Stream.Recieve();
 
+            //TODO Remove third param from Response
             if (Stream.Response(response, Codes.GET_ROOM, this.ErrorBox))
             {
-                this.ErrorBox.Text = response.jObject.ToString();
+                JArray jArray = (JArray)response.jObject[Keys.rooms];
+                foreach (JObject jObject in jArray)
+                {
+                    this.RoomsList.Items.Add(jObject[Keys.name]);
+                }
             }
         }
 
