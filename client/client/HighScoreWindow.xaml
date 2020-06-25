@@ -8,15 +8,10 @@
         Title="HighScoreWindow" Height="450" Width="800">
     <Grid>
         <TextBlock x:Name="HighScoresHeader" HorizontalAlignment="Center" Margin="237,42,436.6,0" TextWrapping="Wrap" Text="High Scores" VerticalAlignment="Top" Height="26" Width="120"/>
-        <TextBlock x:Name="FirstPlaceHeader" HorizontalAlignment="Left" Margin="237,112,0,0" TextWrapping="Wrap" Text="First place:" VerticalAlignment="Top" RenderTransformOrigin="0.292,-5.562" Height="40" Width="102"/>
-        <TextBlock x:Name="SecondPlaceHeader" HorizontalAlignment="Left" Margin="237,174,0,0" TextWrapping="Wrap" Text="Second place:" VerticalAlignment="Top" Height="39" Width="102"/>
-        <TextBlock x:Name="ThirdPlaceHeader" HorizontalAlignment="Left" Margin="237,232,0,0" TextWrapping="Wrap" Text="Third place:" VerticalAlignment="Top" Height="33" Width="102"/>
         <Button x:Name="BackButton" Content="Back" HorizontalAlignment="Left" Margin="347,337,0,0" VerticalAlignment="Top" Width="117" Height="42" Click="BackButton_Click"/>
         <TextBlock x:Name="ErrorBlock" HorizontalAlignment="Left" Margin="582,186,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="138" Width="169"/>
-        <TextBlock x:Name="FirstPlaceName" HorizontalAlignment="Left" Margin="414,112,0,0" TextWrapping="Wrap" Text="name1" VerticalAlignment="Top"/>
-        <TextBlock x:Name="SecondPlaceName" HorizontalAlignment="Left" Margin="414,174,0,0" TextWrapping="Wrap" Text="name2" VerticalAlignment="Top"/>
-        <TextBlock x:Name="ThirdPlaceName" HorizontalAlignment="Left" Margin="414,232,0,0" TextWrapping="Wrap" Text="name3" VerticalAlignment="Top"/>
         <TextBlock x:Name="errorOutput" HorizontalAlignment="Left" Margin="10,30,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="306" Width="191"/>
+        <ListBox x:Name="highScores" HorizontalAlignment="Left" Height="218" Margin="236,94,0,0" VerticalAlignment="Top" Width="288"/>
 
     </Grid>
 </local:LogoutWindow>

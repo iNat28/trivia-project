@@ -34,6 +34,7 @@ struct Keys
 	static const char* numCorrectAnswers;
 	static const char* numWrongAnswers;
 	static const char* averageAnswerTime;
+	static const char* highScores;
 
 	/* Objects */
 

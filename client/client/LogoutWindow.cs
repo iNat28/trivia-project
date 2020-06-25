@@ -17,7 +17,7 @@ namespace client
 {
     public class LogoutWindow : Window
     {
-        public static bool toClose = false;
+        public static bool toClose = true;
 
         protected override void OnClosed(EventArgs e)
         {
@@ -25,11 +25,7 @@ namespace client
 
             if (toClose)
             {
-                JObject jObject = new JObject
-                {
-                    ["username"] = User.username
-                };
-                Stream.Send(jObject, Codes.LOGOUT);
+                Stream.Signout();
                 Stream.Close();
             }
         }

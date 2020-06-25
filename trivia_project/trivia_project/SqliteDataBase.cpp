@@ -267,14 +267,12 @@ HighScores SqliteDataBase::getHighScores() const
 	sstream buffer;
 
 	//TODO: Move three to const
-	buffer << "select numPoints from statistics order by numPoints DESC limit 3;";
+	buffer << "select username, numPoints from statistics order by numPoints DESC limit 3;";
 	send_query(buffer.str().c_str(), statistics_callback);
 
-	int i = 0;
 	for (auto& game : m_gamesList)
 	{
-		highScores[i] = UserHighScore(game.username, game.numPoints);
-		i++;
+		highScores.push_back(UserHighScore(game.username, game.numPoints));
 	}
 
 	return highScores;

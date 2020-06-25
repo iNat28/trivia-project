@@ -64,6 +64,16 @@ namespace client
             }
         }
 
+        public static void Signout()
+        {
+            JObject jObject = new JObject
+            {
+                ["username"] = User.username
+            };
+            Send(jObject, Codes.LOGOUT);
+            Recieve();
+        }
+
         public static void Send(JObject jObject, Codes code)
         {
             try

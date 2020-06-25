@@ -30,6 +30,7 @@ namespace client
             {
                 Console.WriteLine(e.Message);
             }
+            Stream.Close();
         }
     }
 }

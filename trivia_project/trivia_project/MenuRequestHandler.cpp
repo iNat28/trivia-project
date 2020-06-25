@@ -123,7 +123,7 @@ const map<Codes, MenuRequestHandler::requests_func_t> MenuRequestHandler::m_requ
 	{ Codes::GET_ROOM, &MenuRequestHandler::_getRooms },
 	{ Codes::GET_PLAYERS_IN_ROOM, &MenuRequestHandler::_getPlayersInRoom },
 	{ Codes::USER_STATS, &MenuRequestHandler::_getUserStats },
-	{ Codes::USER_STATS, &MenuRequestHandler::_getHighScores },
+	{ Codes::HIGH_SCORES, &MenuRequestHandler::_getHighScores },
 	{ Codes::JOIN_ROOM, &MenuRequestHandler::_joinRoom },
 	{ Codes::CREATE_ROOM, &MenuRequestHandler::_createRoom }
 };

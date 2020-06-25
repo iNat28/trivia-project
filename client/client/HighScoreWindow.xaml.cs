@@ -31,7 +31,11 @@ namespace client
             Response response = Stream.Recieve();
             if (Stream.Response(response, Codes.HIGH_SCORES, errorOutput))
             {
-                errorOutput.Text = response.jObject.ToString();
+                JArray jArray = (JArray)response.jObject[Keys.highScores];
+                foreach (JObject jObject in jArray)
+                {
+                    this.highScores.Items.Add((string)jObject[Keys.username] + " - " + (int)jObject[Keys.numPoints]);
+                }
             }
         }
 

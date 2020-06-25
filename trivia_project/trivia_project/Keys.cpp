@@ -24,6 +24,7 @@ const char* Keys::numTotalGames = "numTotalGames";
 const char* Keys::numCorrectAnswers = "numCorrectAnswers";
 const char* Keys::numWrongAnswers = "numWrongAnswers";
 const char* Keys::averageAnswerTime = "averageAnswerTime";
+const char* Keys::highScores = "highScores";
 
 const char* Keys::id = "id";
 const char* Keys::name = "name";

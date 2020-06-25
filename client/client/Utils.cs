@@ -13,9 +13,9 @@ namespace client
         {
             LogoutWindow.toClose = false;
             windowToHide.Close();
+            LogoutWindow.toClose = true;
             User.errorOutput = null;
             windowToOpen.ShowDialog();
-            LogoutWindow.toClose = true;
         }
     }
 
@@ -65,6 +65,7 @@ namespace client
         public const string numCorrectAnswers = "numCorrectAnswers";
         public const string numWrongAnswers = "numWrongAnswers";
         public const string averageAnswerTime = "averageAnswerTime";
+        public const string highScores = "highScores";
 
         public const string id = "id";
         public const string name = "name";

@@ -20,7 +20,7 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const GetRoomResponse& ge
 Buffer JsonResponsePacketSerializer::serializeResponse(const GetPlayersInRoomResponse& getPlayersInRoomResponse)
 {
 	json jsonToSerialize;
-	jsonToSerialize[Keys::rooms] = getPlayersInRoomResponse.users;
+	jsonToSerialize[Keys::playersInRoom] = getPlayersInRoomResponse.users;
 
 	return JsonResponsePacketSerializer::serializeJson(jsonToSerialize, getPlayersInRoomResponse);
 }
@@ -37,7 +37,7 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const GetUserStatsRespons
 Buffer JsonResponsePacketSerializer::serializeResponse(const GetHighScoresResponse& getHighScoresResponse)
 {
 	json jsonToSerialize;
-	jsonToSerialize[Keys::username] = getHighScoresResponse.highScores;
+	jsonToSerialize[Keys::highScores] = getHighScoresResponse.highScores;
 	jsonToSerialize[Keys::status] = getHighScoresResponse.status;
 
 	return JsonResponsePacketSerializer::serializeJson(jsonToSerialize, getHighScoresResponse);

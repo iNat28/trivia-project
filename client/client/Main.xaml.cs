@@ -29,11 +29,7 @@ namespace client
 
         private void SignoutButton_Click(object sender, RoutedEventArgs e)
         {
-            JObject jObject = new JObject
-            {
-                ["username"] = User.username
-            };
-            Stream.Send(jObject, Codes.LOGOUT);
+            Stream.Signout();
             Utils.OpenWindow(this, new LoginWindow());
         }
 
