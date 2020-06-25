@@ -18,7 +18,7 @@ namespace client
     /// <summary>
     /// Interaction logic for MyStatus.xaml
     /// </summary>
-    public partial class MyStatus : Window
+    public partial class MyStatus : LogoutWindow
     {
         public MyStatus()
         {
@@ -26,10 +26,10 @@ namespace client
             {
                 InitializeComponent();
 
-                Stream.Send(new JObject(), Codes.STATISTICS);
+                Stream.Send(new JObject(), Codes.USER_STATS);
 
                 Response response = Stream.Recieve();
-                if (Stream.Response(response, Codes.STATISTICS, errorOutput))
+                if (Stream.Response(response, Codes.USER_STATS, errorOutput))
                 {
                     errorOutput.Text = response.jObject.ToString();
                 }

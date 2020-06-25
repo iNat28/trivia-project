@@ -18,29 +18,12 @@ namespace client
     /// <summary>
     /// Interaction logic for Main.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : LogoutWindow
     {
-        public static bool toClose = true;
-
         public MainWindow()
         {
             InitializeComponent();
             UsernameHeader.Text = "Hello " + User.username;
-        }
-
-        protected override void OnClosed(EventArgs e)
-        {
-            base.OnClosed(e);
-
-            if (toClose)
-            {
-                JObject jObject = new JObject
-                {
-                    ["username"] = User.username
-                };
-                Stream.Send(jObject, Codes.LOGOUT);
-                Stream.Close();
-            }
         }
 
         private void SignoutButton_Click(object sender, RoutedEventArgs e)

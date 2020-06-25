@@ -22,7 +22,8 @@ void RoomManager::deleteRoom(unsigned int id)
 	for (auto& user : room.getAllUsers())
 	{
 		this->m_database.addGameStats(
-			UserStats(user, id, room.getRoomData().numQuestionsAsked)
+			//TODO: Add user stats from the game
+			UserStats()
 		);
 	}
 

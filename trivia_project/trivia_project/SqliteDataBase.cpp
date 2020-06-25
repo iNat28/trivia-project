@@ -265,9 +265,9 @@ UserStats SqliteDataBase::getUserStats(string username) const
 	return m_gamesList[0];
 }
 
-std::vector<UserHighScore> SqliteDataBase::getHighScores() const
+HighScores SqliteDataBase::getHighScores() const
 {
-	std::vector<UserHighScore> highScores;
+	HighScores highScores;
 	SqliteDataBase::moreData = false;
 	sstream buffer;
 

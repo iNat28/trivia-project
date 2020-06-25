@@ -66,12 +66,24 @@ RequestResult MenuRequestHandler::_getPlayersInRoom(const RequestInfo& requestIn
 	);
 }
 
-RequestResult MenuRequestHandler::_getStatistics(const RequestInfo& requestInfo) const
+RequestResult MenuRequestHandler::_getUserStats(const RequestInfo& requestInfo) const
 {
 	return RequestResult(
 		JsonResponsePacketSerializer::serializeResponse(
-			GetStatisticsResponse(static_cast<unsigned int>(ResponseCodes::SUCCESFUL),
-				this->m_handlerFactor.getStatisticsManager().getStatistics(this->m_user.username)
+			GetUserStatsResponse(static_cast<unsigned int>(ResponseCodes::SUCCESFUL),
+				this->m_handlerFactor.getStatisticsManager().getUserStats(this->m_user.username)
+			)
+		),
+		this->m_handlerFactor.createMenuRequestHandler(this->m_user)
+	);
+}
+
+RequestResult MenuRequestHandler::_getHighScores(const RequestInfo& requestInfo) const
+{
+	return RequestResult(
+		JsonResponsePacketSerializer::serializeResponse(
+			GetHighScoresResponse(static_cast<unsigned int>(ResponseCodes::SUCCESFUL),
+				this->m_handlerFactor.getStatisticsManager().getHighScores()
 			)
 		),
 		this->m_handlerFactor.createMenuRequestHandler(this->m_user)
@@ -110,7 +122,8 @@ const map<Codes, MenuRequestHandler::requests_func_t> MenuRequestHandler::m_requ
 	{ Codes::LOGOUT, &MenuRequestHandler::_signout },
 	{ Codes::GET_ROOM, &MenuRequestHandler::_getRooms },
 	{ Codes::GET_PLAYERS_IN_ROOM, &MenuRequestHandler::_getPlayersInRoom },
-	{ Codes::STATISTICS, &MenuRequestHandler::_getStatistics },
+	{ Codes::USER_STATS, &MenuRequestHandler::_getUserStats },
+	{ Codes::USER_STATS, &MenuRequestHandler::_getHighScores },
 	{ Codes::JOIN_ROOM, &MenuRequestHandler::_joinRoom },
 	{ Codes::CREATE_ROOM, &MenuRequestHandler::_createRoom }
 };

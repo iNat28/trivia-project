@@ -6,7 +6,12 @@ StatisticsManager::StatisticsManager(IDatabase& database) :
 {
 }
 
-PersonalUserGameStats StatisticsManager::getStatistics(string username)
+UserStats StatisticsManager::getUserStats(string username)
 {
-	return this->m_database.getAllTimeGameStats(username);
+	return this->m_database.getUserStats(username);
+}
+
+HighScores StatisticsManager::getHighScores()
+{
+	return this->m_database.getHighScores();
 }

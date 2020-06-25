@@ -26,21 +26,3 @@ struct UserStats
 
 void to_json(json& j, const UserHighScore& userHighScore);
 void to_json(json& j, const UserStats& userStats);
-
-//struct RecordTable
-//{
-//	RecordTable(std::vector<std::pair<string, int>> table);
-//	RecordTable();
-//
-//	std::array<UserStats, 5> userRecordTable;
-//};
-
-//struct PersonalUserGameStats
-//{
-//	PersonalUserGameStats(string username, vector<UserStats> allGames);
-//	PersonalUserGameStats();
-//
-//	string username;
-//	vector<UserStats> allGames;
-//	RecordTable recordTable;
-//};

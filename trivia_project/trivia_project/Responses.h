@@ -77,11 +77,20 @@ struct CreateRoomResponse : StatusResponse
 	using StatusResponse::StatusResponse;
 };
 
-struct GetStatisticsResponse : StatusResponse
+struct GetUserStatsResponse : StatusResponse
 {
-	GetStatisticsResponse(unsigned int status, PersonalUserGameStats personalUserGameStats);
+	GetUserStatsResponse(unsigned int status, UserStats userStats);
 
 	virtual Codes getResponseCode() const override;
 
-	PersonalUserGameStats personalUserGameStats;
+	UserStats userStats;
+};
+
+struct GetHighScoresResponse : StatusResponse
+{
+	GetHighScoresResponse(unsigned int status, HighScores highScores);
+
+	virtual Codes getResponseCode() const override;
+
+	HighScores highScores;
 };

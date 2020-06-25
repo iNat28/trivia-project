@@ -19,7 +19,8 @@ enum class Codes
 	CREATE_ROOM,
 
 	//Statistics
-	STATISTICS = 30
+	USER_STATS = 30,
+	HIGH_SCORES
 };
 
 enum class ResponseCodes

@@ -11,10 +11,10 @@ namespace client
     {
         public static void OpenWindow(Window windowToHide, Window windowToOpen)
         {
-            MainWindow.toClose = false;
+            LogoutWindow.toClose = false;
             windowToHide.Close();
             windowToOpen.ShowDialog();
-            MainWindow.toClose = true;
+            LogoutWindow.toClose = true;
         }
     }
 
@@ -34,7 +34,8 @@ namespace client
         CREATE_ROOM,
 
         //Statistics
-        STATISTICS = 30
+        USER_STATS = 30,
+        HIGH_SCORES
     };
 
     //TODO: Add Keys for Json

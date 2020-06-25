@@ -34,7 +34,7 @@ public:
 	virtual void addGameStats(UserStats userStats) override;
 	//TODO: Change to UserStats
 	virtual UserStats getUserStats(string username) const override;
-	virtual std::vector<UserHighScore> getHighScores() const override;
+	virtual HighScores getHighScores() const override;
 	
 	void openDB();
 

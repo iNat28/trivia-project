@@ -61,12 +61,22 @@ Codes CreateRoomResponse::getResponseCode() const
 	return Codes::CREATE_ROOM;
 }
 
-GetStatisticsResponse::GetStatisticsResponse(unsigned int status, PersonalUserGameStats personalUserGameStats) :
-	StatusResponse(status), personalUserGameStats(personalUserGameStats)
+GetUserStatsResponse::GetUserStatsResponse(unsigned int status, UserStats userStats) : 
+	StatusResponse(status), userStats(userStats)
 {
 }
 
-Codes GetStatisticsResponse::getResponseCode() const
+Codes GetUserStatsResponse::getResponseCode() const
 {
-	return Codes::STATISTICS;
+	return Codes::USER_STATS;
+}
+
+GetHighScoresResponse::GetHighScoresResponse(unsigned int status, HighScores highScores) : 
+	StatusResponse(status), highScores(highScores)
+{
+}
+
+Codes GetHighScoresResponse::getResponseCode() const
+{
+	return Codes::HIGH_SCORES;
 }
