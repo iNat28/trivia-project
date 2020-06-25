@@ -24,7 +24,6 @@ namespace client
         
         public JoinRoom()
         {
-            //should get the list of rooms and display them in the list box
             InitializeComponent();
            
             Stream.Send(new JObject(), Codes.GET_ROOM);
@@ -68,7 +67,19 @@ namespace client
 
         private void RoomsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            //should get the list of rooms and then get the id of the room with the same name.
+            Stream.Send(new JObject(), Codes.GET_ROOM);
+
+            Response response = Stream.Recieve();
+            
+            if (Stream.Response(response, Codes.GET_ROOM, this.ErrorBox))
+            {
+                JArray jArray = (JArray)response.jObject[Keys.rooms];
+                foreach (JObject jObject in jArray)
+                {
+                    if (jObject[Keys.name].ToString() == RoomsList.SelectedItem.ToString())
+                        this.roomId = Convert.ToInt32(jObject[Keys.id].ToString());
+                }
+            }
 
         }
     }
