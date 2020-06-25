@@ -44,11 +44,5 @@ namespace client
         {
             Utils.OpenWindow(this, new Statistics());
         }
-
-
-        private void BackButton_Click(object sender, RoutedEventArgs e)
-        {
-            Utils.OpenWindow(this, new Statistics());
-        }
     }
 }
