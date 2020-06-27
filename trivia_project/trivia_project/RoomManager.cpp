@@ -15,9 +15,9 @@ void RoomManager::createRoom(RoomData roomData)
 	this->m_rooms[newRoom.getRoomData().id] = newRoom;
 }
 
-void RoomManager::deleteRoom(unsigned int id)
+void RoomManager::deleteRoom(unsigned int roomId)
 {
-	Room& room = getRoom(id);
+	Room& room = getRoom(roomId);
 	for (auto& user : room.getAllUsers())
 	{
 		this->m_database.addGameStats(
@@ -26,7 +26,7 @@ void RoomManager::deleteRoom(unsigned int id)
 		);
 	}
 
-	if (!this->m_rooms.erase(id))
+	if (!this->m_rooms.erase(roomId))
 	{
 		throw Exception("Room ID not found");
 	}

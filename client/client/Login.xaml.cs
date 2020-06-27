@@ -44,7 +44,7 @@ namespace client
 
             Response response = Stream.Recieve();
 
-            if(Stream.Response(response, Codes.LOGIN, errorOutput))
+            if(Stream.Response(response, Codes.LOGIN))
             {
                 User.username = (string)login["username"];
                 Utils.OpenWindow(this, new MainWindow());

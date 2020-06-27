@@ -125,9 +125,9 @@ namespace client
             return response;
         }
 
-        public static bool Response(Response response, Codes code, TextBlock errorOutput)
+        public static bool Response(Response response, Codes code)
         {
-            string error = "";
+            string error;
 
             try
             {
@@ -145,7 +145,7 @@ namespace client
                     error = response.jObject.ToString();
                 }
 
-                errorOutput.Text = error;
+                throw new Exception(error);
             }
             catch (Exception e)
             {

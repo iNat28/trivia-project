@@ -29,7 +29,7 @@ namespace client
             Stream.Send(new JObject(), Codes.HIGH_SCORES);
 
             Response response = Stream.Recieve();
-            if (Stream.Response(response, Codes.HIGH_SCORES, errorOutput))
+            if (Stream.Response(response, Codes.HIGH_SCORES))
             {
                 JArray jArray = (JArray)response.jObject[Keys.highScores];
                 foreach (JObject jObject in jArray)

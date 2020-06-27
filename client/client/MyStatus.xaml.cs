@@ -23,11 +23,12 @@ namespace client
         public MyStatus()
         {
             InitializeComponent();
+            User.errorOutput = errorOutput;
 
             Stream.Send(new JObject(), Codes.USER_STATS);
 
             Response response = Stream.Recieve();
-            if (Stream.Response(response, Codes.USER_STATS, errorOutput))
+            if (Stream.Response(response, Codes.USER_STATS))
             {
                 JObject userStats = (JObject)response.jObject[Keys.userStats];
                 this.numPointsOutput.Text = "Number of Points - " + (int)userStats[Keys.numPoints];

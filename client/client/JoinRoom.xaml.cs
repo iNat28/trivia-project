@@ -25,13 +25,14 @@ namespace client
         public JoinRoom()
         {
             InitializeComponent();
-           
+            User.errorOutput = this.ErrorBox;
+
             Stream.Send(new JObject(), Codes.GET_ROOM);
 
             Response response = Stream.Recieve();
 
             //TODO Remove third param from Response
-            if (Stream.Response(response, Codes.GET_ROOM, this.ErrorBox))
+            if (Stream.Response(response, Codes.GET_ROOM))
             {
                 JArray jArray = (JArray)response.jObject[Keys.rooms];
                 foreach (JObject jObject in jArray)
@@ -53,7 +54,7 @@ namespace client
 
                 Response response = Stream.Recieve();
                 
-                if (Stream.Response(response, Codes.JOIN_ROOM, this.ErrorBox))
+                if (Stream.Response(response, Codes.JOIN_ROOM))
                 {
                     Utils.OpenWindow(this, new Room(false, this.RoomsList.SelectedItem.ToString(), 0, 0));
                 }          
@@ -71,7 +72,7 @@ namespace client
 
             Response response = Stream.Recieve();
             
-            if (Stream.Response(response, Codes.GET_ROOM, this.ErrorBox))
+            if (Stream.Response(response, Codes.GET_ROOM))
             {
                 JArray jArray = (JArray)response.jObject[Keys.rooms];
                 foreach (JObject jObject in jArray)
