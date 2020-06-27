@@ -8,7 +8,7 @@ class RoomManager
 public:
 	RoomManager(IDatabase& database);
 
-	void createRoom(RoomData roomData);
+	void createRoom(RoomData roomData, string adminUsername);
 	void deleteRoom(unsigned int id);
 	bool getRoomState(unsigned int id) const;
 	Room& getRoom(unsigned int id);

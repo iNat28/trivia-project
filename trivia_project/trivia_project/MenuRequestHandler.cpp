@@ -108,7 +108,7 @@ RequestResult MenuRequestHandler::_createRoom(const RequestInfo& requestInfo) co
 {
 	CreateRoomRequest createRoomRequest = JsonRequestPacketDeserializer::deserializeCreateRoomRequest(requestInfo.buffer);
 
-	this->m_handlerFactor.getRoomManager().createRoom(createRoomRequest.roomData);
+	this->m_handlerFactor.getRoomManager().createRoom(createRoomRequest.roomData, createRoomRequest.adminUsername);
 
 	return RequestResult(
 		JsonResponsePacketSerializer::serializeResponse(

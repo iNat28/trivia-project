@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Threading;
 using Newtonsoft.Json.Linq;
 
 namespace client
@@ -19,9 +20,11 @@ namespace client
     {
         public static string username;
         public static TextBlock errorOutput;
+        public static Mutex mutex = new Mutex();
 
         public static void PrintError(Exception e)
         {
+            mutex.WaitOne();
             if (errorOutput != null)
             {
                 errorOutput.Text = e.Message;
@@ -31,6 +34,7 @@ namespace client
                 Console.WriteLine(e.Message);
             }
             Stream.Close();
+            mutex.ReleaseMutex();
         }
     }
 }

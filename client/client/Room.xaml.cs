@@ -52,11 +52,12 @@ namespace client
                         this.roomId = Convert.ToInt32(jObject[Keys.id].ToString());
                 }
             }
+
             updateUserList = true;
             //adding users
-            ThreadStart usersThreadStart = new ThreadStart(ShowUsersList);
+            ParameterizedThreadStart usersThreadStart = new ParameterizedThreadStart(ShowUsersList);
             Thread usersThread = new Thread(usersThreadStart);
-            usersThread.Start();
+            usersThread.Start(this.NamesList.Items);
         }
 
         protected override void OnClosed(EventArgs e)
@@ -64,6 +65,10 @@ namespace client
             if (isAdmin)
             {
                 CloseRoom();
+            }
+            else
+            {
+                Utils.OpenWindow(this, new MainWindow());
             }
         }
 
@@ -104,12 +109,17 @@ namespace client
             Utils.OpenWindow(this, new MainWindow());
         }
 
-        private void ShowUsersList()
+        private void ShowUsersList(object obj)
         {
+            ItemCollection items = (ItemCollection)obj;
             //TODO: add thread that does the following every 3 mins
             while (updateUserList)
             {
-                Stream.Send(new JObject(), Codes.GET_PLAYERS_IN_ROOM);
+                JObject roomIdJObject = new JObject
+                {
+                    ["roomId"] = roomId
+                };
+                Stream.Send(roomIdJObject, Codes.GET_PLAYERS_IN_ROOM);
 
                 Response usersResponse = Stream.Recieve();
 
@@ -118,7 +128,8 @@ namespace client
                     JArray jArray = (JArray)usersResponse.jObject[Keys.playersInRoom];
                     foreach (JObject jObject in jArray)
                     {
-                        this.NamesList.Items.Add(jObject[Keys.username]);
+                        Console.WriteLine((string)jObject[Keys.username]);
+                        items.Add("1"/*(string)jObject[Keys.username]*/);
                     }
                 }
                 Thread.Sleep(3000);

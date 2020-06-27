@@ -6,11 +6,12 @@ RoomManager::RoomManager(IDatabase& database) :
 {
 }
 
-void RoomManager::createRoom(RoomData roomData)
+void RoomManager::createRoom(RoomData roomData, string adminUsername)
 {
 	Room newRoom(roomData);
 	
 	newRoom.getRoomData().id = this->m_database.getHighestRoomId();
+	newRoom.addUser(LoggedUser(adminUsername));
 
 	this->m_rooms[newRoom.getRoomData().id] = newRoom;
 }

@@ -34,9 +34,9 @@ namespace client
         //unsigned int numQuestionsAsked;
         private void CreateRoomButton_Click(object sender, RoutedEventArgs e)
         {
+            //TODO throw error about blank fields
             if (!(this.RoomName.Text == "") && !(this.MaxPlayers.Text == "") && !(this.AnswerTime.Text == ""))
             {
-
                 JObject jObject = new JObject
                 {
                     [Keys.id] = 0,
@@ -44,7 +44,8 @@ namespace client
                     [Keys.maxUsers] = Convert.ToInt32(this.MaxPlayers.Text),
                     [Keys.timePerQuestion] = Convert.ToInt32(this.AnswerTime.Text),
                     [Keys.isActive] = 0,
-                    [Keys.numQuestionsAsked] = 0
+                    [Keys.numQuestionsAsked] = 0,
+                    [Keys.username] = User.username
                 };
                 
                 Stream.Send(jObject, Codes.CREATE_ROOM);

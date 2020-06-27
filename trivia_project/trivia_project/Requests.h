@@ -40,7 +40,8 @@ struct CloseRoomRequest : RoomIdRequest
 
 struct CreateRoomRequest
 {
-	CreateRoomRequest(RoomData roomData);
+	CreateRoomRequest(RoomData roomData, string adminUsername);
 
 	RoomData roomData;
+	string adminUsername;
 };

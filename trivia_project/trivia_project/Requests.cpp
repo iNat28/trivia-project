@@ -16,7 +16,7 @@ RoomIdRequest::RoomIdRequest(unsigned int roomId) :
 {
 }
 
-CreateRoomRequest::CreateRoomRequest(RoomData roomData) :
-	roomData(roomData)
+CreateRoomRequest::CreateRoomRequest(RoomData roomData, string adminUsername) :
+	roomData(roomData), adminUsername(adminUsername)
 {
 }

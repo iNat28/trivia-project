@@ -51,5 +51,7 @@ CreateRoomRequest JsonRequestPacketDeserializer::deserializeCreateRoomRequest(co
 		jsonFromBson[Keys::timePerQuestion],
 		jsonFromBson[Keys::isActive],
 		jsonFromBson[Keys::numQuestionsAsked]
-	));
+	),
+		jsonFromBson[Keys::username]
+	);
 }
