@@ -33,6 +33,7 @@ namespace client
         GET_PLAYERS_IN_ROOM,
         JOIN_ROOM,
         CREATE_ROOM,
+        CLOSE_ROOM,
 
         //Statistics
         USER_STATS = 30,

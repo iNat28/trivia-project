@@ -80,3 +80,8 @@ Codes GetHighScoresResponse::getResponseCode() const
 {
 	return Codes::HIGH_SCORES;
 }
+
+Codes CloseRoomResponse::getResponseCode() const
+{
+	return Codes::CLOSE_ROOM;
+}

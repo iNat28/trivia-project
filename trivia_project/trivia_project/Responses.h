@@ -1,7 +1,7 @@
 #pragma once
 #include "pch.h"
 #include "Room.h"
-#include "Constants.h"
+#include "Codes.h"
 
 struct Response
 {
@@ -63,20 +63,6 @@ struct GetPlayersInRoomResponse : Response
 	vector<LoggedUser> users;
 };
 
-struct JoinRoomResponse : StatusResponse
-{
-	using StatusResponse::StatusResponse;
-
-	virtual Codes getResponseCode() const override;
-};
-
-struct CreateRoomResponse : StatusResponse
-{
-	virtual Codes getResponseCode() const override;
-
-	using StatusResponse::StatusResponse;
-};
-
 struct GetUserStatsResponse : StatusResponse
 {
 	GetUserStatsResponse(unsigned int status, UserStats userStats);
@@ -93,4 +79,25 @@ struct GetHighScoresResponse : StatusResponse
 	virtual Codes getResponseCode() const override;
 
 	HighScores highScores;
+};
+
+struct JoinRoomResponse : StatusResponse
+{
+	using StatusResponse::StatusResponse;
+
+	virtual Codes getResponseCode() const override;
+};
+
+struct CreateRoomResponse : StatusResponse
+{
+	virtual Codes getResponseCode() const override;
+
+	using StatusResponse::StatusResponse;
+};
+
+struct CloseRoomResponse : StatusResponse
+{
+	virtual Codes getResponseCode() const override;
+
+	using StatusResponse::StatusResponse;
 };
