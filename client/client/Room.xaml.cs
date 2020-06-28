@@ -67,8 +67,9 @@ namespace client
 
             backgroundWorker.DoWork += GetUsersList;
             backgroundWorker.ProgressChanged += AddUserToList;
+            backgroundWorker.ProgressChanged += clearUsersList;
             backgroundWorker.RunWorkerCompleted += GetUsersCompleted;
-            backgroundWorker.RunWorkerAsync();
+            backgroundWorker.RunWorkerAsync();            
         }
 
         protected override void OnClosed(EventArgs e)
@@ -127,9 +128,7 @@ namespace client
         }
 
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            //get list of usernames in the room and add then to the list like this:
-            
+        {                     
         }
 
         private void StartGameButton_Click(object sender, RoutedEventArgs e)
@@ -150,7 +149,7 @@ namespace client
         private void GetUsersList(object sender, DoWorkEventArgs e)
         {
             while (true)
-            {
+            {                
                 if(backgroundWorker.CancellationPending)
                 {
                     e.Cancel = true;
@@ -174,28 +173,35 @@ namespace client
                     close = true;
                     break;
                 }
+                //here the users list needs to be cleared
+                backgroundWorker.ReportProgress(0, (string)"");
                 if (Stream.Response(usersResponse, Codes.GET_PLAYERS_IN_ROOM))
                 {
                     JArray jArray = (JArray)usersResponse.jObject[Keys.playersInRoom];
                     foreach (JObject jObject in jArray)
-                    {
+                    {                                               
                         Console.WriteLine((string)jObject[Keys.username]);
                         backgroundWorker.ReportProgress(0, (string)jObject[Keys.username]);
                     }
-                }
-
+                }                
                 sendingMutex.ReleaseMutex();
                 Thread.Sleep(3000);
             }
         }
 
+        private void clearUsersList(object sender, ProgressChangedEventArgs e)
+        {
+            if(e.UserState.ToString() == "")
+                this.NamesList.Items.Clear();
+        }
+
         private void AddUserToList(object sender, ProgressChangedEventArgs e)
         {
-            if (!this.NamesList.Items.Contains(e.UserState))
+            if (!this.NamesList.Items.Contains(e.UserState) && e.UserState.ToString() != "")
             {
                 this.NamesList.Items.Add(e.UserState);
             }
-        }
+        }             
 
         private void GetUsersCompleted(object sender, RunWorkerCompletedEventArgs e)
         {

@@ -26,6 +26,7 @@ void Room::removeUser(LoggedUser user)
 		if (it->username == user.username)
 		{
 			this->m_users.erase(it);
+			break;
 		}
 	}
 }
