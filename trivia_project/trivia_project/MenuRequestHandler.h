@@ -28,4 +28,5 @@ private:
 	RequestResult _joinRoom(const RequestInfo& requestInfo) const;
 	RequestResult _createRoom(const RequestInfo& requestInfo) const;
 	RequestResult _closeRoom(const RequestInfo& requestInfo) const;
+	RequestResult _leaveRoom(const RequestInfo& requestInfo) const;
 };

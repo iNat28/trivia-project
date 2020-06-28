@@ -29,5 +29,10 @@ namespace client
                 Stream.Close();
             }
         }
+
+        protected void OnClosedBase(EventArgs e)
+        {
+            base.OnClosed(e);
+        }
     }
 }

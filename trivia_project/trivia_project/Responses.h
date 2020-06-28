@@ -101,3 +101,10 @@ struct CloseRoomResponse : StatusResponse
 
 	using StatusResponse::StatusResponse;
 };
+
+struct LeaveRoomResponse : StatusResponse
+{
+	virtual Codes getResponseCode() const override;
+
+	using StatusResponse::StatusResponse;
+};

@@ -19,13 +19,14 @@ void RoomManager::createRoom(RoomData roomData, string adminUsername)
 void RoomManager::deleteRoom(unsigned int roomId)
 {
 	Room& room = getRoom(roomId);
-	for (auto& user : room.getAllUsers())
+	
+	//TODO: Add user stats from the game
+	/*for (auto& user : room.getAllUsers())
 	{
 		this->m_database.addGameStats(
-			//TODO: Add user stats from the game
 			UserStats()
 		);
-	}
+	}*/
 
 	if (!this->m_rooms.erase(roomId))
 	{

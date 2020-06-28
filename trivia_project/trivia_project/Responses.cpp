@@ -85,3 +85,8 @@ Codes CloseRoomResponse::getResponseCode() const
 {
 	return Codes::CLOSE_ROOM;
 }
+
+Codes LeaveRoomResponse::getResponseCode() const
+{
+	return Codes::LEAVE_ROOM;
+}

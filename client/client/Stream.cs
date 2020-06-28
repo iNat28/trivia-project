@@ -42,7 +42,7 @@ namespace client
                     }
                     catch(Exception e)
                     {
-                        User.PrintError(e);
+                        User.PrintErrorAndKeep(e);
                     }
                 }
 
@@ -60,7 +60,7 @@ namespace client
             }
             catch (Exception e)
             {
-                User.PrintError(e);
+                User.PrintErrorAndKeep(e);
             }
         }
 
@@ -89,7 +89,7 @@ namespace client
             }
             catch (Exception e)
             {
-                User.PrintError(e);
+                User.PrintErrorAndClose(e);
             }
         }
 
@@ -119,7 +119,7 @@ namespace client
             }
             catch (Exception e)
             {
-                User.PrintError(e);
+                User.PrintErrorAndClose(e);
             }
 
             return response;
@@ -149,7 +149,7 @@ namespace client
             }
             catch (Exception e)
             {
-                User.PrintError(e);
+                User.PrintErrorAndClose(e);
             }
 
             return false;

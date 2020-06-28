@@ -254,7 +254,7 @@ UserStats SqliteDataBase::getUserStats(string username) const
 	SqliteDataBase::moreData = false;
 	sstream buffer;
 
-	buffer << "select * from statistics where username = '" << username << '\'';
+	buffer << "select * from statistics where username = '" << username << "';";
 	send_query(buffer.str().c_str(), statistics_callback);
 	
 	return m_gamesList[0];

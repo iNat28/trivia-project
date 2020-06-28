@@ -34,6 +34,7 @@ namespace client
         JOIN_ROOM,
         CREATE_ROOM,
         CLOSE_ROOM,
+        LEAVE_ROOM,
 
         //Statistics
         USER_STATS = 30,
