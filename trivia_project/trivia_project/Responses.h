@@ -108,3 +108,17 @@ struct LeaveRoomResponse : StatusResponse
 
 	using StatusResponse::StatusResponse;
 };
+
+struct GetRoomState : StatusResponse
+{
+	virtual Codes getResponseCode() const override;
+
+	using StatusResponse::StatusResponse;
+};
+
+struct StartGameResPonse : StatusResponse
+{
+	virtual Codes getResponseCode() const override;
+
+	using StatusResponse::StatusResponse;
+};
