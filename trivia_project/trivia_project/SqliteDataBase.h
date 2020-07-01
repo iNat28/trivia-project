@@ -32,14 +32,15 @@ public:
 	//statistics
 	virtual int getHighestRoomId() const override;
 	virtual void addGameStats(UserStats userStats) override;
-	//TODO: Change to UserStats
 	virtual UserStats getUserStats(string username) const override;
 	virtual HighScores getHighScores() const override;
 	
+private:
 	void openDB();
 
 	sqlite3* db;
 	const char* dbFileName;
+	static const unsigned int HIGH_SCORE_NUMS = 3;
 
 	static std::unordered_map<string, string> m_usersList;
 	static std::vector<UserStats> m_gamesList;
