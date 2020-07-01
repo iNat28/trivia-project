@@ -1,8 +1,7 @@
 #pragma once
 #include "pch.h"
 
-//TODO: Move Codes to own file
-
+//TODO: Move
 typedef char Byte;
 typedef std::vector<Byte> Buffer;
 

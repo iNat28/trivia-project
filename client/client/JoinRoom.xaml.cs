@@ -31,7 +31,6 @@ namespace client
 
             Response response = Stream.Recieve();
 
-            //TODO Remove third param from Response
             if (Stream.Response(response, Codes.GET_ROOM))
             {
                 JArray jArray = (JArray)response.jObject[Keys.rooms];

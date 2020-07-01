@@ -248,7 +248,6 @@ void SqliteDataBase::addGameStats(UserStats userStats)
 	send_query(buffer.str().c_str());
 }
 
-//TODO:
 UserStats SqliteDataBase::getUserStats(string username) const
 {
 	SqliteDataBase::moreData = false;
@@ -266,8 +265,7 @@ HighScores SqliteDataBase::getHighScores() const
 	SqliteDataBase::moreData = false;
 	sstream buffer;
 
-	//TODO: Move three to const
-	buffer << "select username, numPoints from statistics order by numPoints DESC limit 3;";
+	buffer << "select username, numPoints from statistics order by numPoints DESC limit << " << SqliteDataBase::HIGH_SCORE_NUMS << ';';
 	send_query(buffer.str().c_str(), statistics_callback);
 
 	for (auto& game : m_gamesList)
