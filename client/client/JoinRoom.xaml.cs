@@ -134,7 +134,7 @@ namespace client
                     JArray jArray = (JArray)response.jObject[Keys.rooms];
                     foreach (JObject jObject in jArray)
                     {
-                        backgroundWorker.ReportProgress(0, (string)jObject[Keys.roomName]);
+                        backgroundWorker.ReportProgress(0, (string)jObject[Keys.name]);
                     }
                 }                                                    
                 
@@ -150,7 +150,7 @@ namespace client
 
         private void AddRoomToList(object sender, ProgressChangedEventArgs e)
         {
-            //TODO: need to change user state to rooms
+            //TODO: need to change user state to rooms        
             if (!this.RoomsList.Items.Contains(e.UserState) && e.UserState.ToString() != "")
             {
                 this.RoomsList.Items.Add(e.UserState);
