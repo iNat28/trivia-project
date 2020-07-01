@@ -20,3 +20,8 @@ RequestResult::RequestResult() :
 	response(JsonResponsePacketSerializer::serializeResponse(ErrorResponse("Error occurred"))), newHandler(nullptr)
 {
 }
+
+IRequestHandler::IRequestHandler(RequestHandlerFactory& handlerFactor) : 
+	m_handlerFactory(handlerFactor)
+{
+}

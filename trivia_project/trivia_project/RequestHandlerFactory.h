@@ -4,22 +4,21 @@
 #include "LoginManager.h"
 #include "RoomManager.h"
 #include "StatisticsManager.h"
-#include "IRequestHandler.h"
 #include "JsonRequestPacketDeserializer.h"
 #include "JsonResponsePacketSerializer.h"
-#include "LoginRequestHandler.h"
-#include "MenuRequestHandler.h"
-
-class LoginRequestHandler;
-class MenuRequestHandler;
 
 class RequestHandlerFactory
 {
 public:
 	RequestHandlerFactory(IDatabase& database);
-
-	std::shared_ptr<LoginRequestHandler> createLoginRequestHandler();
-	std::shared_ptr<MenuRequestHandler> createMenuRequestHandler(LoggedUser user);
+	
+	//Maybe allow it so each RequestHandler can use this for one of the parameters, instead of having to get the requestHandler
+	//TODO: Look into args, so it'll return std::make_shared<Handler>(*this, args)
+	template<typename Handler>
+	std::shared_ptr<Handler> createRequestHandler(Handler handler) const
+	{
+		return std::make_shared<Handler>(handler);
+	};
 	
 	LoginManager& getLoginManager();
 	RoomManager& getRoomManager();

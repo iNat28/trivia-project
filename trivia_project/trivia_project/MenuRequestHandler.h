@@ -2,11 +2,12 @@
 #include "pch.h"
 #include "IRequestHandler.h"
 #include "RequestHandlerFactory.h"
+#include "LoginRequestHandler.h"
 #include "Constants.h"
 #include "LoggedUser.h"
 #include "IDatabase.h"
 
-class RequestHandlerFactory;
+class LoginRequestHandler;
 
 class MenuRequestHandler : public IRequestHandler
 {
@@ -15,7 +16,6 @@ public:
 
 	virtual RequestResult handleRequest(const RequestInfo& requestInfo) const override;
 private:
-	RequestHandlerFactory& m_handlerFactor;
 	LoggedUser m_user;
 	using requests_func_t = RequestResult(MenuRequestHandler::*)(const RequestInfo&)const;
 	static const map<Codes, MenuRequestHandler::requests_func_t> m_requests;

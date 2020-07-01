@@ -94,11 +94,7 @@ namespace client
             backgroundWorker.CancelAsync();
 
             sendingMutex.WaitOne();
-            JObject jObject = new JObject
-            {
-                ["roomId"] = roomId
-            };
-            Stream.Send(jObject, Codes.CLOSE_ROOM);
+            Stream.Send(new JObject(), Codes.CLOSE_ROOM);
 
             Response response = Stream.Recieve();
 
@@ -113,11 +109,7 @@ namespace client
             backgroundWorker.CancelAsync();
 
             sendingMutex.WaitOne();
-            JObject jObject = new JObject
-            {
-                ["roomId"] = roomId
-            };
-            Stream.Send(jObject, Codes.LEAVE_ROOM);
+            Stream.Send(new JObject(), Codes.LEAVE_ROOM);
 
             Response response = Stream.Recieve();
 

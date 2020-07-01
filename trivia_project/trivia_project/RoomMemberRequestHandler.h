@@ -1,12 +1,19 @@
 #pragma once
-#include "IRequestHandler.h"
+#include "AllRoomMembersRequestHandler.h"
+#include "MenuRequestHandler.h"
 
 class RoomMemberRequestHandler :
-	public IRequestHandler
+	public AllRoomMembersRequestHandler
 {
 public:
+	using AllRoomMembersRequestHandler::AllRoomMembersRequestHandler;
+
 	virtual RequestResult handleRequest(const RequestInfo& requestInfo) const;
 private:
-
+	using requests_func_t = RequestResult(RoomMemberRequestHandler::*)(const RequestInfo&) const;
+	static const map<Codes, RoomMemberRequestHandler::requests_func_t> m_requests;
+	
+	RequestResult _closeRoom(const RequestInfo& requestInfo) const;
+	RequestResult _startGame(const RequestInfo& requestInfo) const;
 };
 

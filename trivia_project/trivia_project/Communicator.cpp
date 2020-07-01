@@ -88,7 +88,7 @@ void Communicator::startHandleRequests()
 		}
 
 		//Gets the login handler
-		handler = this->m_handlerFactory.createLoginRequestHandler();
+		handler = this->m_handlerFactory.createRequestHandler(LoginRequestHandler(this->m_handlerFactory));
 
 		//Puts the client into a thread
 		client = std::thread(s_handleNewClient, std::ref(*this), clientSocket, handler);
