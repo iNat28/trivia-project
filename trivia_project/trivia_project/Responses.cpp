@@ -90,3 +90,14 @@ Codes LeaveRoomResponse::getResponseCode() const
 {
 	return Codes::LEAVE_ROOM;
 }
+
+Codes GetRoomState::getResponseCode() const
+{
+	//TODO
+	return Codes::ROOM_STATE;
+}
+
+Codes StartGameResPonse::getResponseCode() const
+{
+	return Codes::START_GAME;
+}
