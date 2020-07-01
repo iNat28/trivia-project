@@ -32,18 +32,27 @@ void LoginManager::login(string username, string password)
 			throw Exception("User already logged in");
 		}
 	}
-	
+
+	if (!this->m_database.doesPasswordMatch(username, password))
+	{
+		throw Exception("User password is incorrect");
+	}
+
 	//Logins in the user
 	this->m_loggedUsers.push_back(username);
 }
 
 void LoginManager::logout(string username)
 {
-	for (auto loggedUser = this->m_loggedUsers.begin(); loggedUser != this->m_loggedUsers.end(); loggedUser++)
+	for (auto loggedUser = this->m_loggedUsers.begin(); loggedUser != this->m_loggedUsers.end(); )
 	{
 		if (loggedUser->username == username)
 		{
-			this->m_loggedUsers.erase(loggedUser);
+			loggedUser = this->m_loggedUsers.erase(loggedUser);
+		}
+		else
+		{
+			++loggedUser;
 		}
 	}
 }

@@ -20,20 +20,27 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const GetRoomResponse& ge
 Buffer JsonResponsePacketSerializer::serializeResponse(const GetPlayersInRoomResponse& getPlayersInRoomResponse)
 {
 	json jsonToSerialize;
-	jsonToSerialize[Keys::rooms] = getPlayersInRoomResponse.users;
+	jsonToSerialize[Keys::playersInRoom] = getPlayersInRoomResponse.users;
 
 	return JsonResponsePacketSerializer::serializeJson(jsonToSerialize, getPlayersInRoomResponse);
 }
 
-Buffer JsonResponsePacketSerializer::serializeResponse(const GetStatisticsResponse& getStatisticsResponse)
+Buffer JsonResponsePacketSerializer::serializeResponse(const GetUserStatsResponse& getUserStatsResponse)
 {
 	json jsonToSerialize;
-	jsonToSerialize[Keys::username] = getStatisticsResponse.personalUserGameStats.username;
-	jsonToSerialize[Keys::users] = getStatisticsResponse.personalUserGameStats.recordTable.userRecordTable;
-	jsonToSerialize[Keys::totalGames] = getStatisticsResponse.personalUserGameStats.allGames;
-	jsonToSerialize[Keys::status] = getStatisticsResponse.status;
+	jsonToSerialize[Keys::userStats] = getUserStatsResponse.userStats;
+	jsonToSerialize[Keys::status] = getUserStatsResponse.status;
 
-	return JsonResponsePacketSerializer::serializeJson(jsonToSerialize, getStatisticsResponse);
+	return JsonResponsePacketSerializer::serializeJson(jsonToSerialize, getUserStatsResponse);
+}
+
+Buffer JsonResponsePacketSerializer::serializeResponse(const GetHighScoresResponse& getHighScoresResponse)
+{
+	json jsonToSerialize;
+	jsonToSerialize[Keys::highScores] = getHighScoresResponse.highScores;
+	jsonToSerialize[Keys::status] = getHighScoresResponse.status;
+
+	return JsonResponsePacketSerializer::serializeJson(jsonToSerialize, getHighScoresResponse);
 }
 
 Buffer JsonResponsePacketSerializer::serializeResponse(const StatusResponse& statusResponse)

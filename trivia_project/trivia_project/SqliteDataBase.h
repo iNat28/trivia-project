@@ -31,9 +31,10 @@ public:
 
 	//statistics
 	virtual int getHighestRoomId() const override;
-	virtual void addGameStats(UserStats gameStats) override;
-	virtual PersonalUserGameStats getAllTimeGameStats(string username) const override;
-	RecordTable getFiveBestUserGames(string username) const;
+	virtual void addGameStats(UserStats userStats) override;
+	//TODO: Change to UserStats
+	virtual UserStats getUserStats(string username) const override;
+	virtual HighScores getHighScores() const override;
 	
 	void openDB();
 
@@ -44,6 +45,7 @@ public:
 	static std::vector<UserStats> m_gamesList;
 	//variable for multiple users
 	static bool moreData;
+	static int highestRoomId;
 };
 
 //https://opentdb.com/api.php?amount=10

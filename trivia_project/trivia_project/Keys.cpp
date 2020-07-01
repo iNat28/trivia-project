@@ -11,14 +11,20 @@ const char* Keys::maxUsers = "maxUsers";
 const char* Keys::questionCount = "questionCount";
 const char* Keys::answerTimeout = "answerTimeout";
 
+const char* Keys::userStats = "userStats";
+
 const char* Keys::status = "status";
 const char* Keys::message = "message";
 
 const char* Keys::rooms = "Rooms";
 const char* Keys::playersInRoom = "PlayersInRoom";
 
-const char* Keys::totalGames = "totalGames";
-const char* Keys::user = "user";
+const char* Keys::numPoints = "numPoints";
+const char* Keys::numTotalGames = "numTotalGames";
+const char* Keys::numCorrectAnswers = "numCorrectAnswers";
+const char* Keys::numWrongAnswers = "numWrongAnswers";
+const char* Keys::averageAnswerTime = "averageAnswerTime";
+const char* Keys::highScores = "highScores";
 
 const char* Keys::id = "id";
 const char* Keys::name = "name";

@@ -4,7 +4,7 @@
 #include "sqlite3.h"
 #include "statistics.h"
 
-using std::string;
+typedef std::vector<UserHighScore> HighScores;
 
 class IDatabase
 {
@@ -14,5 +14,6 @@ public:
 	virtual void addNewUser(string username, string password, string email) const = 0;
 	virtual void addGameStats(UserStats gameStats) = 0;
 	virtual int getHighestRoomId() const = 0;
-	virtual PersonalUserGameStats getAllTimeGameStats(string username) const = 0;
+	virtual UserStats getUserStats(string username) const = 0;
+	virtual HighScores getHighScores() const = 0;
 };

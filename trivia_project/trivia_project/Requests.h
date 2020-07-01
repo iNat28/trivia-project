@@ -33,9 +33,20 @@ struct JoinRoomRequest : RoomIdRequest
 	using RoomIdRequest::RoomIdRequest;
 };
 
+struct CloseRoomRequest : RoomIdRequest
+{
+	using RoomIdRequest::RoomIdRequest;
+};
+
+struct LeaveRoomRequest : RoomIdRequest
+{
+	using RoomIdRequest::RoomIdRequest;
+};
+
 struct CreateRoomRequest
 {
-	CreateRoomRequest(RoomData roomData);
+	CreateRoomRequest(RoomData roomData, string adminUsername);
 
 	RoomData roomData;
+	string adminUsername;
 };

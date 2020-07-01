@@ -6,27 +6,29 @@ RoomManager::RoomManager(IDatabase& database) :
 {
 }
 
-void RoomManager::createRoom(string username, RoomData roomData)
+void RoomManager::createRoom(RoomData roomData, string adminUsername)
 {
 	Room newRoom(roomData);
 	
-	newRoom.getRoomData().name = username + "'s game";
 	newRoom.getRoomData().id = this->m_database.getHighestRoomId();
+	newRoom.addUser(LoggedUser(adminUsername));
 
-	this->m_rooms[roomData.id] = newRoom;
+	this->m_rooms[newRoom.getRoomData().id] = newRoom;
 }
 
-void RoomManager::deleteRoom(unsigned int id)
+void RoomManager::deleteRoom(unsigned int roomId)
 {
-	Room& room = getRoom(id);
-	for (auto& user : room.getAllUsers())
+	Room& room = getRoom(roomId);
+	
+	//TODO: Add user stats from the game
+	/*for (auto& user : room.getAllUsers())
 	{
 		this->m_database.addGameStats(
-			UserStats(user, id, room.getRoomData().numQuestionsAsked)
+			UserStats()
 		);
-	}
+	}*/
 
-	if (!this->m_rooms.erase(id))
+	if (!this->m_rooms.erase(roomId))
 	{
 		throw Exception("Room ID not found");
 	}

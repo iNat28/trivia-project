@@ -2,34 +2,27 @@
 #include "pch.h"
 #include "LoggedUser.h"
 
-struct UserStats
+struct UserHighScore
 {
-	UserStats(LoggedUser username, unsigned int roomId, unsigned int totalQuestions);
-	UserStats();
-	
-	unsigned int getAverageAnswerTime();
-
-	LoggedUser user;
-	unsigned int roomId;
-	unsigned int totalQuestions;
-};
-
-struct RecordTable
-{
-	RecordTable(std::array<UserStats, 5> table);
-	RecordTable();
-
-	std::array<UserStats, 5> userRecordTable;
-};
-
-struct PersonalUserGameStats
-{
-	PersonalUserGameStats(string username, vector<UserStats> allGames);
-	PersonalUserGameStats();
+	UserHighScore(string username, int numPoints);
+	UserHighScore();
 
 	string username;
-	vector<UserStats> allGames;
-	RecordTable recordTable;
+	int numPoints;
 };
 
+struct UserStats
+{
+	UserStats(string username, int numPoints, int numTotalGames, int numCorrectAnswers, int numWrongAnswers, int averageAnswerTime);
+	UserStats();
+	
+	string username;
+	int numPoints;
+	int numTotalGames;
+	int numCorrectAnswers;
+	int numWrongAnswers;
+	int averageAnswerTime;
+};
+
+void to_json(json& j, const UserHighScore& userHighScore);
 void to_json(json& j, const UserStats& userStats);
