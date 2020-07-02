@@ -20,19 +20,25 @@ RequestResult RoomAdminRequestHandler::handleRequest(const RequestInfo& requestI
 	}
 }
 
-RequestResult RoomAdminRequestHandler::_leaveRoom(const RequestInfo& requestInfo) const
+RequestResult RoomAdminRequestHandler::_closeRoom(const RequestInfo& requestInfo) const
 {
-	this->m_room.removeUser(this->m_user);
+	this->m_handlerFactory.getRoomManager().deleteRoom(this->m_room.getRoomData().id);
 
 	return RequestResult(
 		JsonResponsePacketSerializer::serializeResponse(
-			LeaveRoomResponse(static_cast<unsigned int>(ResponseCodes::SUCCESFUL))
+			CloseRoomResponse(static_cast<unsigned int>(ResponseCodes::SUCCESFUL))
 		),
-		this->m_handlerFactory.createRequestHandler(MenuRequestHandler(this->m_handlerFactory, this->m_user))
+		this->createMenuRequestHandler()
 	);
 }
 
+RequestResult RoomAdminRequestHandler::_startGame(const RequestInfo& requestInfo) const
+{
+	return RequestResult();
+}
+
 const map<Codes, RoomAdminRequestHandler::requests_func_t> RoomAdminRequestHandler::m_requests = {
-	{ Codes::LEAVE_ROOM, &RoomAdminRequestHandler::_leaveRoom },
+	{ Codes::CLOSE_ROOM, &RoomAdminRequestHandler::_closeRoom },
+	{ Codes::START_GAME, &RoomAdminRequestHandler::_startGame },
 	{ Codes::GET_ROOM_STATE, &AllRoomMembersRequestHandler::_getRoomState }
 };

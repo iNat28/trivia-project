@@ -13,6 +13,7 @@ private:
 	using requests_func_t = RequestResult(RoomAdminRequestHandler::*)(const RequestInfo&) const;
 	static const map<Codes, RoomAdminRequestHandler::requests_func_t> m_requests;
 
-	RequestResult _leaveRoom(const RequestInfo& requestInfo) const;
+	RequestResult _closeRoom(const RequestInfo& requestInfo) const;
+	RequestResult _startGame(const RequestInfo& requestInfo) const;
 };
 

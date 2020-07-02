@@ -10,3 +10,8 @@ RequestResult AllRoomMembersRequestHandler::_getRoomState(const RequestInfo& req
 {
 	return RequestResult();
 }
+
+std::shared_ptr<MenuRequestHandler> AllRoomMembersRequestHandler::createMenuRequestHandler() const
+{
+	return this->m_handlerFactory.createRequestHandler(MenuRequestHandler(this->m_handlerFactory, this->m_user));
+}

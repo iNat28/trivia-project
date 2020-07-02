@@ -1,8 +1,8 @@
 #pragma once
 #include "pch.h"
 #include "Codes.h"
-#include "JsonResponsePacketSerializer.h"
 #include "RequestHandlerFactory.h"
+#include "Requests.h"
 
 class IRequestHandler;
 class RequestHandlerFactory;

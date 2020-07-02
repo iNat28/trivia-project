@@ -117,34 +117,6 @@ RequestResult MenuRequestHandler::_createRoom(const RequestInfo& requestInfo) co
 	);
 }
 
-RequestResult MenuRequestHandler::_closeRoom(const RequestInfo& requestInfo) const
-{
-	CloseRoomRequest::RoomIdRequest closeRoomRequest = JsonRequestPacketDeserializer::deserializeRoomIdRequest(requestInfo.buffer);
-
-	this->m_handlerFactory.getRoomManager().deleteRoom(closeRoomRequest.roomId);
-
-	return RequestResult(
-		JsonResponsePacketSerializer::serializeResponse(
-			CloseRoomResponse(static_cast<unsigned int>(ResponseCodes::SUCCESFUL))
-		),
-		this->m_handlerFactory.createRequestHandler(*this)
-	);
-}
-
-RequestResult MenuRequestHandler::_leaveRoom(const RequestInfo& requestInfo) const
-{
-	LeaveRoomRequest::RoomIdRequest leaveRoomRequest = JsonRequestPacketDeserializer::deserializeRoomIdRequest(requestInfo.buffer);
-
-	this->m_handlerFactory.getRoomManager().getRoom(leaveRoomRequest.roomId).removeUser(this->m_user);
-
-	return RequestResult(
-		JsonResponsePacketSerializer::serializeResponse(
-			LeaveRoomResponse(static_cast<unsigned int>(ResponseCodes::SUCCESFUL))
-		),
-		this->m_handlerFactory.createRequestHandler(*this)
-	);
-}
-
 const map<Codes, MenuRequestHandler::requests_func_t> MenuRequestHandler::m_requests = {
 	{ Codes::LOGOUT, &MenuRequestHandler::_signout },
 	{ Codes::GET_ROOM, &MenuRequestHandler::_getRooms },
