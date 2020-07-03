@@ -31,6 +31,7 @@ namespace client
         
         //TODO: Need to get room state instead of get players in room, and needs to check if the room closed or if the game started
         //Might want to do if(!isAdmin) before checking
+        //TODO: Make sure all of the json keys are the same as in the back end
         
         public Room(bool isAdmin, string roomName, int maxPlayers, int answerTime)
         {
