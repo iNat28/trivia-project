@@ -26,6 +26,9 @@ namespace client
         private BackgroundWorker backgroundWorker;
         private Mutex sendingMutex;
         private bool close = false;
+        
+        //TODO: Need to show the rooms and all of it's room state, and if it's game started, or if it is maxed out for players
+        
         public JoinRoom()
         {
             InitializeComponent();

@@ -32,6 +32,18 @@ RequestResult RoomMemberRequestHandler::_leaveRoom(const RequestInfo& requestInf
 	);
 }
 
+RequestResult RoomMemberRequestHandler::_getRoomState(const RequestInfo& requestInfo) const
+{
+	RequestResult requestResult = this->_getRoomStateNoHandler(requestInfo);
+
+	if (requestResult.newHandler == nullptr)
+	{
+		requestResult.newHandler = this->m_handlerFactory.createRequestHandler(*this);
+	}
+
+	return requestResult;
+}
+
 const map<Codes, RoomMemberRequestHandler::requests_func_t> RoomMemberRequestHandler::m_requests = {
 	{ Codes::LEAVE_ROOM, &RoomMemberRequestHandler::_leaveRoom },
 	{ Codes::GET_ROOM_STATE, &RoomMemberRequestHandler::_getRoomState }

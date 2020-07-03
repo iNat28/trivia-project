@@ -41,6 +41,14 @@ namespace client
         HIGH_SCORES
     };
 
+    enum ResponseCodes
+    {
+        ERROR_RESPONSE,
+	    SUCCESFUL,
+	    ROOM_OPEN,
+	    ROOM_CLOSED
+    };
+
     //TODO: Add Keys for Json
     public static class Keys
     {
@@ -50,7 +58,6 @@ namespace client
 
         public const string roomId = "roomId";
         public const string roomName = "roomName";
-        public const string maxUsers = "maxUsers";
         public const string questionCount = "questionCount";
         public const string answerTimeout = "answerTimeout";
 
@@ -61,6 +68,8 @@ namespace client
 
         public const string rooms = "Rooms";
         public const string playersInRoom = "PlayersInRoom";
+        public const string roomData = "roomData";
+        public const string roomState = "roomState";
 
         public const string numPoints = "numPoints";
         public const string numTotalGames = "numTotalGames";
@@ -73,9 +82,9 @@ namespace client
         public const string name = "name";
         public const string maxPlayers = "maxPlayers";
         public const string timePerQuestion = "timePerQuestion";
-        public const string isActive = "isActive";
-        public const string users = "users";
-        public const string numQuestionsAsked = "numQuestionsAsked";
+        public const string players = "players";
+        public const string questionsCount = "questionsCount";
+        public const string didGameStart = "didGameStart";
 
         public const string category = "category";
         public const string difficulty = "difficulty";

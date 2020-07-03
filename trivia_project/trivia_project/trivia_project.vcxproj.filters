@@ -132,6 +132,9 @@
     <ClCompile Include="AllRoomMembersRequestHandler.cpp">
       <Filter>Source Files\Handlers</Filter>
     </ClCompile>
+    <ClCompile Include="GameRequestHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="JsonResponsePacketSerializer.h">
@@ -220,6 +223,9 @@
     </ClInclude>
     <ClInclude Include="Question.h">
       <Filter>Header Files\Infrastructure</Filter>
+    </ClInclude>
+    <ClInclude Include="GameRequestHandler.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

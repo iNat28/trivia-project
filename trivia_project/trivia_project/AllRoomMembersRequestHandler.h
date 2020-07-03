@@ -9,12 +9,11 @@ class AllRoomMembersRequestHandler :
 {
 public:
 	AllRoomMembersRequestHandler(RequestHandlerFactory& handlerFactor, LoggedUser user, Room& room);
-
 protected:
 	LoggedUser m_user;
 	Room& m_room;
 
-	RequestResult _getRoomState(const RequestInfo& requestInfo) const;
+	RequestResult _getRoomStateNoHandler(const RequestInfo& requestInfo) const;
 	//TODO: Maybe change MenuRequestHandler and this class to inherit from UserRequestHandler (has user attribute)
 	std::shared_ptr<MenuRequestHandler> createMenuRequestHandler() const;
 };

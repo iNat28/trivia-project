@@ -15,6 +15,7 @@ public:
 	static Buffer serializeResponse(const GetPlayersInRoomResponse& getPlayersInRoomResponse);
 	static Buffer serializeResponse(const GetUserStatsResponse& getUserStatsResponse);
 	static Buffer serializeResponse(const GetHighScoresResponse& getUserStatsResponse);
+	static Buffer serializeResponse(const GetRoomStateResponse& getRoomStateResponse);
 
 private:
 	static Buffer serializeJson(const json& jsonToSerialize, const Response& response);

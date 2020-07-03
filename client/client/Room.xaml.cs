@@ -29,6 +29,9 @@ namespace client
         private Mutex sendingMutex;
         private bool close = false;
         
+        //TODO: Need to get room state instead of get players in room, and needs to check if the room closed or if the game started
+        //Might want to do if(!isAdmin) before checking
+        
         public Room(bool isAdmin, string roomName, int maxPlayers, int answerTime)
         {
             InitializeComponent();

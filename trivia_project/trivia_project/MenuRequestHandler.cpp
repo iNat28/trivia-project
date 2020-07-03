@@ -99,7 +99,10 @@ RequestResult MenuRequestHandler::_joinRoom(const RequestInfo& requestInfo) cons
 		JsonResponsePacketSerializer::serializeResponse(
 			JoinRoomResponse(static_cast<unsigned int>(ResponseCodes::SUCCESFUL))
 		),
-		this->m_handlerFactory.createRequestHandler(*this)
+		this->m_handlerFactory.createRequestHandler(RoomMemberRequestHandler(
+			this->m_handlerFactory, this->m_user,
+			this->m_handlerFactory.getRoomManager().getRoom(joinRoomRequest.roomId)
+		))
 	);
 }
 
@@ -107,13 +110,16 @@ RequestResult MenuRequestHandler::_createRoom(const RequestInfo& requestInfo) co
 {
 	CreateRoomRequest createRoomRequest = JsonRequestPacketDeserializer::deserializeCreateRoomRequest(requestInfo.buffer);
 
-	this->m_handlerFactory.getRoomManager().createRoom(createRoomRequest.roomData, createRoomRequest.adminUsername);
+	this->m_handlerFactory.getRoomManager().createRoom(createRoomRequest.room);
 
 	return RequestResult(
 		JsonResponsePacketSerializer::serializeResponse(
 			CreateRoomResponse(static_cast<unsigned int>(ResponseCodes::SUCCESFUL))
 		),
-		this->m_handlerFactory.createRequestHandler(*this)
+		this->m_handlerFactory.createRequestHandler(RoomAdminRequestHandler(
+			this->m_handlerFactory, this->m_user,
+			this->m_handlerFactory.getRoomManager().getRoom(createRoomRequest.room.getId())
+		))
 	);
 }
 

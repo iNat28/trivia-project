@@ -26,12 +26,7 @@ namespace client
 
             User.errorOutput = this.errorOutput;
         }
-        //unsigned int id;
-        //string name;
-        //unsigned int maxPlayers;
-        //unsigned int timePerQuestion;
-        //unsigned int isActive;
-        //unsigned int numQuestionsAsked;
+        
         private void CreateRoomButton_Click(object sender, RoutedEventArgs e)
         {
             //TODO throw error about blank fields
@@ -39,12 +34,12 @@ namespace client
             {
                 JObject jObject = new JObject
                 {
-                    [Keys.id] = 0,
                     [Keys.roomName] = this.RoomName.Text,
-                    [Keys.maxUsers] = Convert.ToInt32(this.MaxPlayers.Text),
+                    //TODO: Move converts to its own variable
+                    [Keys.maxPlayers] = Convert.ToInt32(this.MaxPlayers.Text),
+                    //TODO: Add questions count
+                    [Keys.questionsCount] = 0,
                     [Keys.timePerQuestion] = Convert.ToInt32(this.AnswerTime.Text),
-                    [Keys.isActive] = 0,
-                    [Keys.numQuestionsAsked] = 0,
                     [Keys.username] = User.username
                 };
                 
@@ -53,7 +48,9 @@ namespace client
                 Response response = Stream.Recieve();
 
                 if (Stream.Response(response, Codes.CREATE_ROOM))
+                {
                     Utils.OpenWindow(this, new Room(true, this.RoomName.Text, Convert.ToInt32(this.MaxPlayers.Text), Convert.ToInt32(this.AnswerTime.Text)));
+                }
             }
         }
 

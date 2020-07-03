@@ -109,14 +109,16 @@ struct LeaveRoomResponse : StatusResponse
 	using StatusResponse::StatusResponse;
 };
 
-struct GetRoomState : StatusResponse
+struct GetRoomStateResponse : StatusResponse
 {
 	virtual Codes getResponseCode() const override;
 
-	using StatusResponse::StatusResponse;
+	GetRoomStateResponse(unsigned int status, const RoomState& roomState);
+
+	const RoomState& roomState;
 };
 
-struct StartGameResPonse : StatusResponse
+struct StartGameResponse : StatusResponse
 {
 	virtual Codes getResponseCode() const override;
 

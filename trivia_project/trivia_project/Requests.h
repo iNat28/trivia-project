@@ -35,8 +35,7 @@ struct JoinRoomRequest : RoomIdRequest
 
 struct CreateRoomRequest
 {
-	CreateRoomRequest(RoomData roomData, string adminUsername);
+	CreateRoomRequest(Room room);
 
-	RoomData roomData;
-	string adminUsername;
+	Room room;
 };

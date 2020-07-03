@@ -6,9 +6,36 @@ AllRoomMembersRequestHandler::AllRoomMembersRequestHandler(RequestHandlerFactory
 {
 }
 
-RequestResult AllRoomMembersRequestHandler::_getRoomState(const RequestInfo& requestInfo) const
+RequestResult AllRoomMembersRequestHandler::_getRoomStateNoHandler(const RequestInfo& requestInfo) const
 {
-	return RequestResult();
+	IRequestHandlerPtr handler;
+	ResponseCodes responseCode;
+
+	if (this->m_room.isClosed())
+	{
+		handler = this->createMenuRequestHandler();
+		responseCode = ResponseCodes::ROOM_CLOSED;
+	}
+	else if (this->m_room.didGameStart())
+	{
+		handler = this->createMenuRequestHandler();
+		responseCode = ResponseCodes::ROOM_CLOSED;
+	}
+	else
+	{
+		handler = nullptr;
+		responseCode = ResponseCodes::ROOM_OPEN;
+	}
+
+	return RequestResult(
+		JsonResponsePacketSerializer::serializeResponse(
+			GetRoomStateResponse(
+				static_cast<unsigned int>(responseCode),
+				this->m_room.getRoomState()
+			)
+		),
+		handler
+	);
 }
 
 std::shared_ptr<MenuRequestHandler> AllRoomMembersRequestHandler::createMenuRequestHandler() const

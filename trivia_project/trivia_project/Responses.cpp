@@ -91,13 +91,17 @@ Codes LeaveRoomResponse::getResponseCode() const
 	return Codes::LEAVE_ROOM;
 }
 
-Codes GetRoomState::getResponseCode() const
+Codes GetRoomStateResponse::getResponseCode() const
 {
-	//TODO
-	return Codes::ROOM_STATE;
+	return Codes::GET_ROOM_STATE;
 }
 
-Codes StartGameResPonse::getResponseCode() const
+GetRoomStateResponse::GetRoomStateResponse(unsigned int status, const RoomState& roomState) : 
+	StatusResponse(status), roomState(roomState)
+{
+}
+
+Codes StartGameResponse::getResponseCode() const
 {
 	return Codes::START_GAME;
 }

@@ -31,5 +31,7 @@ enum class Codes
 enum class ResponseCodes
 {
 	ERROR_RESPONSE,
-	SUCCESFUL
+	SUCCESFUL,
+	ROOM_OPEN,
+	ROOM_CLOSED
 };

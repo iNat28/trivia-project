@@ -3,35 +3,49 @@
 #include "LoggedUser.h"
 #include "SqliteDataBase.h"
 
-struct RoomData 
+struct RoomState
 {
-	RoomData(unsigned int id, string name, unsigned int maxPlayers, unsigned int timePerQuestion, unsigned int isActive, unsigned int numQuestionsAsked);
+	RoomState(vector<LoggedUser> players, unsigned int maxPlayers, unsigned int questionsCount, unsigned int timePerQuestion);
+	RoomState();
+
+	vector<LoggedUser> players;
+	unsigned int maxPlayers;
+	unsigned int questionsCount;
+	unsigned int timePerQuestion;
+	bool didGameStart;
+};
+
+void to_json(json& j, const RoomState& roomState);
+
+struct RoomData
+{
+	RoomData(unsigned int id, string name);
 	RoomData();
 
 	unsigned int id;
 	string name;
-	unsigned int maxPlayers;
-	unsigned int timePerQuestion;
-	unsigned int isActive;
-	unsigned int numQuestionsAsked;
+	bool isClosed;
 };
+
+void to_json(json& j, const RoomData& roomData);
 
 class Room
 {
 public:
-	Room(RoomData roomData);
+	Room(RoomData roomData, RoomState roomState);
 	Room();
 
 	void addUser(LoggedUser user);
 	void removeUser(LoggedUser user);
+	void close();
 	vector<LoggedUser> getAllUsers() const;
-	int getActivity() const;
-	const RoomData& getRoomDataConst() const;
-	RoomData& getRoomData();
+	RoomState getRoomState() const;
+	bool didGameStart() const;
+	bool isClosed() const;
+	unsigned int getId() const;
+	void setId(unsigned int id);
+	friend void to_json(json& j, const Room& room);
 private:
-	RoomData m_metadata;
-	vector<LoggedUser> m_users;
+	RoomData m_roomdata;
+	RoomState m_roomstate;
 };
-
-void to_json(json& j, const Room& room);
-void from_json(const json& j, Room& room);

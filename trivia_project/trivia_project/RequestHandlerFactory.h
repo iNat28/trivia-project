@@ -15,7 +15,7 @@ public:
 	//Maybe allow it so each RequestHandler can use this for one of the parameters, instead of having to get the requestHandler
 	//TODO: Look into args, so it'll return std::make_shared<Handler>(*this, args)
 	template<typename Handler>
-	std::shared_ptr<Handler> createRequestHandler(Handler handler) const
+	std::shared_ptr<Handler> createRequestHandler(const Handler handler) const
 	{
 		return std::make_shared<Handler>(handler);
 	};

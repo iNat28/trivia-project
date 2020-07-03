@@ -2,12 +2,16 @@
 #include "pch.h"
 #include "IRequestHandler.h"
 #include "RequestHandlerFactory.h"
-#include "LoginRequestHandler.h"
 #include "Constants.h"
 #include "LoggedUser.h"
 #include "IDatabase.h"
+#include "LoginRequestHandler.h"
+#include "RoomAdminRequestHandler.h"
+#include "RoomMemberRequestHandler.h"
 
 class LoginRequestHandler;
+class RoomAdminRequestHandler;
+class RoomMemberRequestHandler;
 
 class MenuRequestHandler : public IRequestHandler
 {

@@ -22,7 +22,7 @@ RequestResult RoomAdminRequestHandler::handleRequest(const RequestInfo& requestI
 
 RequestResult RoomAdminRequestHandler::_closeRoom(const RequestInfo& requestInfo) const
 {
-	this->m_handlerFactory.getRoomManager().deleteRoom(this->m_room.getRoomData().id);
+	this->m_handlerFactory.getRoomManager().closeRoom(this->m_room);
 
 	return RequestResult(
 		JsonResponsePacketSerializer::serializeResponse(
@@ -37,8 +37,20 @@ RequestResult RoomAdminRequestHandler::_startGame(const RequestInfo& requestInfo
 	return RequestResult();
 }
 
+RequestResult RoomAdminRequestHandler::_getRoomState(const RequestInfo& requestInfo) const
+{
+	RequestResult requestResult = this->_getRoomStateNoHandler(requestInfo);
+
+	if (requestResult.newHandler == nullptr)
+	{
+		requestResult.newHandler = this->m_handlerFactory.createRequestHandler(*this);
+	}
+
+	return requestResult;
+}
+
 const map<Codes, RoomAdminRequestHandler::requests_func_t> RoomAdminRequestHandler::m_requests = {
 	{ Codes::CLOSE_ROOM, &RoomAdminRequestHandler::_closeRoom },
 	{ Codes::START_GAME, &RoomAdminRequestHandler::_startGame },
-	{ Codes::GET_ROOM_STATE, &AllRoomMembersRequestHandler::_getRoomState }
+	{ Codes::GET_ROOM_STATE, &RoomAdminRequestHandler::_getRoomState }
 };
