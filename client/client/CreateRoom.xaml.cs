@@ -38,7 +38,7 @@ namespace client
                     //TODO: Move converts to its own variable
                     [Keys.maxPlayers] = Convert.ToInt32(this.MaxPlayers.Text),
                     //TODO: Add questions count
-                    [Keys.questionsCount] = 0,
+                    [Keys.questionsCount] = 10,
                     [Keys.timePerQuestion] = Convert.ToInt32(this.AnswerTime.Text),
                     [Keys.username] = User.username
                 };
@@ -49,7 +49,7 @@ namespace client
 
                 if (Stream.Response(response, Codes.CREATE_ROOM))
                 {
-                    Utils.OpenWindow(this, new Room(true, this.RoomName.Text, Convert.ToInt32(this.MaxPlayers.Text), Convert.ToInt32(this.AnswerTime.Text)));
+                    Utils.OpenWindow(this, new Room(true, new RoomData(0, this.RoomName.Text, Convert.ToInt32(this.MaxPlayers.Text), 10, Convert.ToInt32(this.AnswerTime.Text), Room.Status.OPEN)));
                 }
             }
         }

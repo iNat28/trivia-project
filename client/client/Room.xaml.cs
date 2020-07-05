@@ -20,27 +20,27 @@ namespace client
     /// <summary>
     /// Interaction logic for Room.xaml
     /// </summary>
-    public partial class Room : LogoutWindow
+    public partial class Room : Window
     {
-        private readonly int roomId;
+        //private readonly int roomId;
         //private static bool updateUserList;
-        private bool isAdmin;
-        private BackgroundWorker backgroundWorker;
-        private Mutex sendingMutex;
-        private bool close = false;
+        private readonly bool isAdmin;
+        private readonly BackgroundWorker backgroundWorker;
+        private readonly Mutex sendingMutex;
+        private Status roomStatus = Status.OPEN;
 
         //TODO: Need to get room state instead of get players in room, and needs to check if the room closed or if the game started
         //Might want to do if(!isAdmin) before checking
         //TODO: Make sure all of the json keys are the same as in the back end
 
-        enum RoomStatus
+        public enum Status
         { 
             OPEN,
 	        CLOSED,
 	        GAME_STARTED
         };
 
-        public Room(bool isAdmin, string roomName, int maxPlayers, int answerTime)
+        public Room(bool isAdmin, RoomData roomData)
         {
             InitializeComponent();
             User.errorOutput = this.errorOutput;
@@ -54,24 +54,11 @@ namespace client
                 this.CloseRoomButton.Visibility = Visibility.Hidden;
                 this.StartGameButton.Visibility = Visibility.Hidden;
             }
-            //getting id of room
-            Stream.Send(new JObject(), Codes.GET_ROOM);
-
-            Response response = Stream.Recieve();
-
-            if (Stream.Response(response, Codes.GET_ROOM))
-            {
-                JArray jArray = (JArray)response.jObject[Keys.rooms];
-                foreach (JObject jObject in jArray)
-                {
-                    if (jObject[Keys.name].ToString() == roomName)                  
-                        this.roomId = Convert.ToInt32(jObject[Keys.id].ToString());                                                   
-                }
-            }
+            
             //TODO: add a thread here that updates this data when we add the functionality of changing these stats in the room window
-            this.RoomName.Text = roomName;
-            this.MaxPlayers.Text = maxPlayers.ToString();
-            this.TimePerQuestion.Text = answerTime.ToString();
+            this.RoomName.Text = roomData.name;
+            this.MaxPlayers.Text = roomData.maxPlayers.ToString();
+            this.TimePerQuestion.Text = roomData.timePerQuestion.ToString();
             //adding users
 
             backgroundWorker = new BackgroundWorker
@@ -81,16 +68,13 @@ namespace client
             };
 
             backgroundWorker.DoWork += GetUsersList;
-            backgroundWorker.ProgressChanged += AddUserToList;
-            backgroundWorker.ProgressChanged += clearUsersList;
+            backgroundWorker.ProgressChanged += ChangeWPF;
             backgroundWorker.RunWorkerCompleted += GetUsersCompleted;
             backgroundWorker.RunWorkerAsync();            
         }
 
         protected override void OnClosed(EventArgs e)
         {
-            OnClosedBase(e);
-
             if (LogoutWindow.toClose)
             {
                 if (isAdmin)
@@ -140,7 +124,17 @@ namespace client
 
         private void StartGameButton_Click(object sender, RoutedEventArgs e)
         {
-            //starts game
+            backgroundWorker.CancelAsync();
+
+            sendingMutex.WaitOne();
+            Stream.Send(new JObject(), Codes.START_GAME);
+
+            Response response = Stream.Recieve();
+
+            if (Stream.Response(response, Codes.START_GAME))
+            {
+                Utils.OpenWindow(this, new GameWindow());
+            }
         }
 
         private void CloseRoomButton_Click(object sender, RoutedEventArgs e)
@@ -164,58 +158,89 @@ namespace client
                 }
 
                 sendingMutex.WaitOne();
-                JObject roomIdJObject = new JObject
-                {
-                    ["roomId"] = roomId
-                };
-                Stream.Send(roomIdJObject, Codes.GET_PLAYERS_IN_ROOM);
+                Stream.Send(new JObject(), Codes.GET_ROOM_STATE);
 
                 Response usersResponse = Stream.Recieve();
 
-                //If the room is closed
-                //TODO: Change code to be room is closed
-                if(usersResponse.code == Codes.ERROR_CODE)
+                backgroundWorker.ReportProgress(0, "");
+
+                string error;
+                if (Stream.ResponseForThread(usersResponse, Codes.GET_ROOM_STATE, out error))
                 {
-                    e.Cancel = true;
-                    close = true;
-                    break;
-                }
-                //here the users list needs to be cleared
-                backgroundWorker.ReportProgress(0, (string)"");
-                if (Stream.Response(usersResponse, Codes.GET_PLAYERS_IN_ROOM))
-                {
-                    JArray jArray = (JArray)usersResponse.jObject[Keys.playersInRoom];
-                    foreach (JObject jObject in jArray)
-                    {                                               
-                        Console.WriteLine((string)jObject[Keys.username]);
-                        backgroundWorker.ReportProgress(0, (string)jObject[Keys.username]);
+                    this.roomStatus = (Status)(int)usersResponse.jObject[Keys.roomStatus];
+                    
+                    if (this.roomStatus != Status.OPEN)
+                    {
+                        e.Cancel = true;
+                        break;
                     }
-                }                
+
+                    JArray jArray = (JArray)usersResponse.jObject[Keys.players];
+
+                    List<string> players = new List<string>();
+
+                    foreach (JObject jObject in jArray)
+                    {
+                        string player = (string)jObject[Keys.username];
+                        if(!this.NamesList.Items.Contains(player))
+                        {
+                            backgroundWorker.ReportProgress(1, player);
+                        }
+                        players.Add(player);
+                    }
+                    
+                    for (int i = this.NamesList.Items.Count - 1; i >= 0; i--)
+                    {
+                        if (!players.Contains(this.NamesList.Items[i]))
+                        {
+                            backgroundWorker.ReportProgress(2, this.NamesList.Items[i].ToString());
+                        }
+                    }
+                }
+                else
+                {
+                    backgroundWorker.ReportProgress(3, error);
+                }
+
                 sendingMutex.ReleaseMutex();
                 Thread.Sleep(3000);
             }
         }
-
-        private void clearUsersList(object sender, ProgressChangedEventArgs e)
+        
+        private void ChangeWPF(object sender, ProgressChangedEventArgs e)
         {
-            if(e.UserState.ToString() == "")
-                this.NamesList.Items.Clear();
-        }
-
-        private void AddUserToList(object sender, ProgressChangedEventArgs e)
-        {
-            if (!this.NamesList.Items.Contains(e.UserState) && e.UserState.ToString() != "")
+            string param = (string)e.UserState;
+            switch (e.ProgressPercentage)
             {
-                this.NamesList.Items.Add(e.UserState);
+                case 1:
+                    this.NamesList.Items.Add(param);
+                    break;
+                case 2:
+                    this.NamesList.Items.Remove(param);
+                    break;
+                case 3:
+                    this.errorOutput.Text = param;
+                    break;
             }
         }             
 
         private void GetUsersCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            if(close)
+            Window newWindow = null;
+            
+            switch(roomStatus)
             {
-                Utils.OpenWindow(this, new MainWindow());
+                case Status.OPEN:
+                    return;
+                case Status.CLOSED:
+                    newWindow = new MainWindow();
+                    break;
+                case Status.GAME_STARTED:
+                    newWindow = new GameWindow();
+                    break;
             }
+
+            Utils.OpenWindow(this, newWindow);
         }
     }
 }

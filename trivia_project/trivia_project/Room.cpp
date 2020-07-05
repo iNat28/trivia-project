@@ -33,14 +33,19 @@ Room::Room()
 
 void Room::addUser(LoggedUser user)
 {
-	if (this->m_roomdata.players.size() < this->m_roomdata.maxPlayers)
-	{
-		this->m_roomdata.players.push_back(user);
-	}
-	else
+	if (this->m_roomdata.players.size() >= this->m_roomdata.maxPlayers)
 	{
 		throw Exception("Room is full!");
 	}
+	if (this->m_roomdata.roomStatus == RoomStatus::CLOSED)
+	{
+		throw Exception("Room is closed!");
+	}
+	if (this->m_roomdata.roomStatus == RoomStatus::GAME_STARTED)
+	{
+		throw Exception("Room has started!");
+	}
+	this->m_roomdata.players.push_back(user);
 }
 
 void Room::removeUser(LoggedUser user)
@@ -83,5 +88,5 @@ void Room::setId(unsigned int id)
 
 void to_json(json& j, const Room& room)
 {
-	j[Keys::roomData] = room.m_roomdata;
+	j = room.m_roomdata;
 }

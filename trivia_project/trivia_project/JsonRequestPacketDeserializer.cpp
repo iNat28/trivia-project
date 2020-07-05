@@ -48,7 +48,7 @@ CreateRoomRequest JsonRequestPacketDeserializer::deserializeCreateRoomRequest(co
 		RoomData(
 			0,
 			jsonFromBson[Keys::roomName],
-			vector<LoggedUser>(jsonFromBson[Keys::username]),
+			{ LoggedUser(jsonFromBson[Keys::username]) },
 			jsonFromBson[Keys::maxPlayers],
 			jsonFromBson[Keys::questionsCount],
 			jsonFromBson[Keys::timePerQuestion]
