@@ -1,8 +1,8 @@
 #include "pch.h"
 #include "LoginRequestHandler.h"
 
-LoginRequestHandler::LoginRequestHandler(RequestHandlerFactory& handlerFactor) :
-	IRequestHandler(handlerFactor)
+LoginRequestHandler::LoginRequestHandler(RequestHandlerFactory& handlerFactory) :
+	m_handlerFactory(handlerFactory)
 {
 }
 
@@ -21,7 +21,7 @@ RequestResult LoginRequestHandler::handleRequest(const RequestInfo& requestInfo)
 	{
 		return RequestResult(
 			JsonResponsePacketSerializer::serializeResponse(ErrorResponse(e.what())),
-			this->m_handlerFactory.createRequestHandler(*this)
+			this->m_handlerFactory.createLoginRequestHandler()
 		);
 	}
 	//Other exception caught (probably because of the json)
@@ -43,9 +43,9 @@ RequestResult LoginRequestHandler::_login(const RequestInfo& requestInfo) const
 
 	return RequestResult(
 		JsonResponsePacketSerializer::serializeResponse(
-			LoginResponse(static_cast<unsigned int>(ResponseCodes::SUCCESFUL))
+			LoginResponse()
 		),
-		this->_createMenuRequestHandler(loginRequest.username)
+		this->m_handlerFactory.createMenuRequestHandler(loginRequest.username)
 	);
 }
 
@@ -58,15 +58,10 @@ RequestResult LoginRequestHandler::_signup(const RequestInfo& requestInfo) const
 
 	return RequestResult(
 		JsonResponsePacketSerializer::serializeResponse(
-			SignupResponse(static_cast<unsigned int>(ResponseCodes::SUCCESFUL))
+			SignupResponse()
 		),
-		this->_createMenuRequestHandler(signupRequest.username)
+		this->m_handlerFactory.createMenuRequestHandler(signupRequest.username)
 	);
-}
-
-std::shared_ptr<MenuRequestHandler> LoginRequestHandler::_createMenuRequestHandler(string username) const
-{
-	return this->m_handlerFactory.createRequestHandler(MenuRequestHandler(this->m_handlerFactory, username));
 }
 
 const map<Codes, LoginRequestHandler::requests_func_t> LoginRequestHandler::m_requests = {

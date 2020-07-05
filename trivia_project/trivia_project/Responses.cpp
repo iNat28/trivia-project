@@ -1,11 +1,6 @@
 #include "pch.h"
 #include "Responses.h"
 
-StatusResponse::StatusResponse(unsigned int status) :
-	status(status)
-{
-}
-
 ErrorResponse::ErrorResponse(std::string message) :
 	message(message)
 {
@@ -31,8 +26,8 @@ Codes ErrorResponse::getResponseCode() const
 	return Codes::ERROR_CODE;
 }
 
-GetRoomResponse::GetRoomResponse(unsigned int status, vector<Room> rooms) :
-	StatusResponse(status), rooms(rooms)
+GetRoomResponse::GetRoomResponse(const vector<Room>& rooms) : 
+	rooms(rooms)
 {
 }
 
@@ -41,8 +36,8 @@ Codes GetRoomResponse::getResponseCode() const
 	return Codes::GET_ROOM;
 }
 
-GetPlayersInRoomResponse::GetPlayersInRoomResponse(vector<LoggedUser> users) :
-	users(users)
+GetPlayersInRoomResponse::GetPlayersInRoomResponse(const vector<LoggedUser>& players) :
+	players(players)
 {
 }
 
@@ -61,8 +56,8 @@ Codes CreateRoomResponse::getResponseCode() const
 	return Codes::CREATE_ROOM;
 }
 
-GetUserStatsResponse::GetUserStatsResponse(unsigned int status, UserStats userStats) : 
-	StatusResponse(status), userStats(userStats)
+GetUserStatsResponse::GetUserStatsResponse(const UserStats& userStats) : 
+	userStats(userStats)
 {
 }
 
@@ -71,8 +66,8 @@ Codes GetUserStatsResponse::getResponseCode() const
 	return Codes::USER_STATS;
 }
 
-GetHighScoresResponse::GetHighScoresResponse(unsigned int status, HighScores highScores) : 
-	StatusResponse(status), highScores(highScores)
+GetHighScoresResponse::GetHighScoresResponse(const HighScores& highScores) : 
+	highScores(highScores)
 {
 }
 
@@ -91,14 +86,14 @@ Codes LeaveRoomResponse::getResponseCode() const
 	return Codes::LEAVE_ROOM;
 }
 
+GetRoomStateResponse::GetRoomStateResponse(RoomStatus roomStatus, const vector<LoggedUser>& players) : 
+	roomStatus(roomStatus), players(players)
+{
+}
+
 Codes GetRoomStateResponse::getResponseCode() const
 {
 	return Codes::GET_ROOM_STATE;
-}
-
-GetRoomStateResponse::GetRoomStateResponse(unsigned int status, const RoomState& roomState) : 
-	StatusResponse(status), roomState(roomState)
-{
 }
 
 Codes StartGameResponse::getResponseCode() const

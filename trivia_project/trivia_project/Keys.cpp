@@ -33,7 +33,7 @@ const char* Keys::maxPlayers = "maxPlayers";
 const char* Keys::timePerQuestion = "timePerQuestion";
 const char* Keys::players = "players";
 const char* Keys::questionsCount = "questionsCount";
-const char* Keys::didGameStart = "didGameStart";
+const char* Keys::roomStatus = "roomStatus";
 
 const char* Keys::category = "category";
 const char* Keys::difficulty = "difficulty";

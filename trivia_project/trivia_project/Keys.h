@@ -44,7 +44,7 @@ struct Keys
 	static const char* name;
 	static const char* maxPlayers;
 	static const char* timePerQuestion;
-	static const char* didGameStart;
+	static const char* roomStatus;
 	static const char* players;
 	static const char* questionsCount;
 

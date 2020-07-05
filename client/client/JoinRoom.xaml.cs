@@ -76,7 +76,7 @@ namespace client
                 if (Stream.Response(response, Codes.JOIN_ROOM))
                 {
                     Utils.OpenWindow(this, new Room(false, this.RoomsList.SelectedItem.ToString(), 0, 0));
-                }          
+                }    
             }
         }
 

@@ -1,6 +1,11 @@
 #include "pch.h"
 #include "RoomMemberRequestHandler.h"
 
+RoomMemberRequestHandler::RoomMemberRequestHandler(RequestHandlerFactory& handlerFactory, LoggedUser user, Room& room) :
+	AllRoomMembersRequestHandler(user, room), m_handlerFactory(handlerFactory)
+{
+}
+
 RequestResult RoomMemberRequestHandler::handleRequest(const RequestInfo& requestInfo) const
 {
 	RoomMemberRequestHandler::requests_func_t handler = nullptr;
@@ -15,7 +20,7 @@ RequestResult RoomMemberRequestHandler::handleRequest(const RequestInfo& request
 	{
 		return RequestResult(
 			JsonResponsePacketSerializer::serializeResponse(ErrorResponse(e.what())),
-			this->m_handlerFactory.createRequestHandler(*this)
+			this->m_handlerFactory.createRoomMemberRequestHandler(this->m_user, this->m_room)
 		);
 	}
 }
@@ -26,9 +31,9 @@ RequestResult RoomMemberRequestHandler::_leaveRoom(const RequestInfo& requestInf
 
 	return RequestResult(
 		JsonResponsePacketSerializer::serializeResponse(
-			LeaveRoomResponse(static_cast<unsigned int>(ResponseCodes::SUCCESFUL))
+			LeaveRoomResponse()
 		),
-		this->createMenuRequestHandler()
+		this->m_handlerFactory.createMenuRequestHandler(this->m_user)
 	);
 }
 
@@ -36,9 +41,18 @@ RequestResult RoomMemberRequestHandler::_getRoomState(const RequestInfo& request
 {
 	RequestResult requestResult = this->_getRoomStateNoHandler(requestInfo);
 
-	if (requestResult.newHandler == nullptr)
+	switch (this->m_room.getRoomStatus())
 	{
-		requestResult.newHandler = this->m_handlerFactory.createRequestHandler(*this);
+	case RoomStatus::OPEN:
+		requestResult.newHandler = this->m_handlerFactory.createRoomMemberRequestHandler(this->m_user, this->m_room);
+		break;
+	case RoomStatus::CLOSED:
+		requestResult.newHandler = this->m_handlerFactory.createMenuRequestHandler(this->m_user);
+		break;
+	case RoomStatus::GAME_STARTED:
+		//TODO
+		//handler = this->m_handlerFactory.createGameRequestHandler();
+		break;
 	}
 
 	return requestResult;

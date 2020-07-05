@@ -6,25 +6,30 @@ RequestHandlerFactory::RequestHandlerFactory(IDatabase& database) :
 {
 }
 
-//std::shared_ptr<LoginRequestHandler> RequestHandlerFactory::createLoginRequestHandler() const
-//{
-//	return std::make_shared<LoginRequestHandler>(*this);
-//}
-//
-//std::shared_ptr<MenuRequestHandler> RequestHandlerFactory::createMenuRequestHandler(LoggedUser user) const
-//{
-//	return std::make_shared<MenuRequestHandler>(*this, user);
-//}
-//
-//std::shared_ptr<RoomAdminRequestHandler> RequestHandlerFactory::creatRoomAdminRequestHandler(LoggedUser user, Room room) const
-//{
-//	return std::make_shared<RoomAdminRequestHandler>(*this, user, room);
-//}
-//
-//std::shared_ptr<RoomMemberRequestHandler> RequestHandlerFactory::creatRoomMemberRequestHandler(LoggedUser user, Room room) const
-//{
-//	return std::make_shared<RoomMemberRequestHandler>(*this, user, room);
-//}
+std::shared_ptr<LoginRequestHandler> RequestHandlerFactory::createLoginRequestHandler()
+{
+	return std::make_shared<LoginRequestHandler>(*this);
+}
+
+std::shared_ptr<MenuRequestHandler> RequestHandlerFactory::createMenuRequestHandler(LoggedUser user)
+{
+	return std::make_shared<MenuRequestHandler>(*this, user);
+}
+
+std::shared_ptr<RoomAdminRequestHandler> RequestHandlerFactory::createRoomAdminRequestHandler(LoggedUser user, Room& room)
+{
+	return std::make_shared<RoomAdminRequestHandler>(*this, user, room);
+}
+
+std::shared_ptr<RoomMemberRequestHandler> RequestHandlerFactory::createRoomMemberRequestHandler(LoggedUser user, Room& room)
+{
+	return std::make_shared<RoomMemberRequestHandler>(*this, user, room);
+}
+
+std::shared_ptr<GameRequestHandler> RequestHandlerFactory::createGameRequestHandler(LoggedUser user)
+{
+	return std::make_shared<GameRequestHandler>(*this, user);
+}
 
 LoginManager& RequestHandlerFactory::getLoginManager()
 {

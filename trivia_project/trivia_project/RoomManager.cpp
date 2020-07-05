@@ -61,7 +61,7 @@ vector<Room> RoomManager::getRooms() const
 
 	for (const auto& room : this->m_rooms)
 	{
-		if (!room.second.isClosed())
+		if (room.second.getRoomStatus() != RoomStatus::CLOSED)
 		{
 			rooms.push_back(room.second);
 		}

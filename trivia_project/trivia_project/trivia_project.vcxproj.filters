@@ -225,7 +225,7 @@
       <Filter>Header Files\Infrastructure</Filter>
     </ClInclude>
     <ClInclude Include="GameRequestHandler.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Handlers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
