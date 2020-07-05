@@ -64,10 +64,14 @@ namespace client
                 JArray jArray = (JArray)response.jObject[Keys.rooms];
                 foreach (JObject jObject in jArray)
                 {
-                    if (jObject[Keys.name].ToString() == roomName)
-                        this.roomId = Convert.ToInt32(jObject[Keys.id].ToString());
+                    if (jObject[Keys.name].ToString() == roomName)                  
+                        this.roomId = Convert.ToInt32(jObject[Keys.id].ToString());                                                   
                 }
             }
+            //TODO: add a thread here that updates this data when we add the functionality of changing these stats in the room window
+            this.RoomName.Text = roomName;
+            this.MaxPlayers.Text = maxPlayers.ToString();
+            this.TimePerQuestion.Text = answerTime.ToString();
             //adding users
 
             backgroundWorker = new BackgroundWorker
