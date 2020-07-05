@@ -34,6 +34,8 @@ namespace client
          TODO: there should also be an algorithm to randomly chhose which button gets which answer.
 
          TODO: there should be a way to determine if the admin is the one who left the game. if so then the room should exit for everyone.
+
+         TODO: somewhere calculate the points and average answer time.
          */
         private void Answer1_Click(object sender, RoutedEventArgs e)
         {
