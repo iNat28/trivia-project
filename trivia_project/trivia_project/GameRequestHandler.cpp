@@ -2,7 +2,7 @@
 #include "GameRequestHandler.h"
 
 GameRequestHandler::GameRequestHandler(RequestHandlerFactory& handlerFactory, LoggedUser user) : 
-	m_handlerFactory(handlerFactory), m_user(user)
+	LoggedUserRequestHandler(user), m_handlerFactory(handlerFactory)
 {
 }
 

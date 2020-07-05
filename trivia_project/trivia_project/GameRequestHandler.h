@@ -1,9 +1,9 @@
 #pragma once
-#include "IRequestHandler.h"
+#include "LoggedUserRequestHandler.h"
 #include "RequestHandlerFactory.h"
 
 class GameRequestHandler :
-	public IRequestHandler
+	public LoggedUserRequestHandler
 {
 public:
 	GameRequestHandler(RequestHandlerFactory& handlerFactory, LoggedUser user);
@@ -11,6 +11,5 @@ public:
 	virtual RequestResult handleRequest(const RequestInfo& requestInfo) const override;
 private:
 	RequestHandlerFactory& m_handlerFactory;
-	LoggedUser& m_user;
 };
 

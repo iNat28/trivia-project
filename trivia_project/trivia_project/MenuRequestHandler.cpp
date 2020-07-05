@@ -4,7 +4,7 @@
 //TODO: Make sure things are const
 
 MenuRequestHandler::MenuRequestHandler(RequestHandlerFactory& handlerFactory, LoggedUser user) :
-	m_handlerFactory(handlerFactory), m_user(user)
+	LoggedUserRequestHandler(user), m_handlerFactory(handlerFactory)
 {
 }
 

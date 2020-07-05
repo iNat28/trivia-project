@@ -133,7 +133,10 @@
       <Filter>Source Files\Handlers</Filter>
     </ClCompile>
     <ClCompile Include="GameRequestHandler.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Handlers</Filter>
+    </ClCompile>
+    <ClCompile Include="LoggedUserRequestHandler.cpp">
+      <Filter>Source Files\Handlers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -225,6 +228,9 @@
       <Filter>Header Files\Infrastructure</Filter>
     </ClInclude>
     <ClInclude Include="GameRequestHandler.h">
+      <Filter>Header Files\Handlers</Filter>
+    </ClInclude>
+    <ClInclude Include="LoggedUserRequestHandler.h">
       <Filter>Header Files\Handlers</Filter>
     </ClInclude>
   </ItemGroup>
