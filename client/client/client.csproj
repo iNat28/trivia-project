@@ -83,6 +83,9 @@
     <Compile Include="MyStatus.xaml.cs">
       <DependentUpon>MyStatus.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Question.xaml.cs">
+      <DependentUpon>Question.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Room.xaml.cs">
       <DependentUpon>Room.xaml</DependentUpon>
     </Compile>
@@ -124,6 +127,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="MyStatus.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Question.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
