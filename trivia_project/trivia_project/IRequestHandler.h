@@ -1,6 +1,7 @@
 #pragma once
 #include "pch.h"
 #include "Codes.h"
+#include "Requests.h"
 #include "JsonResponsePacketSerializer.h"
 
 class IRequestHandler;

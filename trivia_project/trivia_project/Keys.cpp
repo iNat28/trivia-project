@@ -7,7 +7,6 @@ const char* Keys::email = "email";
 
 const char* Keys::roomId = "roomId";
 const char* Keys::roomName = "roomName";
-const char* Keys::maxUsers = "maxUsers";
 const char* Keys::questionCount = "questionCount";
 const char* Keys::answerTimeout = "answerTimeout";
 
@@ -18,6 +17,8 @@ const char* Keys::message = "message";
 
 const char* Keys::rooms = "Rooms";
 const char* Keys::playersInRoom = "PlayersInRoom";
+const char* Keys::roomData = "roomData";
+const char* Keys::roomState = "roomState";
 
 const char* Keys::numPoints = "numPoints";
 const char* Keys::numTotalGames = "numTotalGames";
@@ -30,9 +31,9 @@ const char* Keys::id = "id";
 const char* Keys::name = "name";
 const char* Keys::maxPlayers = "maxPlayers";
 const char* Keys::timePerQuestion = "timePerQuestion";
-const char* Keys::isActive = "isActive";
-const char* Keys::users = "users";
-const char* Keys::numQuestionsAsked = "numQuestionsAsked";
+const char* Keys::players = "players";
+const char* Keys::questionsCount = "questionsCount";
+const char* Keys::roomStatus = "roomStatus";
 
 const char* Keys::category = "category";
 const char* Keys::difficulty = "difficulty";

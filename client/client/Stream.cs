@@ -22,6 +22,7 @@ namespace client
     {
         private static TcpClient tcpClient;
         private static NetworkStream client;
+        private static bool open = false;
 
         private const int MSG_CODE_SIZE = 1;
         private const int MSG_LEN_SIZE = 4;
@@ -34,6 +35,12 @@ namespace client
             {
                 if (client == null)
                 {
+                    if(open)
+                    {
+                        System.Environment.Exit(1);
+                    }
+                    open = true;
+
                     try
                     {
                         tcpClient = new TcpClient();
@@ -62,6 +69,7 @@ namespace client
             {
                 User.PrintErrorAndKeep(e);
             }
+            open = false;
         }
 
         public static void Signout()
@@ -109,13 +117,16 @@ namespace client
                 response.code = (Codes)bufferRead[0]; 
                 bufferSize = BitConverter.ToInt32(bufferRead, MSG_CODE_SIZE);
 
-                bufferBson = new byte[bufferSize + MSG_LEN_SIZE];
-                //Copies the Bson length to the bson buffer
-                Array.Copy(bufferRead, MSG_CODE_SIZE, bufferBson, 0, MSG_LEN_SIZE);
+                if (bufferSize > 0)
+                {
+                    bufferBson = new byte[bufferSize + MSG_LEN_SIZE];
+                    //Copies the Bson length to the bson buffer
+                    Array.Copy(bufferRead, MSG_CODE_SIZE, bufferBson, 0, MSG_LEN_SIZE);
 
-                Client.Read(bufferBson, MSG_LEN_SIZE, bufferBson.Length - MSG_LEN_SIZE);
+                    Client.Read(bufferBson, MSG_LEN_SIZE, bufferBson.Length - MSG_LEN_SIZE);
 
-                response.jObject = (JObject)JToken.ReadFrom(new BsonDataReader(new MemoryStream(bufferBson)));
+                    response.jObject = (JObject)JToken.ReadFrom(new BsonDataReader(new MemoryStream(bufferBson)));
+                }
             }
             catch (Exception e)
             {
@@ -127,32 +138,53 @@ namespace client
 
         public static bool Response(Response response, Codes code)
         {
-            string error;
-
             try
             {
-                if (response.code == code)
-                {
-                    return true;
-                }
-                
-                if (response.code == Codes.ERROR_CODE)
-                {
-                    error = (string)response.jObject["message"];
-                }
-                else
-                {
-                    error = response.jObject.ToString();
-                }
-
-                throw new Exception(error);
+                return _Response(response, code);
             }
             catch (Exception e)
             {
-                User.PrintErrorAndClose(e);
+                User.PrintErrorAndKeep(e);
             }
 
             return false;
+        }
+
+        public static bool ResponseForThread(Response response, Codes code, out string error)
+        {
+            error = "";
+
+            try
+            {
+                return _Response(response, code);
+            }
+            catch (Exception e)
+            {
+                error = e.Message;
+            }
+
+            return false;
+        }
+
+        private static bool _Response(Response response, Codes code)
+        {
+            string error;
+
+            if (response.code == code)
+            {
+                return true;
+            }
+
+            if (response.code == Codes.ERROR_CODE)
+            {
+                error = (string)response.jObject["message"];
+            }
+            else
+            {
+                error = response.jObject.ToString();
+            }
+
+            throw new Exception(error);
         }
     }
 }

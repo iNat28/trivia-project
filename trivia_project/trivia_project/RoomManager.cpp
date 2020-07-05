@@ -6,38 +6,37 @@ RoomManager::RoomManager(IDatabase& database) :
 {
 }
 
-void RoomManager::createRoom(RoomData roomData, string adminUsername)
+void RoomManager::createRoom(Room& room)
 {
-	Room newRoom(roomData);
-	
-	newRoom.getRoomData().id = this->m_database.getHighestRoomId();
-	newRoom.addUser(LoggedUser(adminUsername));
+	room.setId(this->m_database.getHighestRoomId());
 
-	this->m_rooms[newRoom.getRoomData().id] = newRoom;
+	this->m_rooms[room.getId()] = room;
 }
 
-void RoomManager::deleteRoom(unsigned int roomId)
+void RoomManager::closeRoom(Room& room)
 {
-	Room& room = getRoom(roomId);
-	
-	//TODO: Add user stats from the game
-	/*for (auto& user : room.getAllUsers())
-	{
-		this->m_database.addGameStats(
-			UserStats()
-		);
-	}*/
+	room.close();
 
-	if (!this->m_rooms.erase(roomId))
+	if (room.getAllUsers().empty())
 	{
-		throw Exception("Room ID not found");
+		if (!this->m_rooms.erase(room.getId()))
+		{
+			throw Exception("Room ID not found");
+		}
 	}
 }
 
-bool RoomManager::getRoomState(unsigned int id) const
-{
-	return this->_getRoom(id).getActivity();
-}
+//RoomData RoomManager::getRoomState(unsigned int id) const
+//{
+//	//TODO: Change
+//	//TODO: Make sure to update Get Activty when the game starts
+//	return RoomData(
+//		this->_getRoom(id).didGameStart(),
+//		this->getUsersInRoom(id),
+//		0,
+//		0
+//	);
+//}
 
 Room& RoomManager::getRoom(unsigned int id)
 {
@@ -62,7 +61,10 @@ vector<Room> RoomManager::getRooms() const
 
 	for (const auto& room : this->m_rooms)
 	{
-		rooms.push_back(room.second);
+		if (room.second.getRoomStatus() != RoomStatus::CLOSED)
+		{
+			rooms.push_back(room.second);
+		}
 	}
 
 	return rooms;

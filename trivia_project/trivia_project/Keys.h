@@ -12,7 +12,6 @@ struct Keys
 	//Rooms
 	static const char* roomId;
 	static const char* roomName;
-	static const char* maxUsers;
 	static const char* questionCount;
 	static const char* answerTimeout;
 	
@@ -27,6 +26,8 @@ struct Keys
 	//Rooms
 	static const char* rooms;
 	static const char* playersInRoom;
+	static const char* roomState;
+	static const char* roomData;
 
 	//Statistics
 	static const char* numPoints;
@@ -38,14 +39,14 @@ struct Keys
 
 	/* Objects */
 
-	//RoomData
+	//Room
 	static const char* id;
 	static const char* name;
 	static const char* maxPlayers;
 	static const char* timePerQuestion;
-	static const char* isActive;
-	static const char* users;
-	static const char* numQuestionsAsked;
+	static const char* roomStatus;
+	static const char* players;
+	static const char* questionsCount;
 
 	//Question
 	static const char* category;

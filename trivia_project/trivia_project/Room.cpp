@@ -1,8 +1,29 @@
 #include "pch.h"
 #include "Room.h"
 
-Room::Room(RoomData roomData) :
-	m_metadata(roomData)
+RoomData::RoomData(unsigned int id, string name, vector<LoggedUser> players, unsigned int maxPlayers, unsigned int questionsCount, unsigned int timePerQuestion) : 
+	id(id), name(name), players(players), maxPlayers(maxPlayers), questionsCount(questionsCount), timePerQuestion(timePerQuestion), roomStatus(RoomStatus::OPEN)
+{
+}
+
+RoomData::RoomData() :
+	id(0), name(), players(), maxPlayers(0), questionsCount(0), timePerQuestion(0), roomStatus(RoomStatus::OPEN)
+{
+}
+
+void to_json(json& j, const RoomData& roomData)
+{
+	j[Keys::id] = roomData.id;
+	j[Keys::roomName] = roomData.name;
+	j[Keys::players] = roomData.players;
+	j[Keys::maxPlayers] = roomData.maxPlayers;
+	j[Keys::timePerQuestion] = roomData.timePerQuestion;
+	j[Keys::questionsCount] = roomData.questionsCount;
+	j[Keys::roomStatus] = roomData.roomStatus;
+}
+
+Room::Room(RoomData roomData) : 
+	m_roomdata(roomData)
 {
 }
 
@@ -12,74 +33,60 @@ Room::Room()
 
 void Room::addUser(LoggedUser user)
 {
-	if (this->m_users.size() < this->m_metadata.maxPlayers)
+	if (this->m_roomdata.players.size() >= this->m_roomdata.maxPlayers)
 	{
-		this->m_users.push_back(user);
+		throw Exception("Room is full!");
 	}
+	if (this->m_roomdata.roomStatus == RoomStatus::CLOSED)
+	{
+		throw Exception("Room is closed!");
+	}
+	if (this->m_roomdata.roomStatus == RoomStatus::GAME_STARTED)
+	{
+		throw Exception("Room has started!");
+	}
+	this->m_roomdata.players.push_back(user);
 }
 
 void Room::removeUser(LoggedUser user)
 {
-	vector<LoggedUser>::iterator it;
-	for (it = this->m_users.begin(); it != this->m_users.end(); it++)
+	for (auto it = this->m_roomdata.players.begin(); it != this->m_roomdata.players.end(); it++)
 	{
 		if (it->username == user.username)
 		{
-			this->m_users.erase(it);
-			break;
+			this->m_roomdata.players.erase(it);
+			return;
 		}
 	}
+	throw Exception("User not found");
+}
+
+void Room::close()
+{
+	this->m_roomdata.roomStatus = RoomStatus::CLOSED;
 }
 
 vector<LoggedUser> Room::getAllUsers() const
 {
-	return this->m_users;
+	return this->m_roomdata.players;
 }
 
-int Room::getActivity() const
+RoomStatus Room::getRoomStatus() const
 {
-	return this->m_metadata.isActive;
+	return this->m_roomdata.roomStatus;
 }
 
-const RoomData& Room::getRoomDataConst() const
+unsigned int Room::getId() const
 {
-	return this->m_metadata;
+	return this->m_roomdata.id;
 }
 
-RoomData& Room::getRoomData()
+void Room::setId(unsigned int id)
 {
-	return this->m_metadata;
-}
-
-RoomData::RoomData(unsigned int id, string name, unsigned int maxPlayers, unsigned int timePerQuestion, unsigned int isActive, unsigned int numQuestionsAsked) :
-	id(id), name(name), maxPlayers(maxPlayers), timePerQuestion(timePerQuestion), isActive(isActive), numQuestionsAsked(numQuestionsAsked)
-{
-}
-
-RoomData::RoomData() :
-	id(0), maxPlayers(5), timePerQuestion(20), isActive(false), numQuestionsAsked(0)
-{
+	this->m_roomdata.id = id;
 }
 
 void to_json(json& j, const Room& room)
 {
-	j[Keys::id] = room.getRoomDataConst().id;
-	j[Keys::name] = room.getRoomDataConst().name;
-	j[Keys::maxPlayers] = room.getRoomDataConst().maxPlayers;
-	j[Keys::timePerQuestion] = room.getRoomDataConst().timePerQuestion;
-	j[Keys::isActive] = room.getActivity();
-	j[Keys::users] = room.getAllUsers();
-	j[Keys::numQuestionsAsked] = room.getRoomDataConst().numQuestionsAsked;
-}
-
-void from_json(const json& j, Room& room)
-{
-	room = RoomData(
-		j[Keys::id],
-		j[Keys::name],
-		j[Keys::maxPlayers],
-		j[Keys::timePerQuestion],
-		j[Keys::isActive],
-		j[Keys::numQuestionsAsked]
-	);
+	j = room.m_roomdata;
 }

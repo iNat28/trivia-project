@@ -16,6 +16,21 @@ std::shared_ptr<MenuRequestHandler> RequestHandlerFactory::createMenuRequestHand
 	return std::make_shared<MenuRequestHandler>(*this, user);
 }
 
+std::shared_ptr<RoomAdminRequestHandler> RequestHandlerFactory::createRoomAdminRequestHandler(LoggedUser user, Room& room)
+{
+	return std::make_shared<RoomAdminRequestHandler>(*this, user, room);
+}
+
+std::shared_ptr<RoomMemberRequestHandler> RequestHandlerFactory::createRoomMemberRequestHandler(LoggedUser user, Room& room)
+{
+	return std::make_shared<RoomMemberRequestHandler>(*this, user, room);
+}
+
+std::shared_ptr<GameRequestHandler> RequestHandlerFactory::createGameRequestHandler(LoggedUser user)
+{
+	return std::make_shared<GameRequestHandler>(*this, user);
+}
+
 LoginManager& RequestHandlerFactory::getLoginManager()
 {
 	return this->m_loginManager;

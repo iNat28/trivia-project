@@ -1,6 +1,15 @@
 #include "pch.h"
 #include "JsonResponsePacketSerializer.h"
 
+Buffer JsonResponsePacketSerializer::serializeResponse(const Response& response)
+{
+	//Fills the buffer of size 5
+	Buffer buffer(5);
+	buffer[0] = static_cast<Byte>(response.getResponseCode());
+
+	return buffer;
+}
+
 Buffer JsonResponsePacketSerializer::serializeResponse(const ErrorResponse& errResponse)
 {
 	json jsonToSerialize;
@@ -20,7 +29,7 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const GetRoomResponse& ge
 Buffer JsonResponsePacketSerializer::serializeResponse(const GetPlayersInRoomResponse& getPlayersInRoomResponse)
 {
 	json jsonToSerialize;
-	jsonToSerialize[Keys::playersInRoom] = getPlayersInRoomResponse.users;
+	jsonToSerialize[Keys::playersInRoom] = getPlayersInRoomResponse.players;
 
 	return JsonResponsePacketSerializer::serializeJson(jsonToSerialize, getPlayersInRoomResponse);
 }
@@ -29,7 +38,6 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const GetUserStatsRespons
 {
 	json jsonToSerialize;
 	jsonToSerialize[Keys::userStats] = getUserStatsResponse.userStats;
-	jsonToSerialize[Keys::status] = getUserStatsResponse.status;
 
 	return JsonResponsePacketSerializer::serializeJson(jsonToSerialize, getUserStatsResponse);
 }
@@ -38,17 +46,17 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const GetHighScoresRespon
 {
 	json jsonToSerialize;
 	jsonToSerialize[Keys::highScores] = getHighScoresResponse.highScores;
-	jsonToSerialize[Keys::status] = getHighScoresResponse.status;
 
 	return JsonResponsePacketSerializer::serializeJson(jsonToSerialize, getHighScoresResponse);
 }
 
-Buffer JsonResponsePacketSerializer::serializeResponse(const StatusResponse& statusResponse)
+Buffer JsonResponsePacketSerializer::serializeResponse(const GetRoomStateResponse& getRoomStateResponse)
 {
 	json jsonToSerialize;
-	jsonToSerialize[Keys::status] = statusResponse.status;
+	jsonToSerialize[Keys::roomStatus] = getRoomStateResponse.roomStatus;
+	jsonToSerialize[Keys::players] = getRoomStateResponse.players;
 
-	return JsonResponsePacketSerializer::serializeJson(jsonToSerialize, statusResponse);
+	return JsonResponsePacketSerializer::serializeJson(jsonToSerialize, getRoomStateResponse);
 }
 
 Buffer JsonResponsePacketSerializer::serializeJson(const json& jsonToSerialize, const Response& response)

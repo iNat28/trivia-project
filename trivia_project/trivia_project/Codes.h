@@ -14,11 +14,17 @@ enum class Codes
 	GET_PLAYERS_IN_ROOM,
 	JOIN_ROOM,
 	CREATE_ROOM,
-	CLOSE_ROOM,
-	LEAVE_ROOM,
+	GET_ROOM_STATE,
+
+	//RoomAdmin
+	CLOSE_ROOM = 30,
+	START_GAME,
+
+	//RoomMember
+	LEAVE_ROOM = 40,
 
 	//Statistics
-	USER_STATS = 30,
+	USER_STATS = 50,
 	HIGH_SCORES
 };
 
@@ -27,4 +33,3 @@ enum class ResponseCodes
 	ERROR_RESPONSE,
 	SUCCESFUL
 };
-

@@ -14,7 +14,6 @@ namespace client
             LogoutWindow.toClose = false;
             windowToHide.Close();
             LogoutWindow.toClose = true;
-            User.errorOutput = null;
             windowToOpen.ShowDialog();
         }
     }
@@ -23,22 +22,34 @@ namespace client
     {
         ERROR_CODE = 0,
 
-        //Login
-        LOGIN = 10,
-        SIGNUP,
-        LOGOUT,
+	    //Login
+	    LOGIN = 10,
+	    SIGNUP,
+	    LOGOUT,
 
-        //Room
-        GET_ROOM = 20,
-        GET_PLAYERS_IN_ROOM,
-        JOIN_ROOM,
-        CREATE_ROOM,
-        CLOSE_ROOM,
-        LEAVE_ROOM,
+	    //Room
+	    GET_ROOM = 20,
+	    GET_PLAYERS_IN_ROOM,
+	    JOIN_ROOM,
+	    CREATE_ROOM,
+	    GET_ROOM_STATE,
 
-        //Statistics
-        USER_STATS = 30,
-        HIGH_SCORES
+	    //RoomAdmin
+	    CLOSE_ROOM = 30,
+	    START_GAME,
+
+	    //RoomMember
+	    LEAVE_ROOM = 40,
+
+	    //Statistics
+	    USER_STATS = 50,
+	    HIGH_SCORES
+    };
+
+    public enum ResponseCodes
+    {
+        ERROR_RESPONSE,
+	    SUCCESFUL
     };
 
     //TODO: Add Keys for Json
@@ -50,7 +61,6 @@ namespace client
 
         public const string roomId = "roomId";
         public const string roomName = "roomName";
-        public const string maxUsers = "maxUsers";
         public const string questionCount = "questionCount";
         public const string answerTimeout = "answerTimeout";
 
@@ -61,6 +71,8 @@ namespace client
 
         public const string rooms = "Rooms";
         public const string playersInRoom = "PlayersInRoom";
+        public const string roomData = "roomData";
+        public const string roomState = "roomState";
 
         public const string numPoints = "numPoints";
         public const string numTotalGames = "numTotalGames";
@@ -73,9 +85,9 @@ namespace client
         public const string name = "name";
         public const string maxPlayers = "maxPlayers";
         public const string timePerQuestion = "timePerQuestion";
-        public const string isActive = "isActive";
-        public const string users = "users";
-        public const string numQuestionsAsked = "numQuestionsAsked";
+        public const string players = "players";
+        public const string questionsCount = "questionsCount";
+        public const string roomStatus = "roomStatus";
 
         public const string category = "category";
         public const string difficulty = "difficulty";
