@@ -27,7 +27,12 @@ RequestResult GameRequestHandler::handleRequest(const RequestInfo& requestInfo) 
 
 RequestResult GameRequestHandler::_getQuestion(const RequestInfo& requestInfo) const
 {
-	return RequestResult();
+	return RequestResult(
+		JsonResponsePacketSerializer::serializeResponse(
+			GetQuestionResponse(this->m_game.getQuestion())
+		),
+		this->m_handlerFactory.createGameRequestHandler(this->m_user, this->m_game)
+	);
 }
 
 RequestResult GameRequestHandler::_submitAnswer(const RequestInfo& requestInfo) const
@@ -44,14 +49,29 @@ RequestResult GameRequestHandler::_submitAnswer(const RequestInfo& requestInfo) 
 
 RequestResult GameRequestHandler::_getGameResults(const RequestInfo& requestInfo) const
 {
-	return RequestResult();
+	return RequestResult(
+		JsonResponsePacketSerializer::serializeResponse(
+			GetGameResultsResponse(this->m_game.getGameResults())
+		),
+		this->m_handlerFactory.createMenuRequestHandler(this->m_user)
+	);
 }
 
 RequestResult GameRequestHandler::_leaveGame(const RequestInfo& requestInfo) const
 {
-	return RequestResult();
+	this->m_game.removePlayer(this->m_user);
+
+	return RequestResult(
+		JsonResponsePacketSerializer::serializeResponse(
+			LeaveRoomResponse()
+		),
+		this->m_handlerFactory.createMenuRequestHandler(this->m_user)
+	);
 }
 
 const map<Codes, GameRequestHandler::requests_func_t> GameRequestHandler::m_requests = {
-	{ Codes::GET_QUESTION, &GameRequestHandler::_getQuestion }
+	{ Codes::GET_QUESTION, &GameRequestHandler::_getQuestion },
+	{ Codes::SUBMIT_ANSWER, &GameRequestHandler::_submitAnswer },
+	{ Codes::GET_GAME_RESULTS, &GameRequestHandler::_getGameResults },
+	{ Codes::LEAVE_GAME, &GameRequestHandler::_leaveGame },
 };

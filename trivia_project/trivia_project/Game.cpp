@@ -38,7 +38,7 @@ Game::Game(Room& room) :
 	//TODO: Get the users
 }
 
-Question Game::getQuestionForUser(LoggedUser)
+Question Game::getQuestion()
 {
 	return Question();
 }
@@ -52,9 +52,9 @@ void Game::removePlayer(LoggedUser)
 {
 }
 
-vector<PlayerResults> Game::getGameResults()
+map<LoggedUser, PlayerResults> Game::getGameResults()
 {
-	return vector<PlayerResults>();
+	return map<LoggedUser, PlayerResults>();
 }
 
 GameData::GameData(Question currentQuestion, PlayerResults playerResults) : 

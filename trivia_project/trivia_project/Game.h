@@ -36,10 +36,10 @@ class Game
 public:
 	Game(Room& room);
 
-	Question getQuestionForUser(LoggedUser);
+	Question getQuestion();
 	unsigned int submitAnswer(LoggedUser user, unsigned int answerChoice);
 	void removePlayer(LoggedUser);
-	vector<PlayerResults> getGameResults();
+	map<LoggedUser, PlayerResults> getGameResults();
 private:
 	vector<Question> m_questions;
 	map<LoggedUser, GameData> m_players;
