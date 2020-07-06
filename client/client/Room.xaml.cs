@@ -133,7 +133,7 @@ namespace client
 
             if (Stream.Response(response, Codes.START_GAME))
             {
-                Utils.OpenWindow(this, new GameWindow());
+                Utils.OpenWindow(this, new Question(10, Convert.ToInt32(this.TimePerQuestion.Text)));
             }
         }
 
@@ -236,7 +236,7 @@ namespace client
                     newWindow = new MainWindow();
                     break;
                 case Status.GAME_STARTED:
-                    newWindow = new GameWindow();
+                    newWindow = new Question(10, Convert.ToInt32(this.TimePerQuestion.Text));
                     break;
             }
 

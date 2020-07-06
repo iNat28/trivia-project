@@ -43,7 +43,13 @@ namespace client
 
 	    //Statistics
 	    USER_STATS = 50,
-	    HIGH_SCORES
+	    HIGH_SCORES,
+
+        //game
+        GET_GAME_RESULTS = 34,
+        SUBMIT_ANSWER,
+        GET_QUESTION,
+        LEAVE_GAME
     };
 
     public enum ResponseCodes
@@ -66,11 +72,14 @@ namespace client
 
         public const string userStats = "userStats";
 
+        public const string answerIndex = "answerIndex";
+        public const string playersResults = "playersResults";
+
         public const string status = "status";
         public const string message = "message";
 
-        public const string rooms = "Rooms";
-        public const string playersInRoom = "PlayersInRoom";
+        public const string rooms = "rooms";
+        public const string playersInRoom = "playersInRoom";
         public const string roomData = "roomData";
         public const string roomState = "roomState";
 
@@ -92,9 +101,9 @@ namespace client
         public const string category = "category";
         public const string difficulty = "difficulty";
         public const string question = "question";
-        public const string correctAnswer = "correctAnswer";
-        public const string incorrectAnswer1 = "incorrectAnswer1";
-        public const string incorrectAnswer2 = "incorrectAnswer2";
-        public const string incorrectAnswer3 = "incorrectAnswer3";
+        public const string answers = "answers";
+        public const string correctAnswerIndex = "correctAnswerIndex";
+
+        public const string answerTime = "answerTime";
     }
 }
