@@ -9,7 +9,7 @@
     <Grid>
         <TextBlock x:Name="QuestionHeader" HorizontalAlignment="Left" Margin="183,44,0,0" TextWrapping="Wrap" Text="Question:" VerticalAlignment="Top" Height="24" Width="91"/>
         <TextBlock x:Name="Question" HorizontalAlignment="Left" Margin="298,44,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="24" Width="445"/>
-        <TextBlock x:Name="AnswersLeftHeader" HorizontalAlignment="Left" Margin="521,88,0,0" TextWrapping="Wrap" Text="Answers Left:" VerticalAlignment="Top" Height="35" Width="96"/>
+        <TextBlock x:Name="NumAnswersLeftHeader" HorizontalAlignment="Left" Margin="521,88,0,0" TextWrapping="Wrap" Text="Answers Left:" VerticalAlignment="Top" Height="35" Width="96"/>
         <TextBlock x:Name="NumCorrectAnswersHeader" HorizontalAlignment="Left" Margin="521,137,0,0" TextWrapping="Wrap" Text="Correct Answers:" VerticalAlignment="Top" Height="35" Width="96"/>
         <TextBlock x:Name="CorrectAnswers" HorizontalAlignment="Left" Margin="631,137,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="35" Width="112"/>
         <TextBlock x:Name="AnswersLeft" HorizontalAlignment="Left" Margin="631,88,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="35" Width="112"/>

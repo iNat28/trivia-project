@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,18 +38,22 @@ namespace client
     {
         private DataGrid playerStats;
         public Results()
-        {
-            //TODO: need to think of a way to display all of the players and their num correct answers, average answer time and num points. including winner at the top
+        {            
             InitializeComponent();
             createTable();           
 
-            Stream.Send(new JObject(), Codes);
+            Stream.Send(new JObject(), Codes.GET_GAME_RESULTS);
 
             Response response = Stream.Recieve();
-
-            if (Stream.Response(response, Codes.LOGIN))
+           
+            if (Stream.Response(response, Codes.GET_GAME_RESULTS))
             {                
-                
+                Dictionary<string, JObject> resultsList = JsonConvert.DeserializeObject<Dictionary<string, JObject>>(response.ToString());
+                foreach (var result in resultsList)
+                {
+                    myResults playerResult = new myResults(result.Key, Convert.ToInt32(result.Value[Keys.numCorrectAnswers]), Convert.ToInt32(result.Value[Keys.averageAnswerTime]), Convert.ToInt32(result.Value[Keys.numPoints]));
+                    playerStats.Items.Add(playerResult);
+                }
             }
         }
         private void createTable()
@@ -77,8 +82,7 @@ namespace client
             col1.Header = "PLAYER NAME";
             col2.Header = "NUM OF CORRECT ANSWERS";
             col3.Header = "AVERAGE ANSWER TIME";
-            col4.Header = "TOTAL POINTS";
-            //playerStats.Items.Add(new myResults(name, numCorrectAnswers, averageAnswerTime, numPoints))/
+            col4.Header = "TOTAL POINTS";          
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
