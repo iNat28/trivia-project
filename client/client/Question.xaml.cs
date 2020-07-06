@@ -109,6 +109,15 @@ namespace client
                 if (Convert.ToInt32(this.TimeLeft.Text) == 0 || questionsTemp == this.numQuestionsLeft + 1)
                 {
                     //get new question info
+                    Stream.Send(new JObject(), Codes.GET_QUESTION);
+
+                    Response usersResponse = Stream.Recieve();
+                    
+                    string error;
+                    if (Stream.ResponseForThread(usersResponse, Codes.GET_QUESTION, out error))
+                    {
+                        this.updatingThread.ReportProgress(0, usersResponse);
+                    }
 
                     questionsTemp--;
                     //restarting the time
@@ -123,6 +132,32 @@ namespace client
         private void updateNewQuestion(object sender, ProgressChangedEventArgs e)
         {
             //changes the xaml file
+            //TODO: add text blocks for difficulty and category
+            JObject param = (JObject)e.UserState;
+
+            this.QuestionText.Text = param[Keys.question].ToString();
+            this.Difficulty.Text = param[Keys.difficulty].ToString();
+            this.Category.Text = param[Keys.category].ToString();
+
+            JArray jArray = (JArray)param[Keys.answers];
+
+            this.Answer1.Content = jArray[0].ToString();
+            this.Answer2.Content = jArray[1].ToString();
+            //if there are only two answers
+
+            if(jArray.Count == 2)
+            {
+                this.Answer3.Visibility = Visibility.Hidden;
+                this.Answer4.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+                this.Answer3.Visibility = Visibility.Visible;
+                this.Answer4.Visibility = Visibility.Visible;
+
+                this.Answer3.Content = jArray[2].ToString();
+                this.Answer4.Content = jArray[3].ToString();
+            }
         }
 
         private void gameCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -130,10 +165,7 @@ namespace client
             //opens new window
             Utils.OpenWindow(this, new Results());
         }
-        /*        
-         TODO:make a thread that constantly reduces a second from the seconds left text block and restarts the clock every time a new question is added.
-      
-         */
+        
         private void Answer1_Click(object sender, RoutedEventArgs e)
         {
             this.stopwatch.Stop();
