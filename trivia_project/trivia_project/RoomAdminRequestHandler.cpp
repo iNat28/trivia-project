@@ -45,8 +45,10 @@ RequestResult RoomAdminRequestHandler::_startGame(const RequestInfo& requestInfo
 		JsonResponsePacketSerializer::serializeResponse(
 			StartGameResponse()
 		),
-		//TODO: Deal with the game starting
-		this->m_handlerFactory.createMenuRequestHandler(this->m_user)
+		this->m_handlerFactory.createGameRequestHandler(
+			this->m_user,
+			this->m_handlerFactory.getGameManager().createGame(this->m_room)
+		)
 	);
 }
 
@@ -63,8 +65,10 @@ RequestResult RoomAdminRequestHandler::_getRoomState(const RequestInfo& requestI
 		requestResult.newHandler = this->m_handlerFactory.createMenuRequestHandler(this->m_user);
 		break;
 	case RoomStatus::GAME_STARTED:
-		//TODO
-		//handler = this->m_handlerFactory.createGameRequestHandler();
+		requestResult.newHandler = this->m_handlerFactory.createGameRequestHandler(
+			this->m_user,
+			this->m_handlerFactory.getGameManager().createGame(this->m_room)
+		);
 		break;
 	}
 

@@ -10,7 +10,6 @@ public:
 
 	Game& createGame(Room& room);
 	void deleteGame(Game game);
-
 private:
 	IDatabase& m_database;
 	vector<Game> m_games;
