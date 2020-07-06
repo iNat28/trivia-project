@@ -52,7 +52,7 @@ RequestResult RoomMemberRequestHandler::_getRoomState(const RequestInfo& request
 	case RoomStatus::GAME_STARTED:
 		requestResult.newHandler = this->m_handlerFactory.createGameRequestHandler(
 			this->m_user,
-			this->m_handlerFactory.getGameManager().createGame(this->m_room)
+			this->m_handlerFactory.getGameManager().getGame(this->m_room)
 		);
 		break;
 	}

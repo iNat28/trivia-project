@@ -22,6 +22,9 @@ struct PlayerResults
 	unsigned int numWrongAnswers;
 	unsigned int averageAnswerTime;
 	unsigned int numPoints;
+
+	void setAverageAnswerTime(const PlayerResults& other);
+	unsigned int totalNumAnswers() const;
 };
 
 struct UserStats

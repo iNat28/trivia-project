@@ -13,6 +13,7 @@ const char* Keys::answerTimeout = "answerTimeout";
 const char* Keys::userStats = "userStats";
 
 const char* Keys::answerIndex = "answerIndex";
+const char* Keys::answerTime = "answerTime";
 const char* Keys::playersResults = "playersResults";
 
 const char* Keys::status = "status";

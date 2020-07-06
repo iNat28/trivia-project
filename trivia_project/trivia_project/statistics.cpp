@@ -32,6 +32,18 @@ PlayerResults::PlayerResults() :
 {
 }
 
+void PlayerResults::setAverageAnswerTime(const PlayerResults& other)
+{
+	this->averageAnswerTime =
+		(other.averageAnswerTime * other.totalNumAnswers() + this->averageAnswerTime * this->totalNumAnswers()) /
+		(other.totalNumAnswers() + this->totalNumAnswers());
+}
+
+unsigned int PlayerResults::totalNumAnswers() const
+{
+	return this->numCorrectAnswers + this->numWrongAnswers;
+}
+
 void to_json(json& j, const UserHighScore& userHighScore)
 {
 	j[Keys::username] = userHighScore.username;

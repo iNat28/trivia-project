@@ -20,6 +20,7 @@ struct Keys
 	
 	//Game
 	static const char* answerIndex;
+	static const char* answerTime;
 	static const char* playersResults;
 
 	/* Responses */
