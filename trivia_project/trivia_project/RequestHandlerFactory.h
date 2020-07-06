@@ -4,6 +4,7 @@
 #include "LoginManager.h"
 #include "RoomManager.h"
 #include "StatisticsManager.h"
+#include "GameManager.h"
 #include "JsonRequestPacketDeserializer.h"
 #include "JsonResponsePacketSerializer.h"
 #include "IRequestHandler.h"
@@ -36,14 +37,16 @@ public:
 	std::shared_ptr<MenuRequestHandler> createMenuRequestHandler(LoggedUser user);
 	std::shared_ptr<RoomAdminRequestHandler> createRoomAdminRequestHandler(LoggedUser user, Room& room);
 	std::shared_ptr<RoomMemberRequestHandler> createRoomMemberRequestHandler(LoggedUser user, Room& room);
-	std::shared_ptr<GameRequestHandler> createGameRequestHandler(LoggedUser user);
+	std::shared_ptr<GameRequestHandler> createGameRequestHandler(LoggedUser user, Game& game);
 	
 	LoginManager& getLoginManager();
 	RoomManager& getRoomManager();
 	StatisticsManager& getStatisticsManager();
+	GameManager& getGameManager();
 private:
 	IDatabase& m_database;
 	LoginManager m_loginManager;
 	RoomManager m_roomManager;
 	StatisticsManager m_statisticsManager;
+	GameManager m_gameManager;
 };

@@ -12,11 +12,14 @@ const char* Keys::answerTimeout = "answerTimeout";
 
 const char* Keys::userStats = "userStats";
 
+const char* Keys::answerIndex = "answerIndex";
+const char* Keys::playersResults = "playersResults";
+
 const char* Keys::status = "status";
 const char* Keys::message = "message";
 
-const char* Keys::rooms = "Rooms";
-const char* Keys::playersInRoom = "PlayersInRoom";
+const char* Keys::rooms = "rooms";
+const char* Keys::playersInRoom = "playersInRoom";
 const char* Keys::roomData = "roomData";
 const char* Keys::roomState = "roomState";
 
@@ -38,7 +41,5 @@ const char* Keys::roomStatus = "roomStatus";
 const char* Keys::category = "category";
 const char* Keys::difficulty = "difficulty";
 const char* Keys::question = "question";
-const char* Keys::correctAnswer = "correctAnswer";
-const char* Keys::incorrectAnswer1 = "incorrectAnswer1";
-const char* Keys::incorrectAnswer2 = "incorrectAnswer2";
-const char* Keys::incorrectAnswer3 = "incorrectAnswer3";
+const char* Keys::answers = "answers";
+const char* Keys::correctAnswerIndex = "correctAnswerIndex";

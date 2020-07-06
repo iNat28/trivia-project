@@ -39,7 +39,15 @@ RequestResult RoomAdminRequestHandler::_closeRoom(const RequestInfo& requestInfo
 
 RequestResult RoomAdminRequestHandler::_startGame(const RequestInfo& requestInfo) const
 {
-	return RequestResult();
+	this->m_room.setRoomStatus(RoomStatus::GAME_STARTED);
+
+	return RequestResult(
+		JsonResponsePacketSerializer::serializeResponse(
+			StartGameResponse()
+		),
+		//TODO: Deal with the game starting
+		this->m_handlerFactory.createMenuRequestHandler(this->m_user)
+	);
 }
 
 RequestResult RoomAdminRequestHandler::_getRoomState(const RequestInfo& requestInfo) const

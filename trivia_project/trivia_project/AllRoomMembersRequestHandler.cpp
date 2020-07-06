@@ -2,7 +2,7 @@
 #include "AllRoomMembersRequestHandler.h"
 
 AllRoomMembersRequestHandler::AllRoomMembersRequestHandler(LoggedUser user, Room& room) : 
-	m_user(user), m_room(room)
+	LoggedUserRequestHandler(user), m_room(room)
 {
 }
 

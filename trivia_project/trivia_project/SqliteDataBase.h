@@ -5,7 +5,7 @@
 #include "sqlite3.h"
 #include "Keys.h"
 #include "Statistics.h"
-#include "Question.h"
+#include "Game.h"
 
 #define QUESTIONS_FILE  "questions.txt"
 #define BUFFER_SIZE 1024
@@ -43,7 +43,7 @@ private:
 	static const unsigned int HIGH_SCORE_NUMS = 3;
 
 	static std::unordered_map<string, string> m_usersList;
-	static std::vector<UserStats> m_gamesList;
+	static std::vector<UserStats> m_usersStats;
 	//variable for multiple users
 	static bool moreData;
 	static int highestRoomId;

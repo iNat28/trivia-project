@@ -5,6 +5,7 @@
 !/client/client
 !/client/client/Properties
 !
+!questions.txt
 !*.h
 !*.cpp
 !*.c
