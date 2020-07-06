@@ -1,16 +1,13 @@
 #pragma once
 #include "pch.h"
 #include "RequestHandlerFactory.h"
-#include "IRequestHandler.h"
+#include "LoggedUserRequestHandler.h"
 #include "Constants.h"
 #include "LoggedUser.h"
-//#include "LoginRequestHandler.h"
-//#include "RoomAdminRequestHandler.h"
-//#include "RoomMemberRequestHandler.h"
 
 class RequestHandlerFactory;
 
-class MenuRequestHandler : public IRequestHandler
+class MenuRequestHandler : public LoggedUserRequestHandler
 {
 public:
 	MenuRequestHandler(RequestHandlerFactory& handlerFactory, LoggedUser user);
@@ -18,7 +15,6 @@ public:
 	virtual RequestResult handleRequest(const RequestInfo& requestInfo) const override;
 private:
 	RequestHandlerFactory& m_handlerFactory;
-	LoggedUser m_user;
 	using requests_func_t = RequestResult(MenuRequestHandler::*)(const RequestInfo&)const;
 	static const map<Codes, MenuRequestHandler::requests_func_t> m_requests;
 

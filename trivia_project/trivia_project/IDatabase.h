@@ -4,8 +4,6 @@
 #include "sqlite3.h"
 #include "statistics.h"
 
-typedef std::vector<UserHighScore> HighScores;
-
 class IDatabase
 {
 public:

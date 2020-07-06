@@ -2,7 +2,7 @@
 #include "RequestHandlerFactory.h"
 
 RequestHandlerFactory::RequestHandlerFactory(IDatabase& database) : 
-	m_loginManager(database), m_database(database), m_statisticsManager(database), m_roomManager(database)
+	m_loginManager(database), m_database(database), m_statisticsManager(database), m_roomManager(database), m_gameManager(database)
 {
 }
 
@@ -26,9 +26,9 @@ std::shared_ptr<RoomMemberRequestHandler> RequestHandlerFactory::createRoomMembe
 	return std::make_shared<RoomMemberRequestHandler>(*this, user, room);
 }
 
-std::shared_ptr<GameRequestHandler> RequestHandlerFactory::createGameRequestHandler(LoggedUser user)
+std::shared_ptr<GameRequestHandler> RequestHandlerFactory::createGameRequestHandler(LoggedUser user, Game& game)
 {
-	return std::make_shared<GameRequestHandler>(*this, user);
+	return std::make_shared<GameRequestHandler>(*this, user, game);
 }
 
 LoginManager& RequestHandlerFactory::getLoginManager()
@@ -44,4 +44,9 @@ RoomManager& RequestHandlerFactory::getRoomManager()
 StatisticsManager& RequestHandlerFactory::getStatisticsManager()
 {
 	return this->m_statisticsManager;
+}
+
+GameManager& RequestHandlerFactory::getGameManager()
+{
+	return this->m_gameManager;
 }

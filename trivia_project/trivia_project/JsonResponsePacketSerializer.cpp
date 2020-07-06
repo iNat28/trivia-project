@@ -59,6 +59,30 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const GetRoomStateRespons
 	return JsonResponsePacketSerializer::serializeJson(jsonToSerialize, getRoomStateResponse);
 }
 
+Buffer JsonResponsePacketSerializer::serializeResponse(const GetQuestionResponse& getQuestionResponse)
+{
+	json jsonToSerialize;
+	jsonToSerialize[Keys::question] = getQuestionResponse.question;
+
+	return JsonResponsePacketSerializer::serializeJson(jsonToSerialize, getQuestionResponse);
+}
+
+Buffer JsonResponsePacketSerializer::serializeResponse(const SubmitAnswerResponse& submitAnswerResponse)
+{
+	json jsonToSerialize;
+	jsonToSerialize[Keys::correctAnswerIndex] = submitAnswerResponse.correctAnswerIndex;
+
+	return JsonResponsePacketSerializer::serializeJson(jsonToSerialize, submitAnswerResponse);
+}
+
+Buffer JsonResponsePacketSerializer::serializeResponse(const GetGameResultsResponse& getGameResultsResponse)
+{
+	json jsonToSerialize;
+	jsonToSerialize[Keys::playersResults] = getGameResultsResponse.playersResults;
+
+	return JsonResponsePacketSerializer::serializeJson(jsonToSerialize, getGameResultsResponse);
+}
+
 Buffer JsonResponsePacketSerializer::serializeJson(const json& jsonToSerialize, const Response& response)
 {
 	std::vector<unsigned char> jsonBuffer = json::to_bson(jsonToSerialize);

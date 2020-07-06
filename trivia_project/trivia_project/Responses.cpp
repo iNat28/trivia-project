@@ -100,3 +100,38 @@ Codes StartGameResponse::getResponseCode() const
 {
 	return Codes::START_GAME;
 }
+
+GetGameResultsResponse::GetGameResultsResponse(map<LoggedUser, PlayerResults> playersResults) :
+	playersResults(playersResults)
+{
+}
+
+Codes GetGameResultsResponse::getResponseCode() const
+{
+	return Codes::GET_GAME_RESULTS;
+}
+
+SubmitAnswerResponse::SubmitAnswerResponse(unsigned int correctAnswerIndex) : 
+	correctAnswerIndex(correctAnswerIndex)
+{
+}
+
+Codes SubmitAnswerResponse::getResponseCode() const
+{
+	return Codes::SUBMIT_ANSWER;
+}
+
+GetQuestionResponse::GetQuestionResponse(Question question) : 
+	question(question)
+{
+}
+
+Codes GetQuestionResponse::getResponseCode() const
+{
+	return Codes::GET_QUESTION;
+}
+
+Codes LeaveGameResponse::getResponseCode() const
+{
+	return Codes::LEAVE_GAME;
+}

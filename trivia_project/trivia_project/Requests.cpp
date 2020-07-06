@@ -20,3 +20,8 @@ CreateRoomRequest::CreateRoomRequest(Room room) :
 	room(room)
 {
 }
+
+SubmitAnswerRequest::SubmitAnswerRequest(unsigned int answerIndex) :
+	answerIndex(answerIndex)
+{
+}

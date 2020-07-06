@@ -15,7 +15,7 @@ void RoomManager::createRoom(Room& room)
 
 void RoomManager::closeRoom(Room& room)
 {
-	room.close();
+	room.setRoomStatus(RoomStatus::CLOSED);
 
 	if (room.getAllUsers().empty())
 	{

@@ -9,23 +9,34 @@ enum class Codes
 	SIGNUP,
 	LOGOUT,
 
-	//Room
+
+	//Menu
 	GET_ROOM = 20,
 	GET_PLAYERS_IN_ROOM,
 	JOIN_ROOM,
 	CREATE_ROOM,
-	GET_ROOM_STATE,
+
+	//Statistics
+	USER_STATS,
+	HIGH_SCORES,
+
+
+	//Room
+	GET_ROOM_STATE = 30,
 
 	//RoomAdmin
-	CLOSE_ROOM = 30,
+	CLOSE_ROOM,
 	START_GAME,
 
 	//RoomMember
-	LEAVE_ROOM = 40,
+	LEAVE_ROOM,
 
-	//Statistics
-	USER_STATS = 50,
-	HIGH_SCORES
+	
+	//Game
+	GET_GAME_RESULTS,
+	SUBMIT_ANSWER,
+	GET_QUESTION,
+	LEAVE_GAME
 };
 
 enum class ResponseCodes

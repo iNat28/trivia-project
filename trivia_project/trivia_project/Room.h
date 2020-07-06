@@ -1,7 +1,7 @@
 #pragma once
 #include "pch.h"
 #include "LoggedUser.h"
-#include "SqliteDataBase.h"
+#include "Exception.h"
 
 enum class RoomStatus
 {
@@ -34,11 +34,14 @@ public:
 
 	void addUser(LoggedUser user);
 	void removeUser(LoggedUser user);
-	void close();
+
 	vector<LoggedUser> getAllUsers() const;
 	RoomStatus getRoomStatus() const;
 	unsigned int getId() const;
+
 	void setId(unsigned int id);
+	void setRoomStatus(RoomStatus roomStatus);
+
 	friend void to_json(json& j, const Room& room);
 private:
 	RoomData m_roomdata;

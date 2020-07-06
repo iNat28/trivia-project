@@ -11,4 +11,5 @@ public:
 	static SignupRequest deserializeSignupRequest(const Buffer& buffer);
 	static RoomIdRequest deserializeRoomIdRequest(const Buffer& buffer);
 	static CreateRoomRequest deserializeCreateRoomRequest(const Buffer& buffer);
+	static SubmitAnswerRequest deserializeSubmitAnswerRequest(const Buffer& buffer);
 };

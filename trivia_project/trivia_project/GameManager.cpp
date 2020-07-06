@@ -1,15 +1,17 @@
 #include "pch.h"
 #include "GameManager.h"
 
-GameManager::GameManager(IDatabase& database)
+GameManager::GameManager(IDatabase& database) : 
+	m_database(database)
 {
 }
 
-Game GameManager::createGame(Room)
+Game& GameManager::createGame(Room& room)
 {
-	return Game();
+	//TODO: Change
+	return this->m_games[0];
 }
 
-void GameManager::deleteGame(RoomData)
+void GameManager::deleteGame(Game game)
 {
 }

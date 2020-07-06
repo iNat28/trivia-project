@@ -61,11 +61,6 @@ void Room::removeUser(LoggedUser user)
 	throw Exception("User not found");
 }
 
-void Room::close()
-{
-	this->m_roomdata.roomStatus = RoomStatus::CLOSED;
-}
-
 vector<LoggedUser> Room::getAllUsers() const
 {
 	return this->m_roomdata.players;
@@ -84,6 +79,11 @@ unsigned int Room::getId() const
 void Room::setId(unsigned int id)
 {
 	this->m_roomdata.id = id;
+}
+
+void Room::setRoomStatus(RoomStatus roomStatus)
+{
+	this->m_roomdata.roomStatus = roomStatus;
 }
 
 void to_json(json& j, const Room& room)

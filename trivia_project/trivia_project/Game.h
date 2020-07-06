@@ -1,35 +1,47 @@
 #pragma once
-
 #include "pch.h"
-#include "SqliteDataBase.h"
+#include "statistics.h"
+#include "Room.h"
+
+#define ANSWERS_COUNT 4
+#define INCORRECT_ANSWERS_COUNT ANSWERS_COUNT - 1
 
 struct Question
 {
-	Question(string question, string correctAnswer, std::array<string, 3> incorrect_answers);
+	Question(string category, string difficulty, string question, std::array<string, 4> answers, unsigned int correctAnswerIndex);
+	Question();
+
+	string category;
+	string difficulty;
 	string question;
-	string correct_answer;
-	std::array<string, 3> incorrect_answers;
+	std::array<string, ANSWERS_COUNT> answers;
+	unsigned int correctAnswerIndex;
 };
+
+void to_json(json& j, const Question& question);
+void from_json(const json& j, Question& question);
 
 struct GameData
 {
-	GameData(Question currentQuestion, int correctAnswerCount, int wrongAnswerCount, int averageAnswerTime);
+	GameData(Question currentQuestion, PlayerResults playerResults);
 	
 	Question currentQuestion;
-	int correctAnswerCount;
-	int wrongAnswerCount;
-	int averageAnswerTime;
+	PlayerResults playerResults;
 };
+
+void to_json(json& j, const Question& question);
 
 class Game
 {
 public:
-	Question getQuestionForUser(LoggedUser);
-	bool submitAnswer(int answerChoice);
-	void removePlayer(LoggedUser);
+	Game(Room& room);
 
+	Question getQuestionForUser(LoggedUser);
+	unsigned int submitAnswer(LoggedUser user, unsigned int answerChoice);
+	void removePlayer(LoggedUser);
+	vector<PlayerResults> getGameResults();
 private:
 	vector<Question> m_questions;
 	map<LoggedUser, GameData> m_players;
+	Room& m_room;
 };
-
