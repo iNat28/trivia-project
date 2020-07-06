@@ -249,7 +249,7 @@ vector<Question> SqliteDataBase::getQuestionsIntoVectorFormat(string questionsSt
 	return questions;
 }
 
-
+//TODO: Replace the quotes in the questions somewhere
 void SqliteDataBase::addToDB(vector<Question> questionsList)
 {
 	sstream buffer;
@@ -257,25 +257,26 @@ void SqliteDataBase::addToDB(vector<Question> questionsList)
 	for (const auto& question : questionsList)
 	{
 		string correctAnswer = question.answers[question.correctAnswerIndex];
+		vector<string> incorrectAnswers;
 
-		vector<string> incorrectAnswers(INCORRECT_ANSWERS_COUNT);
-
-		for (int i = 0; i < ANSWERS_COUNT; i++)
+		int i = 0;
+		for (const auto& answer : question.answers)
 		{
 			if (i != question.correctAnswerIndex)
 			{
-				incorrectAnswers.push_back(question.answers[i]);
+				incorrectAnswers.push_back(answer);
 			}
+			i++;
 		}
 
 		buffer << "insert into questions(question, category, difficulty, correct_answer, incorrect_answer1, incorrect_answer2, incorrect_answer3) values(" <<
-			question.question << ", " <<
-			question.category << ", " <<
+			'"' << question.question << "\", " <<
+			'"' << question.category << "\", " <<
 			question.difficulty << ", " <<
-			correctAnswer << ", " <<
-			incorrectAnswers[0] << ", " <<
-			incorrectAnswers[1] << ", " <<
-			incorrectAnswers[2] << ");";
+			'"' << correctAnswer << "\", " <<
+			'"' << incorrectAnswers[0] << "\", " <<
+			'"' << incorrectAnswers[1] << "\", " <<
+			'"' << incorrectAnswers[2] << "\");";
 		
 		send_query(buffer.str().c_str());
 		buffer.str("");

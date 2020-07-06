@@ -42,6 +42,11 @@ void from_json(const json& j, Question& question)
 		3
 	);
 
+	while (question.answers.size() < 3)
+	{
+		question.answers.push_back("");
+	}
+
 	question.answers.push_back(j["correct_answer"]);
 }
 
