@@ -41,7 +41,7 @@ RequestResult GameRequestHandler::_submitAnswer(const RequestInfo& requestInfo) 
 
 	return RequestResult(
 		JsonResponsePacketSerializer::serializeResponse(
-			SubmitAnswerResponse(this->m_game.submitAnswer(this->m_user, submitAnswerRequest.answerIndex))
+			SubmitAnswerResponse(this->m_game.submitAnswer(this->m_user, submitAnswerRequest.answerIndex, submitAnswerRequest.answerTime))
 		),
 		this->m_handlerFactory.createGameRequestHandler(this->m_user, this->m_game)
 	);
@@ -51,7 +51,7 @@ RequestResult GameRequestHandler::_getGameResults(const RequestInfo& requestInfo
 {
 	return RequestResult(
 		JsonResponsePacketSerializer::serializeResponse(
-			GetGameResultsResponse(this->m_game.getGameResults())
+			GetGameResultsResponse(this->m_game.getGameResults(this->m_user).first)
 		),
 		this->m_handlerFactory.createMenuRequestHandler(this->m_user)
 	);

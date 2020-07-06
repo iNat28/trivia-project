@@ -60,5 +60,8 @@ SubmitAnswerRequest JsonRequestPacketDeserializer::deserializeSubmitAnswerReques
 {
 	json jsonFromBson = json::from_bson(buffer);
 
-	return SubmitAnswerRequest(jsonFromBson[Keys::answerIndex]);
+	return SubmitAnswerRequest(
+		jsonFromBson[Keys::answerIndex],
+		jsonFromBson[Keys::answerTime]
+	);
 }

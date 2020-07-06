@@ -177,6 +177,12 @@ void SqliteDataBase::send_query(std::string command, int(*callback)(void*, int, 
 
 void SqliteDataBase::openQuestionsFile()
 {
+	//If the question file doesn't exist
+	if (_access(QUESTIONS_FILE, 0) == ENOENT)
+	{
+		throw Exception("Question file needed to create database");
+	}
+
 	std::ifstream file(QUESTIONS_FILE);
 	string buffer;
 	vector<Question> questionList;
@@ -235,32 +241,24 @@ int SqliteDataBase::getHighestRoomId() const
 	return this->highestRoomId++;
 }
 
-void SqliteDataBase::addGameStats(UserStats userStats)
+void SqliteDataBase::addGameStats(LoggedUser user, PlayerResults playerResults)
 {
 	sstream buffer;
+	UserStats otherUserStats = SqliteDataBase::getUserStats(user.username);
 	
-	UserStats otherUserStats = SqliteDataBase::getUserStats(userStats.username);
-	
-	userStats.playerResults.averageAnswerTime =
-		(otherUserStats.playerResults.averageAnswerTime	* 
-		(otherUserStats.playerResults.numCorrectAnswers + otherUserStats.playerResults.numWrongAnswers) +
-		userStats.playerResults.averageAnswerTime		*
-		(userStats.playerResults.numCorrectAnswers + userStats.playerResults.numWrongAnswers))
-		/ 
-		(otherUserStats.playerResults.numCorrectAnswers + otherUserStats.playerResults.numWrongAnswers + 
-			userStats.playerResults.numCorrectAnswers + userStats.playerResults.numWrongAnswers);
-	userStats.playerResults.numPoints += otherUserStats.playerResults.numPoints;
-	userStats.numTotalGames += otherUserStats.numTotalGames;
-	userStats.playerResults.numCorrectAnswers += otherUserStats.playerResults.numCorrectAnswers;
-	userStats.playerResults.numWrongAnswers += otherUserStats.playerResults.numWrongAnswers;
+	otherUserStats.playerResults.setAverageAnswerTime(playerResults);
+	otherUserStats.playerResults.numPoints += playerResults.numPoints;
+	otherUserStats.numTotalGames++;
+	otherUserStats.playerResults.numCorrectAnswers += playerResults.numCorrectAnswers;
+	otherUserStats.playerResults.numWrongAnswers += playerResults.numWrongAnswers;
 	
 	buffer << "update statistics set" <<
-		", numPoints = " << userStats.playerResults.numPoints <<
-		", numTotalGames = " << userStats.numTotalGames <<
-		", numCorrectAnswers = " << userStats.playerResults.numCorrectAnswers <<
-		", numWrongAnswers = " << userStats.playerResults.numWrongAnswers <<
-		", averageAnswerTime = " << userStats.playerResults.averageAnswerTime <<
-		" where username = " << userStats.username << ';';
+		", numPoints = " << otherUserStats.playerResults.numPoints <<
+		", numTotalGames = " << otherUserStats.numTotalGames <<
+		", numCorrectAnswers = " << otherUserStats.playerResults.numCorrectAnswers <<
+		", numWrongAnswers = " << otherUserStats.playerResults.numWrongAnswers <<
+		", averageAnswerTime = " << otherUserStats.playerResults.averageAnswerTime <<
+		" where username = " << otherUserStats.username << ';';
 
 	send_query(buffer.str().c_str());
 }

@@ -47,7 +47,8 @@ RequestResult RoomAdminRequestHandler::_startGame(const RequestInfo& requestInfo
 		),
 		this->m_handlerFactory.createGameRequestHandler(
 			this->m_user,
-			this->m_handlerFactory.getGameManager().createGame(this->m_room)
+			//TODO: Get the questions from the database
+			this->m_handlerFactory.getGameManager().createGame(this->m_room, std::queue<Question>())
 		)
 	);
 }
@@ -56,21 +57,7 @@ RequestResult RoomAdminRequestHandler::_getRoomState(const RequestInfo& requestI
 {
 	RequestResult requestResult = this->_getRoomStateNoHandler(requestInfo);
 
-	switch (this->m_room.getRoomStatus())
-	{
-	case RoomStatus::OPEN:
-		requestResult.newHandler = this->m_handlerFactory.createRoomAdminRequestHandler(this->m_user, this->m_room);
-		break;
-	case RoomStatus::CLOSED:
-		requestResult.newHandler = this->m_handlerFactory.createMenuRequestHandler(this->m_user);
-		break;
-	case RoomStatus::GAME_STARTED:
-		requestResult.newHandler = this->m_handlerFactory.createGameRequestHandler(
-			this->m_user,
-			this->m_handlerFactory.getGameManager().createGame(this->m_room)
-		);
-		break;
-	}
+	requestResult.newHandler = this->m_handlerFactory.createRoomAdminRequestHandler(this->m_user, this->m_room);
 
 	return requestResult;
 }
