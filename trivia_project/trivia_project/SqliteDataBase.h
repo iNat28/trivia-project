@@ -22,6 +22,7 @@ public:
 	static int users_callback(void* data, int argc, char** argv, char** azColName);
 	static int statistics_callback(void* data, int argc, char** argv, char** azColName);
 	static int int_callback(void* data, int argc, char** argv, char** azColName);
+	static int questions_callback(void* data, int argc, char** argv, char** azColName);
 
 	void send_query(std::string command, int(*callback)(void*, int, char**, char**) = nullptr, void* data = nullptr) const;
 
@@ -35,6 +36,8 @@ public:
 	virtual UserStats getUserStats(string username) const override;
 	virtual HighScores getHighScores() const override;
 	
+	virtual Questions getQuestions() const override;
+
 private:
 	void openDB();
 

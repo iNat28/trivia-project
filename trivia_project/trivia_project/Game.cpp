@@ -1,18 +1,17 @@
 #include "pch.h"
 #include "Game.h"
 
-Question::Question(string category, string difficulty, string question, std::array<string, 4> answers, unsigned int correctAnswerIndex) :
+Question::Question(string category, unsigned int difficulty, string question, vector<string> answers, unsigned int correctAnswerIndex) :
 	category(category), difficulty(difficulty), question(question), answers(answers), correctAnswerIndex(correctAnswerIndex)
 {
 }
 
 Question::Question() :
-	correctAnswerIndex(0)
+	correctAnswerIndex(0), difficulty(1)
 {
 }
 
-//TODO: Store in DB as int not string
-unsigned int Question::getDifficulty() const
+unsigned int Question::getDifficulty(string difficulty)
 {
 	if (difficulty == "easy")
 	{
@@ -38,14 +37,14 @@ void from_json(const json& j, Question& question)
 {
 	question = Question(
 		j[Keys::category],
-		j[Keys::difficulty],
+		Question::getDifficulty(j[Keys::difficulty]),
 		j[Keys::question],
 		j[Keys::answers],
 		j[Keys::correctAnswerIndex]
 	);
 }
 
-Game::Game(Room& room, std::queue<Question> questions) : 
+Game::Game(Room& room, Questions questions) :
 	m_room(room), m_questions(questions)
 {
 	for (const auto& player : m_room.getAllUsers())
@@ -83,14 +82,14 @@ unsigned int Game::submitAnswer(LoggedUser user, unsigned int answerIndex, unsig
 	if (question.correctAnswerIndex == answerIndex)
 	{
 		playerResults.numCorrectAnswers++;
-		playerResults.numPoints += question.getDifficulty() * (MAX_ANSWER_TIME - answerTime) * POINT_MULTIPLIER;
+		playerResults.numPoints += question.difficulty * (MAX_ANSWER_TIME - answerTime) * POINT_MULTIPLIER;
 	}
 	else
 	{
 		playerResults.numWrongAnswers++;
 	}
 
-	this->m_questions.pop();
+	this->m_questions.pop_back();
 	return 0;
 }
 

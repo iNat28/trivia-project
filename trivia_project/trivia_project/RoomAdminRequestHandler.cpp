@@ -47,8 +47,7 @@ RequestResult RoomAdminRequestHandler::_startGame(const RequestInfo& requestInfo
 		),
 		this->m_handlerFactory.createGameRequestHandler(
 			this->m_user,
-			//TODO: Get the questions from the database
-			this->m_handlerFactory.getGameManager().createGame(this->m_room, std::queue<Question>())
+			this->m_handlerFactory.getGameManager().createGame(this->m_room, this->m_handlerFactory.getGameManager().getQuestions())
 		)
 	);
 }

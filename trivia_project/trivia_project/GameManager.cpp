@@ -6,7 +6,7 @@ GameManager::GameManager(IDatabase& database) :
 {
 }
 
-Game& GameManager::createGame(Room& room, std::queue<Question> questions)
+Game& GameManager::createGame(Room& room, Questions questions)
 {
 	this->m_games.push_back(Game(room, questions));
 
@@ -61,4 +61,9 @@ void GameManager::removePlayer(Game& game, LoggedUser user)
 	{
 		this->deleteGame(game);
 	}
+}
+
+Questions GameManager::getQuestions() const
+{
+	return this->m_database.getQuestions();
 }

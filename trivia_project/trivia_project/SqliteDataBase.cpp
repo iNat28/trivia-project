@@ -86,7 +86,7 @@ void SqliteDataBase::openDB()
 		send_query(command);
 
 		//questions table
-		command = "create table if not exists questions (question text primary key not null, category text, difficulty text, correct_answer text not null, incorrect_answer1 text not null, incorrect_answer2 text, incorrect_answer3 text);";
+		command = "create table if not exists questions (question text primary key not null, category text, difficulty integer not null, correct_answer text not null, incorrect_answer1 text not null, incorrect_answer2 text, incorrect_answer3 text);";
 		send_query(command);
 		//adding the questions
 		openQuestionsFile();
@@ -159,6 +159,39 @@ int SqliteDataBase::int_callback(void* data, int argc, char** argv, char** azCol
 	if (intReturn != nullptr)
 	{
 		*intReturn = atoi(argv[0]);
+	}
+
+	return 0;
+}
+
+int SqliteDataBase::questions_callback(void* data, int argc, char** argv, char** azColName)
+{
+	Questions* questions = static_cast<Questions*>(data);
+	Question question;
+
+	for (int i = 0; i < argc; i++)
+	{
+		if (std::string(azColName[i]) == "question")
+			question.question = argv[i];
+		else if (std::string(azColName[i]) == "category")
+			question.category = argv[i];
+		else if (std::string(azColName[i]) == "difficulty")
+			question.difficulty = atoi(argv[i]);
+		else if (std::string(azColName[i]) == "correct_answer")
+			question.answers.push_back(argv[i]);
+		else if (std::string(azColName[i]) == "incorrect_answer1")
+			question.answers.push_back(argv[i]);
+		else if (std::string(azColName[i]) == "incorrect_answer2" && argv[i] != "")
+			question.answers.push_back(argv[i]);
+		else if (std::string(azColName[i]) == "incorrect_answer3" && argv[i] != "")
+			question.answers.push_back(argv[i]);
+	}
+
+	std::random_shuffle(question.answers.begin(), question.answers.end());
+
+	if (questions != nullptr)
+	{
+		questions->push_back(question);
 	}
 
 	return 0;
@@ -289,4 +322,14 @@ HighScores SqliteDataBase::getHighScores() const
 	}
 
 	return highScores;
+}
+
+Questions SqliteDataBase::getQuestions() const
+{
+	Questions questions;
+	send_query("select * from questions", questions_callback, &questions);
+
+	std::random_shuffle(questions.begin(), questions.end());
+
+	return Questions();
 }

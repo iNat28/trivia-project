@@ -1,8 +1,8 @@
-
 #pragma once
 #include "pch.h"
 #include "sqlite3.h"
 #include "statistics.h"
+#include "Game.h"
 
 class IDatabase
 {
@@ -14,4 +14,5 @@ public:
 	virtual int getHighestRoomId() const = 0;
 	virtual UserStats getUserStats(string username) const = 0;
 	virtual HighScores getHighScores() const = 0;
+	virtual Questions getQuestions() const = 0;
 };

@@ -10,17 +10,19 @@
 
 struct Question
 {
-	Question(string category, string difficulty, string question, std::array<string, 4> answers, unsigned int correctAnswerIndex);
+	Question(string category, unsigned int difficulty, string question, vector<string> answers, unsigned int correctAnswerIndex);
 	Question();
 
 	string category;
-	string difficulty;
+	unsigned int difficulty;
 	string question;
-	std::array<string, ANSWERS_COUNT> answers;
+	vector<string> answers;
 	unsigned int correctAnswerIndex;
 	
-	unsigned int getDifficulty() const;
+	static unsigned int getDifficulty(string difficulty);
 };
+
+typedef vector<Question> Questions;
 
 void to_json(json& j, const Question& question);
 void from_json(const json& j, Question& question);
@@ -34,7 +36,7 @@ struct GameData
 class Game
 {
 public:
-	Game(Room& room, std::queue<Question> questions);
+	Game(Room& room, Questions questions);
 	Game();
 
 	const Question& getQuestion() const;
@@ -46,7 +48,7 @@ public:
 	bool operator==(const Room& other) const;
 	Game& operator=(const Game& other);
 private:
-	std::queue<Question> m_questions;
+	Questions m_questions;
 	map<LoggedUser, GameData> m_players;
 	Room& m_room;
 };
