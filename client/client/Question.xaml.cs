@@ -1,9 +1,11 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -24,17 +26,109 @@ namespace client
         private Stopwatch stopwatch;
         private int numCorrectanswers;
         private int numQuestionsLeft;
+        private int timeLeft;
+        //mutex
+        private Mutex mtx;
+
+        //threads
+        private BackgroundWorker updatingThread;
+        private BackgroundWorker timeThread;
+
         public Question(int numQuestions, int answerTime)
         {
             InitializeComponent();
             numCorrectanswers = 0;
             numQuestionsLeft = numQuestions;
+            //updating the beggining stats
             this.CorrectAnswers.Text = numCorrectanswers.ToString();
+            this.timeLeft = answerTime;
             this.AnswersLeft.Text = numQuestionsLeft.ToString();
+            this.TimeLeft.Text = answerTime.ToString();
+            //creating the stopwatch
             this.stopwatch = new Stopwatch();
+                        
+
+            //starting threads
+            this.mtx = new Mutex();            
+
+            this.updatingThread = new BackgroundWorker
+            {
+                WorkerReportsProgress = true,
+                WorkerSupportsCancellation = true
+            };
+
+            this.timeThread = new BackgroundWorker
+            {
+                WorkerReportsProgress = true,
+                WorkerSupportsCancellation = true
+            };
+
             this.stopwatch.Start();
 
+            this.updatingThread.DoWork += getNewQuestion;
+            this.updatingThread.ProgressChanged += updateNewQuestion;
+            this.updatingThread.RunWorkerCompleted += gameCompleted;
+            this.updatingThread.RunWorkerAsync();
 
+            this.timeThread.DoWork += updateTime;                       
+            this.timeThread.RunWorkerAsync();
+           
+            
+        }
+
+        private void updateTime(object sender, DoWorkEventArgs e)
+        {
+            int timeTemp;
+            while(true)
+            {
+                if (this.updatingThread.CancellationPending)
+                {
+                    e.Cancel = true;
+                    break;
+                }
+                this.mtx.WaitOne();
+                timeTemp = Convert.ToInt32(this.TimeLeft.Text);
+                this.TimeLeft.Text = (timeTemp--).ToString();
+                this.mtx.ReleaseMutex();
+                Thread.Sleep(1000);
+            }
+        }
+
+        private void getNewQuestion(object sender, DoWorkEventArgs e)
+        {            
+            int questionsTemp = this.numQuestionsLeft;
+            while(questionsTemp != 0)
+            {
+                if (this.updatingThread.CancellationPending)
+                {
+                    e.Cancel = true;
+                    break;
+                }
+
+                this.mtx.WaitOne();
+                if (Convert.ToInt32(this.TimeLeft.Text) == 0 || questionsTemp == this.numQuestionsLeft + 1)
+                {
+                    //get new question info
+
+                    questionsTemp--;
+                    //restarting the time
+                    this.stopwatch.Restart();
+                    this.TimeLeft.Text = this.timeLeft.ToString();                    
+                }
+                this.mtx.ReleaseMutex();
+                Thread.Sleep(1000);
+            }
+        }
+
+        private void updateNewQuestion(object sender, ProgressChangedEventArgs e)
+        {
+            //changes the xaml file
+        }
+
+        private void gameCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            //opens new window
+            Utils.OpenWindow(this, new Results());
         }
         /*        
          TODO:make a thread that constantly reduces a second from the seconds left text block and restarts the clock every time a new question is added.
@@ -69,10 +163,7 @@ namespace client
                     ShowCorrectAnswer(Convert.ToInt32(response));
                 }
                 this.numQuestionsLeft--;
-                if(this.numQuestionsLeft == 0)
-                {
-                    Utils.OpenWindow(this, new Results());
-                }
+                
                 this.AnswersLeft.Text = numQuestionsLeft.ToString();
             }
         }
@@ -107,10 +198,7 @@ namespace client
                 }
             }
             this.numQuestionsLeft--;
-            if (this.numQuestionsLeft == 0)
-            {
-                Utils.OpenWindow(this, new Results());
-            }
+            
             this.AnswersLeft.Text = numQuestionsLeft.ToString();
         }
 
@@ -144,10 +232,7 @@ namespace client
                 }
             }
             this.numQuestionsLeft--;
-            if (this.numQuestionsLeft == 0)
-            {
-                Utils.OpenWindow(this, new Results());
-            }
+            
             this.AnswersLeft.Text = numQuestionsLeft.ToString();
         }
 
@@ -181,10 +266,7 @@ namespace client
                 }
             }
             this.numQuestionsLeft--;
-            if (this.numQuestionsLeft == 0)
-            {
-                Utils.OpenWindow(this, new Results());
-            }
+            
             this.AnswersLeft.Text = numQuestionsLeft.ToString();
         }
 
