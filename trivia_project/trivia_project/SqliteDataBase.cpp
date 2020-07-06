@@ -168,6 +168,8 @@ int SqliteDataBase::questions_callback(void* data, int argc, char** argv, char**
 {
 	Questions* questions = static_cast<Questions*>(data);
 	Question question;
+	int i = 0;
+	map<unsigned int, string> answers;
 
 	for (int i = 0; i < argc; i++)
 	{
@@ -178,16 +180,27 @@ int SqliteDataBase::questions_callback(void* data, int argc, char** argv, char**
 		else if (std::string(azColName[i]) == "difficulty")
 			question.difficulty = atoi(argv[i]);
 		else if (std::string(azColName[i]) == "correct_answer")
-			question.answers.push_back(argv[i]);
+			answers[0] = argv[i];
 		else if (std::string(azColName[i]) == "incorrect_answer1")
-			question.answers.push_back(argv[i]);
+			answers[1] = argv[i];
 		else if (std::string(azColName[i]) == "incorrect_answer2" && argv[i] != "")
-			question.answers.push_back(argv[i]);
+			answers[2] = argv[i];
 		else if (std::string(azColName[i]) == "incorrect_answer3" && argv[i] != "")
-			question.answers.push_back(argv[i]);
+			answers[3] = argv[i];
 	}
 
-	std::random_shuffle(question.answers.begin(), question.answers.end());
+	std::random_shuffle(answers.begin(), answers.end());
+
+	for (auto& answer : answers)
+	{
+		//If it's the first index (the correct answer)
+		if (answer.first == 0)
+		{
+			question.correctAnswerIndex = i;
+		}
+		question.answers.push_back(answer.second);
+		i++;
+	}
 
 	if (questions != nullptr)
 	{
