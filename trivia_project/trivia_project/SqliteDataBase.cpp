@@ -169,7 +169,8 @@ int SqliteDataBase::questions_callback(void* data, int argc, char** argv, char**
 	Questions* questions = static_cast<Questions*>(data);
 	Question question;
 	int i = 0;
-	map<unsigned int, string> answers;
+	//TODO: Change from pairs (maybe)
+	vector<std::pair<unsigned int, string>> answers;
 
 	for (int i = 0; i < argc; i++)
 	{
@@ -180,13 +181,13 @@ int SqliteDataBase::questions_callback(void* data, int argc, char** argv, char**
 		else if (std::string(azColName[i]) == "difficulty")
 			question.difficulty = atoi(argv[i]);
 		else if (std::string(azColName[i]) == "correct_answer")
-			answers[0] = argv[i];
+			answers.push_back({ 0, argv[i] });
 		else if (std::string(azColName[i]) == "incorrect_answer1")
-			answers[1] = argv[i];
+			answers.push_back({ 1, argv[i] });
 		else if (std::string(azColName[i]) == "incorrect_answer2" && argv[i] != "")
-			answers[2] = argv[i];
+			answers.push_back({ 2, argv[i] });
 		else if (std::string(azColName[i]) == "incorrect_answer3" && argv[i] != "")
-			answers[3] = argv[i];
+			answers.push_back({ 3, argv[i] });
 	}
 
 	std::random_shuffle(answers.begin(), answers.end());
