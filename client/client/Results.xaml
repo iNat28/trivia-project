@@ -5,8 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:client"
         mc:Ignorable="d"
-        Title="Results" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Title="Player Results" Height="450" Width="800">
+
+        <Button x:Name="ExitButton" Content="Exit" HorizontalAlignment="Right" Margin="0,341,331.6,0" VerticalAlignment="Top" Width="162" Height="39" Click="Button_Click"/>
 </Window>
