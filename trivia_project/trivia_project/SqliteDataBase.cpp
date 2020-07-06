@@ -231,18 +231,19 @@ void SqliteDataBase::openQuestionsFile()
 	}
 
 	std::ifstream file(QUESTIONS_FILE);
-	string buffer;
-	vector<Question> questionList;
-	file >> buffer;
-	
-	questionList = getQuestionsIntoVectorFormat(buffer);
+
+	json j;
+	file >> j;
+	vector<Question> questionList = j["results"];
+
+	//questionList = getQuestionsIntoVectorFormat(buffer);
 	addToDB(questionList);
 }
 
 vector<Question> SqliteDataBase::getQuestionsIntoVectorFormat(string questionsStr)
 {
 	string questionInfo;
-	json questionList(questionsStr);
+	json questionList = json::parse(questionsStr);
 
 	vector<Question> questions = questionList;
 	return questions;
@@ -271,12 +272,10 @@ void SqliteDataBase::addToDB(vector<Question> questionsList)
 			question.question << ", " <<
 			question.category << ", " <<
 			question.difficulty << ", " <<
-			correctAnswer << ", ";
-		for (int i = 0; i < INCORRECT_ANSWERS_COUNT - 1; i++)
-		{
-			buffer << incorrectAnswers[i] << ", ";
-		}
-		buffer << incorrectAnswers[INCORRECT_ANSWERS_COUNT - 1] << ");";
+			correctAnswer << ", " <<
+			incorrectAnswers[0] << ", " <<
+			incorrectAnswers[1] << ", " <<
+			incorrectAnswers[2] << ");";
 		
 		send_query(buffer.str().c_str());
 		buffer.str("");

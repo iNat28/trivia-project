@@ -32,16 +32,17 @@ void to_json(json& j, const Question& question)
 	j[Keys::answers] = question.answers;
 }
 
-//TODO: Fix when reading from file
 void from_json(const json& j, Question& question)
 {
 	question = Question(
 		j[Keys::category],
 		Question::getDifficulty(j[Keys::difficulty]),
 		j[Keys::question],
-		j[Keys::answers],
-		j[Keys::correctAnswerIndex]
+		j["incorrect_answers"],
+		3
 	);
+
+	question.answers.push_back(j["correct_answer"]);
 }
 
 Game::Game(Room& room, Questions questions) :
