@@ -20,6 +20,10 @@
         <Button x:Name="Answer3" Content="" HorizontalAlignment="Left" Margin="315,185,0,0" VerticalAlignment="Top" Width="114" Height="35" Click="Answer3_Click"/>
         <Button x:Name="Answer4" Content="" HorizontalAlignment="Left" Margin="315,235,0,0" VerticalAlignment="Top" Width="114" Height="35" Click="Answer4_Click"/>
         <Button x:Name="BackButton" Content="Leave Game" HorizontalAlignment="Left" Margin="298,329,0,0" VerticalAlignment="Top" Width="150" Height="41" Click="BackButton_Click"/>
+        <TextBlock x:Name="DifficultyHeader" HorizontalAlignment="Left" Margin="46,88,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="27" Width="99"><Run Text="Difficulty:"/></TextBlock>
+        <TextBlock x:Name="CategoryHeader" HorizontalAlignment="Left" Margin="46,120,0,0" TextWrapping="Wrap" Text="Category:" VerticalAlignment="Top" Width="99" Height="27"/>
+        <TextBlock x:Name="Category" HorizontalAlignment="Left" Margin="170,120,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="27" Width="77"><Run Text=""/></TextBlock>
+        <TextBlock x:Name="Difficulty" HorizontalAlignment="Left" Margin="170,88,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="27" Width="77"><Run Text=""/></TextBlock>
 
     </Grid>
 </Window>
