@@ -327,7 +327,7 @@ HighScores SqliteDataBase::getHighScores() const
 	SqliteDataBase::moreData = false;
 	sstream buffer;
 
-	buffer << "select username, numPoints from statistics order by numPoints DESC limit << " << SqliteDataBase::HIGH_SCORE_NUMS << ';';
+	buffer << "select username, numPoints from statistics order by numPoints DESC limit " << SqliteDataBase::HIGH_SCORE_NUMS << ';';
 	send_query(buffer.str().c_str(), statistics_callback);
 
 	for (auto& userStats : m_usersStats)
