@@ -5,6 +5,7 @@ std::unordered_map<string, string> SqliteDataBase::m_usersList;
 std::vector<UserStats> SqliteDataBase::m_usersStats;
 bool SqliteDataBase::moreData = false;
 int SqliteDataBase::highestRoomId = 1;
+std::mutex mtx;
 
 SqliteDataBase::SqliteDataBase()
 {
@@ -214,6 +215,7 @@ int SqliteDataBase::questions_callback(void* data, int argc, char** argv, char**
 void SqliteDataBase::send_query(std::string command, int(*callback)(void*, int, char**, char**), void* data) const
 {
 	char* errMessage = nullptr;
+	std::lock_guard<std::mutex> guard(mtx);
 	if (SQLITE_OK != sqlite3_exec(this->db, command.c_str(), callback, data, &errMessage))
 	{
 		Exception::ex << errMessage;
