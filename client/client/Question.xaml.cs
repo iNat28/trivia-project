@@ -27,6 +27,7 @@ namespace client
         private int numCorrectanswers;
         private int numQuestionsLeft;
         private int timeLeft;
+        private int timeTemp;
         //mutex
         private Mutex mtx;
 
@@ -42,6 +43,7 @@ namespace client
             //updating the beggining stats
             this.CorrectAnswers.Text = numCorrectanswers.ToString();
             this.timeLeft = answerTime;
+            this.timeTemp = this.timeLeft;
             this.AnswersLeft.Text = numQuestionsLeft.ToString();
             this.TimeLeft.Text = answerTime.ToString();
             //creating the stopwatch
@@ -70,7 +72,8 @@ namespace client
             this.updatingThread.RunWorkerCompleted += gameCompleted;
             this.updatingThread.RunWorkerAsync();
 
-            this.timeThread.DoWork += updateTime;                       
+            this.timeThread.DoWork += updateTime;
+            this.timeThread.ProgressChanged += changeTimeBox;
             this.timeThread.RunWorkerAsync();
            
             
@@ -78,7 +81,7 @@ namespace client
 
         private void updateTime(object sender, DoWorkEventArgs e)
         {
-            int timeTemp;
+            
             while(true)
             {
                 if (this.updatingThread.CancellationPending)
@@ -87,10 +90,24 @@ namespace client
                     break;
                 }
                 this.mtx.WaitOne();
-                timeTemp = Convert.ToInt32(this.TimeLeft.Text);
-                this.TimeLeft.Text = (timeTemp--).ToString();
+                
+                this.timeThread.ReportProgress(0, "");
                 this.mtx.ReleaseMutex();
                 Thread.Sleep(1000);
+            }
+        }
+
+        private void changeTimeBox(object sender, ProgressChangedEventArgs e)
+        {
+            int timerTemp;
+
+            timerTemp = Convert.ToInt32(this.TimeLeft.Text);
+            timerTemp--;
+            this.TimeLeft.Text = timerTemp.ToString();
+            this.timeTemp = timerTemp;
+            if (timerTemp == 0)
+            {
+                this.TimeLeft.Text = this.timeLeft.ToString();
             }
         }
 
@@ -106,7 +123,8 @@ namespace client
                 }
 
                 this.mtx.WaitOne();
-                if (Convert.ToInt32(this.TimeLeft.Text) == 0 || questionsTemp == this.numQuestionsLeft + 1)
+                
+                if (Convert.ToInt32(this.timeTemp) == 0 || questionsTemp == this.numQuestionsLeft + 1)
                 {
                     //get new question info
                     Stream.Send(new JObject(), Codes.GET_QUESTION);
@@ -121,8 +139,7 @@ namespace client
 
                     questionsTemp--;
                     //restarting the time
-                    this.stopwatch.Restart();
-                    this.TimeLeft.Text = this.timeLeft.ToString();                    
+                    this.stopwatch.Restart();                                                           
                 }
                 this.mtx.ReleaseMutex();
                 Thread.Sleep(1000);
@@ -130,9 +147,7 @@ namespace client
         }
 
         private void updateNewQuestion(object sender, ProgressChangedEventArgs e)
-        {
-            //changes the xaml file
-            //TODO: add text blocks for difficulty and category
+        {                    
             JObject param = (JObject)e.UserState;
 
             this.QuestionText.Text = param[Keys.question].ToString();
@@ -158,6 +173,7 @@ namespace client
                 this.Answer3.Content = jArray[2].ToString();
                 this.Answer4.Content = jArray[3].ToString();
             }
+            this.TimeLeft.Text = this.timeLeft.ToString();
         }
 
         private void gameCompleted(object sender, RunWorkerCompletedEventArgs e)
