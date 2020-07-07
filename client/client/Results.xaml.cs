@@ -36,7 +36,7 @@ namespace client
     }
     public partial class Results : Window
     {
-        private DataGrid playerStats;
+        private DataGrid playerStats = new DataGrid();
         public Results()
         {            
             InitializeComponent();

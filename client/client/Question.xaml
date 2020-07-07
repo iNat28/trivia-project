@@ -22,8 +22,9 @@
         <Button x:Name="BackButton" Content="Leave Game" HorizontalAlignment="Left" Margin="298,329,0,0" VerticalAlignment="Top" Width="150" Height="41" Click="BackButton_Click"/>
         <TextBlock x:Name="DifficultyHeader" HorizontalAlignment="Left" Margin="46,88,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="27" Width="99"><Run Text="Difficulty:"/></TextBlock>
         <TextBlock x:Name="CategoryHeader" HorizontalAlignment="Left" Margin="46,120,0,0" TextWrapping="Wrap" Text="Category:" VerticalAlignment="Top" Width="99" Height="27"/>
-        <TextBlock x:Name="Category" HorizontalAlignment="Left" Margin="170,120,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="27" Width="77"><Run Text=""/></TextBlock>
-        <TextBlock x:Name="Difficulty" HorizontalAlignment="Left" Margin="170,88,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="27" Width="77"><Run Text=""/></TextBlock>
+        <TextBlock x:Name="Category" HorizontalAlignment="Left" Margin="150,120,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="27" Width="113"><Run Text=""/></TextBlock>
+        <TextBlock x:Name="Difficulty" HorizontalAlignment="Left" Margin="150,88,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="27" Width="77"><Run Text=""/></TextBlock>
+        <TextBlock x:Name="ErrorOutput" HorizontalAlignment="Left" Margin="46,159,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="211" Width="228"/>
 
     </Grid>
 </Window>

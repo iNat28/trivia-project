@@ -25,6 +25,24 @@ void to_json(json& j, const RoomData& roomData)
 Room::Room(RoomData roomData) : 
 	m_roomdata(roomData)
 {
+	if (roomData.timePerQuestion > MAX_ANSWER_TIME)
+	{
+		Exception::ex << "Max answer time is " << MAX_ANSWER_TIME << '!';
+		throw Exception();
+	}
+	else if (roomData.timePerQuestion < 1)
+	{
+		throw Exception("Minimum answer time is 1!");
+	}
+	else if (roomData.questionsCount > MAX_QUESTION_COUNT)
+	{
+		Exception::ex << "Max amount of questions is " << MAX_QUESTION_COUNT << '!';
+		throw Exception();
+	}
+	else if (roomData.questionsCount < 1)
+	{
+		throw Exception("Minimum amount of questions is 1!");
+	}
 }
 
 Room::Room()

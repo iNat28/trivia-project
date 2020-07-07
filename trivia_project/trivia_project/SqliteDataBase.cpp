@@ -184,9 +184,9 @@ int SqliteDataBase::questions_callback(void* data, int argc, char** argv, char**
 			answers.push_back({ 0, argv[i] });
 		else if (std::string(azColName[i]) == "incorrect_answer1")
 			answers.push_back({ 1, argv[i] });
-		else if (std::string(azColName[i]) == "incorrect_answer2" && argv[i] != "")
+		else if (std::string(azColName[i]) == "incorrect_answer2" && string(argv[i]) != "")
 			answers.push_back({ 2, argv[i] });
-		else if (std::string(azColName[i]) == "incorrect_answer3" && argv[i] != "")
+		else if (std::string(azColName[i]) == "incorrect_answer3" && string(argv[i]) != "")
 			answers.push_back({ 3, argv[i] });
 	}
 
@@ -341,9 +341,11 @@ HighScores SqliteDataBase::getHighScores() const
 Questions SqliteDataBase::getQuestions() const
 {
 	Questions questions;
+	std::srand((unsigned int)std::time(0));
+
 	send_query("select * from questions", questions_callback, &questions);
 
 	std::random_shuffle(questions.begin(), questions.end());
 
-	return Questions();
+	return questions;
 }

@@ -27,9 +27,12 @@ namespace client
         private int numCorrectanswers;
         private int numQuestionsLeft;
         private int timeLeft;
-        private int timeTemp;
+        //private int timeTemp;
+        //private bool wait = false;
         //mutex
         private Mutex mtx;
+        private Mutex timeMutex;
+        private int currentTime;
 
         //threads
         private BackgroundWorker updatingThread;
@@ -39,11 +42,12 @@ namespace client
         {
             InitializeComponent();
             numCorrectanswers = 0;
+            currentTime = 0;
             numQuestionsLeft = numQuestions;
             //updating the beggining stats
             this.CorrectAnswers.Text = numCorrectanswers.ToString();
             this.timeLeft = answerTime;
-            this.timeTemp = this.timeLeft;
+            //this.timeTemp = this.timeLeft;
             this.AnswersLeft.Text = numQuestionsLeft.ToString();
             this.TimeLeft.Text = answerTime.ToString();
             //creating the stopwatch
@@ -51,7 +55,8 @@ namespace client
                         
 
             //starting threads
-            this.mtx = new Mutex();            
+            this.mtx = new Mutex();
+            this.timeMutex = new Mutex();
 
             this.updatingThread = new BackgroundWorker
             {
@@ -65,32 +70,31 @@ namespace client
                 WorkerSupportsCancellation = true
             };
 
-            this.stopwatch.Start();
+            this.getQuestion();
 
-            this.updatingThread.DoWork += getNewQuestion;
-            this.updatingThread.ProgressChanged += updateNewQuestion;
+            this.updatingThread.DoWork += UpdateQuestions;
+            this.updatingThread.ProgressChanged += UpdateThreadProgress;
             this.updatingThread.RunWorkerCompleted += gameCompleted;
-            this.updatingThread.RunWorkerAsync();
 
             this.timeThread.DoWork += updateTime;
             this.timeThread.ProgressChanged += changeTimeBox;
             this.timeThread.RunWorkerAsync();
-           
-            
+
+            this.stopwatch.Start();
         }
 
         private void updateTime(object sender, DoWorkEventArgs e)
         {
-            
-            while(true)
+            //TODO: Try to move the submit answer and get question functionality for this thread, after the time is finished
+            while (true)
             {
-                if (this.updatingThread.CancellationPending)
+                if (this.timeThread.CancellationPending)
                 {
                     e.Cancel = true;
                     break;
                 }
                 this.mtx.WaitOne();
-                
+
                 this.timeThread.ReportProgress(0, "");
                 this.mtx.ReleaseMutex();
                 Thread.Sleep(1000);
@@ -99,62 +103,92 @@ namespace client
 
         private void changeTimeBox(object sender, ProgressChangedEventArgs e)
         {
+            this.timeMutex.WaitOne();
             int timerTemp;
 
             timerTemp = Convert.ToInt32(this.TimeLeft.Text);
             timerTemp--;
             this.TimeLeft.Text = timerTemp.ToString();
-            this.timeTemp = timerTemp;
+            //this.timeTemp = timerTemp;
             if (timerTemp == 0)
             {
                 this.TimeLeft.Text = this.timeLeft.ToString();
+                this.timeMutex.ReleaseMutex();
+                Thread.Sleep(100);
             }
         }
 
-        private void getNewQuestion(object sender, DoWorkEventArgs e)
-        {            
-            int questionsTemp = this.numQuestionsLeft;
-            while(questionsTemp != 0)
-            {
-                if (this.updatingThread.CancellationPending)
-                {
-                    e.Cancel = true;
-                    break;
-                }
+        //private void getNewQuestion(object sender, DoWorkEventArgs e)
+        //{            
+        //    int questionsTemp = this.numQuestionsLeft;
+        //    bool newQuestion = false;
+        //    this.getQuestion();
 
-                this.mtx.WaitOne();
+        //    while(this.numQuestionsLeft != 0)
+        //    {
+        //        if (this.updatingThread.CancellationPending)
+        //        {
+        //            e.Cancel = true;
+        //            break;
+        //        }
+
+        //        this.mtx.WaitOne();
                 
-                if (Convert.ToInt32(this.timeTemp) == 0 || questionsTemp == this.numQuestionsLeft + 1)
-                {
-                    //get new question info
-                    Stream.Send(new JObject(), Codes.GET_QUESTION);
-
-                    Response usersResponse = Stream.Recieve();
+        //        if(questionsTemp == this.numQuestionsLeft + 1)
+        //        {
+        //            wait = true;
+        //            Thread.Sleep(3000);
+        //            wait = false;
+        //            this.updatingThread.ReportProgress(2, null);
+        //            newQuestion = true;
+        //        }
+        //        if (this.timeTemp == 0)
+        //        {
+        //            this.numQuestionsLeft--;
+        //            newQuestion = true;
+        //        }
+        //        if(this.numQuestionsLeft == 0)
+        //        {
+        //            break;
+        //        }
+        //        if(newQuestion)
+        //        {
                     
-                    string error;
-                    if (Stream.ResponseForThread(usersResponse, Codes.GET_QUESTION, out error))
-                    {
-                        this.updatingThread.ReportProgress(0, usersResponse);
-                    }
 
-                    questionsTemp--;
-                    //restarting the time
-                    this.stopwatch.Restart();                                                           
-                }
-                this.mtx.ReleaseMutex();
-                Thread.Sleep(1000);
+        //            questionsTemp--;
+        //            //restarting the time
+        //            this.stopwatch.Restart();
+        //            newQuestion = false;
+        //        }
+
+        //        this.mtx.ReleaseMutex();
+        //        Thread.Sleep(1000);
+        //    }
+        //}
+
+        private void getQuestion()
+        {
+            Stream.Send(new JObject(), Codes.GET_QUESTION);
+            Response usersResponse = Stream.Recieve();
+
+            if (Stream.Response(usersResponse, Codes.GET_QUESTION))
+            {
+                updateNewQuestion(usersResponse.jObject);
             }
         }
 
-        private void updateNewQuestion(object sender, ProgressChangedEventArgs e)
+        private void resetColor(Button button)
+        {
+            button.Background = Brushes.LightGray;
+        }
+
+        private void updateNewQuestion(JObject question)
         {                    
-            JObject param = (JObject)e.UserState;
+            this.QuestionText.Text = question[Keys.question].ToString();
+            this.Difficulty.Text = question[Keys.difficulty].ToString();
+            this.Category.Text = question[Keys.category].ToString();
 
-            this.QuestionText.Text = param[Keys.question].ToString();
-            this.Difficulty.Text = param[Keys.difficulty].ToString();
-            this.Category.Text = param[Keys.category].ToString();
-
-            JArray jArray = (JArray)param[Keys.answers];
+            JArray jArray = (JArray)question[Keys.answers];
 
             this.Answer1.Content = jArray[0].ToString();
             this.Answer2.Content = jArray[1].ToString();
@@ -184,116 +218,52 @@ namespace client
         
         private void Answer1_Click(object sender, RoutedEventArgs e)
         {
-            this.stopwatch.Stop();
-            int seconds = Convert.ToInt32(this.stopwatch.ElapsedMilliseconds / 1000);
-
-            JObject jObject = new JObject
-            {
-                [Keys.answerIndex] = 0,
-                [Keys.answerTime] = seconds
-            };
-
-            Stream.Send(jObject, Codes.SUBMIT_ANSWER);
-
-            Response response = Stream.Recieve();
-
-            if (Stream.Response(response, Codes.SUBMIT_ANSWER))
-            {
-                if (Convert.ToInt32(response) == 0)
-                {
-                    this.Answer1.Background = Brushes.Green;
-                    numCorrectanswers++;
-                    this.CorrectAnswers.Text = numCorrectanswers.ToString();
-                }
-                else
-                {
-                    this.Answer1.Background = Brushes.Red;
-                    ShowCorrectAnswer(Convert.ToInt32(response));
-                }
-                this.numQuestionsLeft--;
-                
-                this.AnswersLeft.Text = numQuestionsLeft.ToString();
-            }
+            this.AnswerQuestion(Answer1, 0);
         }
 
         private void Answer2_Click(object sender, RoutedEventArgs e)
         {
-            this.stopwatch.Stop();
-            this.stopwatch.Stop();
-            int seconds = Convert.ToInt32(this.stopwatch.ElapsedMilliseconds / 1000);
-
-            JObject jObject = new JObject
-            {
-                [Keys.answerIndex] = 1,
-                [Keys.answerTime] = seconds
-            };
-            Stream.Send(jObject, Codes.SUBMIT_ANSWER);
-
-            Response response = Stream.Recieve();
-
-            if (Stream.Response(response, Codes.SUBMIT_ANSWER))
-            {
-                if (Convert.ToInt32(response) == 1)
-                {
-                    this.Answer2.Background = Brushes.Green;
-                    numCorrectanswers++;
-                    this.CorrectAnswers.Text = numCorrectanswers.ToString();
-                }
-                else
-                {
-                    this.Answer2.Background = Brushes.Red;
-                    ShowCorrectAnswer(Convert.ToInt32(response));
-                }
-            }
-            this.numQuestionsLeft--;
-            
-            this.AnswersLeft.Text = numQuestionsLeft.ToString();
+            this.AnswerQuestion(Answer2, 1);
         }
 
         private void Answer3_Click(object sender, RoutedEventArgs e)
         {
-            this.stopwatch.Stop();
-            this.stopwatch.Stop();
-            int seconds = Convert.ToInt32(this.stopwatch.ElapsedMilliseconds / 1000);
-
-            JObject jObject = new JObject
-            {
-                [Keys.answerIndex] = 2,
-                [Keys.answerTime] = seconds
-            };
-            Stream.Send(jObject, Codes.SUBMIT_ANSWER);
-
-            Response response = Stream.Recieve();
-
-            if (Stream.Response(response, Codes.SUBMIT_ANSWER))
-            {
-                if(Convert.ToInt32(response) == 2)
-                {
-                    this.Answer3.Background = Brushes.Green;
-                    numCorrectanswers++;
-                    this.CorrectAnswers.Text = numCorrectanswers.ToString();
-                }
-                else
-                {
-                    this.Answer3.Background = Brushes.Red;
-                    ShowCorrectAnswer(Convert.ToInt32(response));
-                }
-            }
-            this.numQuestionsLeft--;
-            
-            this.AnswersLeft.Text = numQuestionsLeft.ToString();
+            this.AnswerQuestion(Answer3, 2);
         }
 
         private void Answer4_Click(object sender, RoutedEventArgs e)
         {
+            this.AnswerQuestion(Answer4, 3);
+        }
+
+        private void AnswerQuestion(Button selectedButton, int index)
+        {
             this.stopwatch.Stop();
-            this.stopwatch.Stop();
-            int seconds = Convert.ToInt32(this.stopwatch.ElapsedMilliseconds / 1000);
+            currentTime = Convert.ToInt32(this.stopwatch.ElapsedMilliseconds / 1000.0);
+
+            if (!this.updatingThread.IsBusy)
+            {
+                this.updatingThread.RunWorkerAsync(new Tuple<Button, int>(selectedButton, index));
+            }
+        }
+
+        private void UpdateQuestions(object sender, DoWorkEventArgs e)
+        {
+            Tuple<Button, int> param = (Tuple<Button, int>)e.Argument;
+            int index = param.Item2;
+
+            if (this.timeThread.CancellationPending)
+            {
+                e.Cancel = true;
+                return;
+            }
+
+            this.timeMutex.WaitOne();
 
             JObject jObject = new JObject
             {
-                [Keys.answerIndex] = 3,
-                [Keys.answerTime] = seconds
+                [Keys.answerIndex] = index,
+                [Keys.answerTime] = this.currentTime
             };
             Stream.Send(jObject, Codes.SUBMIT_ANSWER);
 
@@ -301,40 +271,56 @@ namespace client
 
             if (Stream.Response(response, Codes.SUBMIT_ANSWER))
             {
-                if (Convert.ToInt32(response) == 3)
-                {
-                    this.Answer4.Background = Brushes.Green;
-                    numCorrectanswers++;
-                    this.CorrectAnswers.Text = numCorrectanswers.ToString();
-                }
-                else
-                {
-                    this.Answer4.Background = Brushes.Red;
-                    ShowCorrectAnswer(Convert.ToInt32(response));
-                }
+                this.updatingThread.ReportProgress(0, new Tuple<int, Button, int>(
+                    Convert.ToInt32((string)response.jObject[Keys.correctAnswerIndex]), param.Item1, param.Item2));
             }
-            this.numQuestionsLeft--;
-            
-            this.AnswersLeft.Text = numQuestionsLeft.ToString();
+
+            this.timeMutex.ReleaseMutex();
         }
 
-        private void ShowCorrectAnswer(int answerIndex)
+        private void UpdateThreadProgress(object sender, ProgressChangedEventArgs e)
         {
-            switch (answerIndex)
+            Tuple<int, Button, int> param = (Tuple<int, Button, int>)e.UserState;
+            int correctAnswerIndex = param.Item1;
+            Button selectedButton = param.Item2;
+            int index = param.Item3;
+
+            if (correctAnswerIndex != index)
+            {
+                selectedButton.Background = Brushes.Red;
+            }
+            else
+            {
+                numCorrectanswers++;
+            }
+            Button correctButton = this.Answer1;
+            switch (correctAnswerIndex)
             {
                 case 0:
-                    this.Answer1.Background = Brushes.Green;
+                    correctButton = this.Answer1;
                     break;
                 case 1:
-                    this.Answer2.Background = Brushes.Green;
+                    correctButton = this.Answer2;
                     break;
                 case 2:
-                    this.Answer3.Background = Brushes.Green;
+                    correctButton = this.Answer3;
                     break;
                 case 3:
-                    this.Answer4.Background = Brushes.Green;
+                    correctButton = this.Answer4;
                     break;
             }
+            correctButton.Background = Brushes.Green;
+
+            this.numQuestionsLeft--;
+
+            Thread.Sleep(3000);
+
+            this.resetColor(correctButton);
+            this.resetColor(selectedButton);
+            this.CorrectAnswers.Text = this.numCorrectanswers.ToString();
+            this.AnswersLeft.Text = numQuestionsLeft.ToString();
+
+            this.getQuestion();
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)

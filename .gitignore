@@ -6,6 +6,7 @@
 !/client/client/Properties
 !
 !questions.txt
+!DBFile.sqlite
 !*.h
 !*.cpp
 !*.c
