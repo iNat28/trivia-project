@@ -7,11 +7,11 @@
         mc:Ignorable="d"
         Title="Login" Height="450" Width="800">
     <Grid>
-        <Button x:Name="signUpButton" Content="Sign Up" HorizontalAlignment="Left" Margin="349,211,0,0" VerticalAlignment="Top" Width="75" Click="SignUpButton_Click"/>
-        <Button x:Name="exitButton" Content="Exit" HorizontalAlignment="Left" Margin="349,261,0,0" VerticalAlignment="Top" Width="75" Click="ExitButton_Click"/>
-        <Button x:Name="loginButton" Content="Login" HorizontalAlignment="Left" Margin="349,165,0,0" VerticalAlignment="Top" Width="75" Click="LoginButton_Click"/>
         <TextBox x:Name="usernameInput" HorizontalAlignment="Left" Margin="353,56,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
         <PasswordBox x:Name="passwordInput" HorizontalAlignment="Left" Margin="353,93,0,0" VerticalAlignment="Top" Width="120"/>
+        <Button x:Name="loginButton" Content="Login" HorizontalAlignment="Left" Margin="349,165,0,0" VerticalAlignment="Top" Width="75" Click="LoginButton_Click"/>
+        <Button x:Name="signUpButton" Content="Sign Up" HorizontalAlignment="Left" Margin="349,211,0,0" VerticalAlignment="Top" Width="75" Click="SignUpButton_Click"/>
+        <Button x:Name="exitButton" Content="Exit" HorizontalAlignment="Left" Margin="349,261,0,0" VerticalAlignment="Top" Width="75" Click="ExitButton_Click"/>
         <TextBlock HorizontalAlignment="Left" Margin="270,56,0,0" TextWrapping="Wrap" Text="Username:" VerticalAlignment="Top" Width="67"/>
         <TextBlock HorizontalAlignment="Left" Margin="270,93,0,0" TextWrapping="Wrap" Text="Password:" VerticalAlignment="Top" Width="67"/>
         <TextBlock x:Name="errorOutput" HorizontalAlignment="Left" Margin="19,124,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="318" Height="123"/>
