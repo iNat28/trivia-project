@@ -30,6 +30,7 @@ namespace client
         private int timerTemp;
         private int selectedAnswerIndex;
         private readonly bool answersAreDisplayed;
+        private bool showResults;
 
         //mutex
         private readonly Mutex mutex;
@@ -60,6 +61,7 @@ namespace client
             this.stopwatch = new Stopwatch();
             this.selectedAnswerIndex = -1;
             this.answersAreDisplayed = false;
+            this.showResults = true;
 
             this.mutex = new Mutex();
 
@@ -101,10 +103,10 @@ namespace client
                     Thread.Sleep(100);
                     this.mutex.WaitOne();
 
+                    Thread.Sleep(3000);
+
                     if (this.numQuestionsLeft != 0)
                     {
-                        Thread.Sleep(3000);
-
                         this.mutex.ReleaseMutex();
                         //Get the next question
                         this.thread.ReportProgress((int)ThreadCodes.GET_NEW_QUESTION, null);
@@ -207,8 +209,10 @@ namespace client
 
         private void GameCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            //opens new window
-            Utils.OpenWindow(this, new Results());
+            if (this.showResults)
+            {
+                Utils.OpenWindow(this, new Results());
+            }
         }
         
         private void Answer1_Click(object sender, RoutedEventArgs e)
@@ -310,6 +314,7 @@ namespace client
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
             this.stopwatch.Stop();
+            this.showResults = false;
             this.thread.CancelAsync();
             Utils.OpenWindow(this, new MainWindow());
         }

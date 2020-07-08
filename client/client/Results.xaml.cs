@@ -47,11 +47,12 @@ namespace client
             Response response = Stream.Recieve();
            
             if (Stream.Response(response, Codes.GET_GAME_RESULTS))
-            {                
-                Dictionary<string, JObject> resultsList = JsonConvert.DeserializeObject<Dictionary<string, JObject>>(response.jObject.ToString());
-                foreach (var result in resultsList)
+            {
+                JArray results = (JArray)response.jObject[Keys.playersResults];
+                
+                foreach (var result in results)
                 {
-                    myResults playerResult = new myResults(result.Key, Convert.ToInt32(result.Value[Keys.numCorrectAnswers]), Convert.ToInt32(result.Value[Keys.averageAnswerTime]), Convert.ToInt32(result.Value[Keys.numPoints]));
+                    myResults playerResult = new myResults((string)result[Keys.username], (int)result[Keys.numCorrectAnswers], (int)result[Keys.averageAnswerTime], (int)result[Keys.numPoints]);
                     playerStats.Items.Add(playerResult);
                 }
             }

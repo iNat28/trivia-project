@@ -107,11 +107,11 @@ struct StartGameResponse : Response
 
 struct GetGameResultsResponse : Response
 {
-	GetGameResultsResponse(map<LoggedUser, PlayerResults> playersResults);
+	GetGameResultsResponse(vector<UserResults> playersResults);
 
 	virtual Codes getResponseCode() const override;
 
-	map<LoggedUser, PlayerResults> playersResults;
+	vector<UserResults> playersResults;
 };
 
 struct SubmitAnswerResponse : Response

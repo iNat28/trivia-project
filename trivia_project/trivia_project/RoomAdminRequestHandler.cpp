@@ -47,7 +47,10 @@ RequestResult RoomAdminRequestHandler::_startGame(const RequestInfo& requestInfo
 		),
 		this->m_handlerFactory.createGameRequestHandler(
 			this->m_user,
-			this->m_handlerFactory.getGameManager().createGame(this->m_room, this->m_handlerFactory.getGameManager().getQuestions())
+			this->m_handlerFactory.getGameManager().createGame(
+				this->m_room,
+				this->m_handlerFactory.getGameManager().getQuestions(this->m_room.getQuestionsCount())
+			)
 		)
 	);
 }

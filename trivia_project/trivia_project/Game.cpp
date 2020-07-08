@@ -106,7 +106,7 @@ void Game::removePlayer(LoggedUser user)
 
 //TODO: Change to struct, or change to find a different solution
 //Returns the players results, and if all of the users received the game results
-map<LoggedUser, PlayerResults> Game::getGameResults(LoggedUser user)
+vector<UserResults> Game::getGameResults(LoggedUser user)
 {
 	if (!this->m_questions.empty())
 	{
@@ -118,14 +118,14 @@ map<LoggedUser, PlayerResults> Game::getGameResults(LoggedUser user)
 	return this->getGameResults();
 }
 
-map<LoggedUser, PlayerResults> Game::getGameResults()
+vector<UserResults> Game::getGameResults()
 {
-	map<LoggedUser, PlayerResults> playersResults;
+	vector<UserResults> playersResults;
 	
 	//Converts the map so the value will be PlayerResults and not GameData
 	for (const auto& player : this->m_players)
 	{
-		playersResults[player.first] = player.second.playerResults;
+		playersResults.push_back(UserResults(player.first, player.second.playerResults));
 	}
 
 	return playersResults;
@@ -160,4 +160,14 @@ Game& Game::operator=(const Game& other)
 	this->m_questions = other.m_questions;
 	std::cout << "Copied game" << std::endl;
 	return *this;
+}
+
+GameData::GameData(PlayerResults playerResults, bool gotResults) : 
+	playerResults(playerResults), gotResults(gotResults)
+{
+}
+
+GameData::GameData() : 
+	playerResults(), gotResults(false)
+{
 }

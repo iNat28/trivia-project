@@ -27,6 +27,15 @@ struct PlayerResults
 	unsigned int totalNumAnswers() const;
 };
 
+struct UserResults
+{
+	UserResults(LoggedUser user, PlayerResults playerResults);
+	UserResults() = default;
+
+	LoggedUser user;
+	PlayerResults playerResults;
+};
+
 struct UserStats
 {
 	UserStats(PlayerResults playerResults, string username, unsigned int numTotalGames);
@@ -39,4 +48,5 @@ struct UserStats
 
 void to_json(json& j, const UserHighScore& userHighScore);
 void to_json(json& j, const PlayerResults& playerResults);
+void to_json(json& j, const UserResults& userResults);
 void to_json(json& j, const UserStats& userStats);

@@ -101,7 +101,7 @@ Codes StartGameResponse::getResponseCode() const
 	return Codes::START_GAME;
 }
 
-GetGameResultsResponse::GetGameResultsResponse(map<LoggedUser, PlayerResults> playersResults) :
+GetGameResultsResponse::GetGameResultsResponse(vector<UserResults> playersResults) :
 	playersResults(playersResults)
 {
 }

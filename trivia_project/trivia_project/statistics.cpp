@@ -58,9 +58,20 @@ void to_json(json& j, const PlayerResults& playerResults)
 	j[Keys::numPoints] = playerResults.numPoints;
 }
 
+void to_json(json& j, const UserResults& userResults)
+{
+	j = userResults.playerResults;
+	j[Keys::username] = userResults.user.username;
+}
+
 void to_json(json& j, const UserStats& userStats)
 {
 	j = userStats.playerResults;
 	j[Keys::username] = userStats.username;
 	j[Keys::numTotalGames] = userStats.numTotalGames;
+}
+
+UserResults::UserResults(LoggedUser user, PlayerResults playerResults) : 
+	user(user), playerResults(playerResults)
+{
 }

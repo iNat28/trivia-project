@@ -17,7 +17,7 @@ void GameManager::deleteGame(Game& game)
 {
 	for (auto userAndResults : game.getGameResults())
 	{
-		this->m_database.addGameStats(userAndResults.first, userAndResults.second);
+		this->m_database.addGameStats(userAndResults.user, userAndResults.playerResults);
 	}
 
 	for (auto it = this->m_games.begin(); it != this->m_games.end(); it++)
@@ -40,35 +40,25 @@ Game& GameManager::getGame(Room& room)
 		}
 	}
 }
+//
+//map<LoggedUser, PlayerResults> GameManager::getGameResults(Game& game, LoggedUser user)
+//{
+//	auto gameResults = game.getGameResults(user);
+//
+//	for (const auto& playerResult : gameResults)
+//	{
+//		this->m_database.addGameStats(playerResult.first, playerResult.second);
+//	}
+//
+//	if (game.allPlayersGotResults())
+//	{
+//		this->deleteGame(game);
+//	}
+//
+//	return gameResults;
+//}
 
-map<LoggedUser, PlayerResults> GameManager::getGameResults(Game& game, LoggedUser user)
+Questions GameManager::getQuestions(unsigned int questionsCount) const
 {
-	auto gameResults = game.getGameResults(user);
-
-	for (const auto& playerResult : gameResults.first)
-	{
-		this->m_database.addGameStats(playerResult.first, playerResult.second);
-	}
-
-	if (gameResults.second)
-	{
-		this->deleteGame(game);
-	}
-
-	return gameResults.first;
-}
-
-void GameManager::removePlayer(Game& game, LoggedUser user)
-{
-	this->m_database.addGameStats(user, game.removePlayer(user));
-
-	if (game.allPlayersGotResults())
-	{
-		this->deleteGame(game);
-	}
-}
-
-Questions GameManager::getQuestions() const
-{
-	return this->m_database.getQuestions();
+	return this->m_database.getQuestions(questionsCount);
 }

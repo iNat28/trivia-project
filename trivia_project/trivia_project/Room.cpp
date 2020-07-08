@@ -79,6 +79,11 @@ void Room::removeUser(LoggedUser user)
 	throw Exception("User not found");
 }
 
+unsigned int Room::getQuestionsCount() const
+{
+	return this->m_roomdata.questionsCount;
+}
+
 vector<LoggedUser> Room::getAllUsers() const
 {
 	return this->m_roomdata.players;

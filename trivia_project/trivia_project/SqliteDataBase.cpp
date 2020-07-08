@@ -302,12 +302,12 @@ void SqliteDataBase::addGameStats(LoggedUser user, PlayerResults playerResults)
 	otherUserStats.playerResults.numWrongAnswers += playerResults.numWrongAnswers;
 	
 	buffer << "update statistics set" <<
-		", numPoints = " << otherUserStats.playerResults.numPoints <<
+		" numPoints = " << otherUserStats.playerResults.numPoints <<
 		", numTotalGames = " << otherUserStats.numTotalGames <<
 		", numCorrectAnswers = " << otherUserStats.playerResults.numCorrectAnswers <<
 		", numWrongAnswers = " << otherUserStats.playerResults.numWrongAnswers <<
 		", averageAnswerTime = " << otherUserStats.playerResults.averageAnswerTime <<
-		" where username = " << otherUserStats.username << ';';
+		" where username = \"" << otherUserStats.username << "\";";
 
 	send_query(buffer.str().c_str());
 }

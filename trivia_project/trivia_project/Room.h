@@ -38,6 +38,7 @@ public:
 	void addUser(LoggedUser user);
 	void removeUser(LoggedUser user);
 
+	unsigned int getQuestionsCount() const;
 	vector<LoggedUser> getAllUsers() const;
 	RoomStatus getRoomStatus() const;
 	unsigned int getId() const;
