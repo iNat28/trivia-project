@@ -67,7 +67,7 @@ RequestResult GameRequestHandler::_leaveGame(const RequestInfo& requestInfo) con
 
 	return RequestResult(
 		JsonResponsePacketSerializer::serializeResponse(
-			LeaveRoomResponse()
+			LeaveGameResponse()
 		),
 		this->m_handlerFactory.createMenuRequestHandler(this->m_user)
 	);
