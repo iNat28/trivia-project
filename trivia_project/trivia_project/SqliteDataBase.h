@@ -20,6 +20,8 @@ public:
 	virtual bool doesUserExist(string username) const override;
 	virtual bool doesPasswordMatch(string username, string password) const override;
 	virtual void addNewUser(string username, string password, string email) const override;
+	
+	//callbacks
 	static int users_callback(void* data, int argc, char** argv, char** azColName);
 	static int statistics_callback(void* data, int argc, char** argv, char** azColName);
 	static int int_callback(void* data, int argc, char** argv, char** azColName);
@@ -46,9 +48,9 @@ private:
 	const char* dbFileName;
 	static const unsigned int HIGH_SCORE_NUMS = 3;
 
-	//Change to struct
 	static std::unordered_map<string, string> m_usersList;
 	static std::vector<UserStats> m_usersStats;
+
 	//variable for multiple users
 	static bool moreData;
 	static int highestRoomId;

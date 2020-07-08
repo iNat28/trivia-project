@@ -5,7 +5,7 @@ AllRoomMembersRequestHandler::AllRoomMembersRequestHandler(LoggedUser user, Room
 	LoggedUserRequestHandler(user), m_room(room)
 {
 }
-
+//getting room state of room
 RequestResult AllRoomMembersRequestHandler::_getRoomStateNoHandler(const RequestInfo& requestInfo) const
 {
 	return RequestResult(

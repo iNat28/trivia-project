@@ -120,9 +120,6 @@
     <ClCompile Include="pch.cpp">
       <Filter>Source Files\Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="Question.cpp">
-      <Filter>Source Files\Infrastructure</Filter>
-    </ClCompile>
     <ClCompile Include="RoomMemberRequestHandler.cpp">
       <Filter>Source Files\Handlers</Filter>
     </ClCompile>
@@ -229,9 +226,6 @@
     </ClInclude>
     <ClInclude Include="AllRoomMembersRequestHandler.h">
       <Filter>Header Files\Handlers</Filter>
-    </ClInclude>
-    <ClInclude Include="Question.h">
-      <Filter>Header Files\Infrastructure</Filter>
     </ClInclude>
     <ClInclude Include="LoggedUserRequestHandler.h">
       <Filter>Header Files\Handlers</Filter>

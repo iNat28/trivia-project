@@ -100,7 +100,6 @@ void Game::removePlayer(LoggedUser user)
 	this->m_players[user].gotResults = true;
 }
 
-//TODO: Change to struct, or change to find a different solution
 //Returns the players results, and if all of the users received the game results
 vector<UserResults> Game::getGameResults(LoggedUser user)
 {
@@ -124,7 +123,14 @@ vector<UserResults> Game::getGameResults()
 		playersResults.push_back(UserResults(player.first, player.second.playerResults));
 	}
 
+	std::sort(playersResults.begin(), playersResults.end(), comaprePlayerPoints);
+
 	return playersResults;
+}
+
+bool comaprePlayerPoints(UserResults i1, UserResults i2)
+{
+	return (i1.playerResults.numPoints > i2.playerResults.numPoints);
 }
 
 Room& Game::getRoom()
