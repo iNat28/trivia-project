@@ -48,7 +48,7 @@ namespace client
            
             if (Stream.Response(response, Codes.GET_GAME_RESULTS))
             {                
-                Dictionary<string, JObject> resultsList = JsonConvert.DeserializeObject<Dictionary<string, JObject>>(response.ToString());
+                Dictionary<string, JObject> resultsList = JsonConvert.DeserializeObject<Dictionary<string, JObject>>(response.jObject.ToString());
                 foreach (var result in resultsList)
                 {
                     myResults playerResult = new myResults(result.Key, Convert.ToInt32(result.Value[Keys.numCorrectAnswers]), Convert.ToInt32(result.Value[Keys.averageAnswerTime]), Convert.ToInt32(result.Value[Keys.numPoints]));

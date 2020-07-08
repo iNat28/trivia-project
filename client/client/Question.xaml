@@ -25,6 +25,10 @@
         <TextBlock x:Name="Category" HorizontalAlignment="Left" Margin="150,120,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="27" Width="113"><Run Text=""/></TextBlock>
         <TextBlock x:Name="Difficulty" HorizontalAlignment="Left" Margin="150,88,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="27" Width="77"><Run Text=""/></TextBlock>
         <TextBlock x:Name="ErrorOutput" HorizontalAlignment="Left" Margin="46,159,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="211" Width="228"/>
+        <TextBlock HorizontalAlignment="Left" Margin="521,172,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="96" Text="Selected Answer:"/>
+        <TextBlock HorizontalAlignment="Left" Margin="521,193,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="119" Text="Time took for answer:"/>
+        <TextBlock x:Name="SelectedAnswerOutput" HorizontalAlignment="Left" Margin="645,172,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="137"/>
+        <TextBlock x:Name="TimeTookForAnswerOutput" HorizontalAlignment="Left" Margin="645,193,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="137"/>
 
     </Grid>
 </Window>
