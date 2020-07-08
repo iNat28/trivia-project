@@ -70,7 +70,7 @@ const Question& Game::getQuestion() const
 	{
 		throw Exception("Couldn't get question - no questions left!");
 	}
-	return this->m_questions.front();
+	return this->m_questions.back();
 }
 
 unsigned int Game::submitAnswer(LoggedUser user, unsigned int answerIndex, unsigned int answerTime)
@@ -88,7 +88,7 @@ unsigned int Game::submitAnswer(LoggedUser user, unsigned int answerIndex, unsig
 	if (question.correctAnswerIndex == answerIndex)
 	{
 		playerResults.numCorrectAnswers++;
-		playerResults.numPoints += question.difficulty * (MAX_ANSWER_TIME - answerTime) * POINT_MULTIPLIER;
+		playerResults.numPoints += question.difficulty * (MAX_ANSWER_TIME + 1 - answerTime) * POINT_MULTIPLIER;
 	}
 	else
 	{
@@ -96,7 +96,7 @@ unsigned int Game::submitAnswer(LoggedUser user, unsigned int answerIndex, unsig
 	}
 
 	this->m_questions.pop_back();
-	return 0;
+	return question.correctAnswerIndex;
 }
 
 PlayerResults Game::removePlayer(LoggedUser user)

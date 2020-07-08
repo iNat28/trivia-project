@@ -7,7 +7,7 @@ class RoomManager
 {
 public:
 	RoomManager(IDatabase& database);
-
+	
 	void createRoom(Room& room);
 	void closeRoom(Room& room);
 	//void deleteRoom(unsigned int id);

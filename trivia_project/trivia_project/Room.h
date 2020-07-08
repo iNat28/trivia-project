@@ -3,6 +3,9 @@
 #include "LoggedUser.h"
 #include "Exception.h"
 
+#define MAX_ANSWER_TIME 1 * 60
+#define MAX_QUESTION_COUNT 10
+
 enum class RoomStatus
 {
 	OPEN,

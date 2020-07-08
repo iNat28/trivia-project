@@ -61,8 +61,7 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const GetRoomStateRespons
 
 Buffer JsonResponsePacketSerializer::serializeResponse(const GetQuestionResponse& getQuestionResponse)
 {
-	json jsonToSerialize;
-	jsonToSerialize[Keys::question] = getQuestionResponse.question;
+	json jsonToSerialize = getQuestionResponse.question;
 
 	return JsonResponsePacketSerializer::serializeJson(jsonToSerialize, getQuestionResponse);
 }
