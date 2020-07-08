@@ -140,7 +140,7 @@ namespace client
         {
             try
             {
-                return _Response(response, code);
+                return ResponseWithoutTryCatch(response, code);
             }
             catch (Exception e)
             {
@@ -156,7 +156,7 @@ namespace client
 
             try
             {
-                return _Response(response, code);
+                return ResponseWithoutTryCatch(response, code);
             }
             catch (Exception e)
             {
@@ -166,7 +166,7 @@ namespace client
             return false;
         }
 
-        private static bool _Response(Response response, Codes code)
+        private static bool ResponseWithoutTryCatch(Response response, Codes code)
         {
             string error;
 

@@ -29,7 +29,7 @@ void from_json(const json& j, Question& question);
 struct GameData
 {
 	PlayerResults playerResults;
-	bool gotData; //If the player recieved the data
+	bool gotResults; //If the player recieved the data
 };
 
 class Game
@@ -39,12 +39,15 @@ public:
 	Game();
 
 	const Question& getQuestion() const;
-	unsigned int submitAnswer(LoggedUser user, unsigned int answerIndex, unsigned int answerTime);
-	PlayerResults removePlayer(LoggedUser user);
-	std::pair<map<LoggedUser, PlayerResults>, bool> getGameResults(LoggedUser user);
-	bool empty() const;
+	unsigned int submitAnswer(LoggedUser user, int answerIndex, unsigned int answerTime);
+	void removePlayer(LoggedUser user);
+	map<LoggedUser, PlayerResults> getGameResults(LoggedUser user);
+	map<LoggedUser, PlayerResults> getGameResults();
+	bool allPlayersGotResults() const;
 	bool operator==(const Game& other) const;
 	bool operator==(const Room& other) const;
+
+	//Needed for unknown reason
 	Game& operator=(const Game& other);
 private:
 	Questions m_questions;

@@ -14,5 +14,5 @@ public:
 	virtual int getHighestRoomId() const = 0;
 	virtual UserStats getUserStats(string username) const = 0;
 	virtual HighScores getHighScores() const = 0;
-	virtual Questions getQuestions() const = 0;
+	virtual Questions getQuestions(unsigned int questionsCount) const = 0;
 };

@@ -15,6 +15,11 @@ Game& GameManager::createGame(Room& room, Questions questions)
 
 void GameManager::deleteGame(Game& game)
 {
+	for (auto userAndResults : game.getGameResults())
+	{
+		this->m_database.addGameStats(userAndResults.first, userAndResults.second);
+	}
+
 	for (auto it = this->m_games.begin(); it != this->m_games.end(); it++)
 	{
 		if (*it == game)
@@ -57,7 +62,7 @@ void GameManager::removePlayer(Game& game, LoggedUser user)
 {
 	this->m_database.addGameStats(user, game.removePlayer(user));
 
-	if (game.empty())
+	if (game.allPlayersGotResults())
 	{
 		this->deleteGame(game);
 	}

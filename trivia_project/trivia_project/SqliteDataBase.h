@@ -37,7 +37,7 @@ public:
 	virtual UserStats getUserStats(string username) const override;
 	virtual HighScores getHighScores() const override;
 	
-	virtual Questions getQuestions() const override;
+	virtual Questions getQuestions(unsigned int questionsCount) const override;
 
 private:
 	void openDB();

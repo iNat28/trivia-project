@@ -74,14 +74,15 @@ namespace client
         private RoomData selectedRoom;
         private readonly BackgroundWorker backgroundWorker;
         private readonly Mutex sendingMutex;
-        private List<RoomData> rooms = new List<RoomData>();
+        private readonly List<RoomData> rooms;
         
         //TODO: Need to show the rooms and all of it's room state, and if it's game started, or if it is maxed out for players
         
         public JoinRoom()
         {
             InitializeComponent();
-            sendingMutex = new Mutex();
+            this.sendingMutex = new Mutex();
+            this.rooms = new List<RoomData>();
             User.errorOutput = this.ErrorBox;
 
             backgroundWorker = new BackgroundWorker
@@ -157,8 +158,7 @@ namespace client
 
                 Response response = Stream.Recieve();
 
-                string error;
-                if (Stream.ResponseForThread(response, Codes.GET_ROOM, out error))
+                if (Stream.ResponseForThread(response, Codes.GET_ROOM, out string error))
                 {
                     JArray jArray = (JArray)response.jObject[Keys.rooms];
                     

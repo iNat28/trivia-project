@@ -21,5 +21,6 @@ private:
 	RequestResult _submitAnswer(const RequestInfo& requestInfo) const;
 	RequestResult _getGameResults(const RequestInfo& requestInfo) const;
 	RequestResult _leaveGame(const RequestInfo& requestInfo) const;
+	void _deleteGameIfEmpty() const;
 };
 

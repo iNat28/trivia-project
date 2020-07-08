@@ -23,105 +23,103 @@ namespace client
     /// </summary>
     public partial class Question : Window
     {
-        private Stopwatch stopwatch;
-        private int numCorrectanswers;
+        private readonly Stopwatch stopwatch;
+        private int numCorrectAnswers;
         private int numQuestionsLeft;
-        private int timeLeft;
+        private readonly int timeLeft;
         private int timerTemp;
         private int selectedAnswerIndex;
-        private bool wait = false;
+        private readonly bool answersAreDisplayed;
+
         //mutex
-        private Mutex mtx;
+        private readonly Mutex mutex;
         private int currentTime;
 
         //threads
-        private BackgroundWorker timeThread;
+        private readonly BackgroundWorker thread;
+
+        private enum ThreadCodes
+        {
+            UPDATE_TIME,
+            SUBMIT_ANSWER,
+            GET_NEW_QUESTION
+        };
 
         public Question(int numQuestions, int answerTime)
         {
             InitializeComponent();
-            numCorrectanswers = 0;
-            currentTime = 0;
-            numQuestionsLeft = numQuestions;
-            //updating the beggining stats
-            this.CorrectAnswers.Text = numCorrectanswers.ToString();
+            
+            this.numCorrectAnswers = 0;
+            this.currentTime = 0;
+            this.numQuestionsLeft = numQuestions;
+            this.CorrectAnswers.Text = numCorrectAnswers.ToString();
             this.timeLeft = answerTime;
             this.timerTemp = this.timeLeft;
             this.AnswersLeft.Text = numQuestionsLeft.ToString();
             this.TimeLeft.Text = answerTime.ToString();
-            //creating the stopwatch
             this.stopwatch = new Stopwatch();
-                        
+            this.selectedAnswerIndex = -1;
+            this.answersAreDisplayed = false;
 
-            //starting threads
-            this.mtx = new Mutex();
-            //this.timeMutex = new Mutex();
+            this.mutex = new Mutex();
 
-            //this.updatingThread = new BackgroundWorker
-            //{
-            //    WorkerReportsProgress = true,
-            //    WorkerSupportsCancellation = true
-            //};
-
-            this.timeThread = new BackgroundWorker
+            this.thread = new BackgroundWorker
             {
                 WorkerReportsProgress = true,
                 WorkerSupportsCancellation = true
             };
 
-            this.getQuestion();
 
-            //this.updatingThread.DoWork += UpdateQuestions;
-            //this.updatingThread.ProgressChanged += UpdateThreadProgress;
-            //this.updatingThread.RunWorkerCompleted += gameCompleted;
+            this.GetQuestion();
 
-            this.timeThread.DoWork += updateTime;
-            this.timeThread.ProgressChanged += updateThread;
-            this.timeThread.RunWorkerCompleted += gameCompleted;
-            this.timeThread.RunWorkerAsync();
+            this.thread.DoWork += WorkForThread;
+            this.thread.ProgressChanged += UpdateThread;
+            this.thread.RunWorkerCompleted += GameCompleted;
+            this.thread.RunWorkerAsync();
 
             this.stopwatch.Start();
         }
 
-        private void updateTime(object sender, DoWorkEventArgs e)
+        private void WorkForThread(object sender, DoWorkEventArgs e)
         {
-            this.mtx.WaitOne();
+            this.mutex.WaitOne();
+            
             while (true)
             {
                 //Update time
-                this.mtx.ReleaseMutex();
-                this.timeThread.ReportProgress(0, null);
+                this.mutex.ReleaseMutex();
+                this.thread.ReportProgress((int)ThreadCodes.UPDATE_TIME, null);
                 Thread.Sleep(100);
-                this.mtx.WaitOne();
+                this.mutex.WaitOne();
 
                 if (timerTemp == 0)
                 {
                     //this.mtx.ReleaseMutex();
                     //Submit the answer
-                    this.mtx.ReleaseMutex();
-                    this.timeThread.ReportProgress(1, null);
+                    this.mutex.ReleaseMutex();
+                    this.thread.ReportProgress((int)ThreadCodes.SUBMIT_ANSWER, null);
                     Thread.Sleep(100);
-                    this.mtx.WaitOne();
+                    this.mutex.WaitOne();
 
                     if (this.numQuestionsLeft != 0)
                     {
                         Thread.Sleep(3000);
 
-                        this.mtx.ReleaseMutex();
+                        this.mutex.ReleaseMutex();
                         //Get the next question
-                        this.timeThread.ReportProgress(2, null);
+                        this.thread.ReportProgress((int)ThreadCodes.GET_NEW_QUESTION, null);
                         Thread.Sleep(100);
-                        this.mtx.WaitOne();
+                        this.mutex.WaitOne();
 
                         this.stopwatch.Restart();
                     }
                     else
                     {
-                        this.timeThread.CancelAsync();
+                        this.thread.CancelAsync();
                     }
                 }
 
-                if (this.timeThread.CancellationPending)
+                if (this.thread.CancellationPending)
                 {
                     e.Cancel = true;
                     break;
@@ -130,99 +128,56 @@ namespace client
                 Thread.Sleep(900);
             }
 
-            this.mtx.ReleaseMutex();
+            this.mutex.ReleaseMutex();
         }
 
-        private void updateThread(object sender, ProgressChangedEventArgs e)
+        private void UpdateThread(object sender, ProgressChangedEventArgs e)
         {
-            this.mtx.WaitOne();
-            switch(e.ProgressPercentage)
+            this.mutex.WaitOne();
+            
+            switch((ThreadCodes)e.ProgressPercentage)
             {
-                case 0:
-                    changeTimeBox();
+                case ThreadCodes.UPDATE_TIME:
+                    ChangeTimeBox();
                     break;
-                case 1:
-                    UpdateQuestion();
+                case ThreadCodes.SUBMIT_ANSWER:
+                    SubmitAnswer();
                     break;
-                case 2:
+                case ThreadCodes.GET_NEW_QUESTION:
                     GetNewQuestion();
                     break;
             }
-            this.mtx.ReleaseMutex();
+            
+            this.mutex.ReleaseMutex();
         }
 
-        private void changeTimeBox()
+        private void ChangeTimeBox()
         {
             this.timerTemp = Convert.ToInt32(this.TimeLeft.Text);
             this.timerTemp--;
             this.TimeLeft.Text = this.timerTemp.ToString();
         }
 
-        //private void getNewQuestion(object sender, DoWorkEventArgs e)
-        //{            
-        //    int questionsTemp = this.numQuestionsLeft;
-        //    bool newQuestion = false;
-        //    this.getQuestion();
-
-        //    while(this.numQuestionsLeft != 0)
-        //    {
-        //        if (this.updatingThread.CancellationPending)
-        //        {
-        //            e.Cancel = true;
-        //            break;
-        //        }
-
-        //        this.mtx.WaitOne();
-                
-        //        if(questionsTemp == this.numQuestionsLeft + 1)
-        //        {
-        //            wait = true;
-        //            Thread.Sleep(3000);
-        //            wait = false;
-        //            this.updatingThread.ReportProgress(2, null);
-        //            newQuestion = true;
-        //        }
-        //        if (this.timeTemp == 0)
-        //        {
-        //            this.numQuestionsLeft--;
-        //            newQuestion = true;
-        //        }
-        //        if(this.numQuestionsLeft == 0)
-        //        {
-        //            break;
-        //        }
-        //        if(newQuestion)
-        //        {
-                    
-
-        //            questionsTemp--;
-        //            //restarting the time
-        //            this.stopwatch.Restart();
-        //            newQuestion = false;
-        //        }
-
-        //        this.mtx.ReleaseMutex();
-        //        Thread.Sleep(1000);
-        //    }
-        //}
-
-        private void getQuestion()
+        private void GetQuestion()
         {
             Stream.Send(new JObject(), Codes.GET_QUESTION);
             Response usersResponse = Stream.Recieve();
 
             if (Stream.Response(usersResponse, Codes.GET_QUESTION))
             {
-                updateNewQuestion(usersResponse.jObject);
+                UpdateNewQuestion(usersResponse.jObject);
             }
         }
 
-        private void resetColor(Button button)
-        {
-            button.Background = Brushes.LightGray;
+        private void ResetAnswerColors()
+        {            
+            for(int i = 0; i < 4; i++)
+            {
+                this.GetAnswerButtonFromIndex(i).Background = Brushes.LightGray;
+            }
         }
 
-        private void updateNewQuestion(JObject question)
+        private void UpdateNewQuestion(JObject question)
         {                    
             this.QuestionText.Text = question[Keys.question].ToString();
             this.Difficulty.Text = question[Keys.difficulty].ToString();
@@ -232,8 +187,8 @@ namespace client
 
             this.Answer1.Content = jArray[0].ToString();
             this.Answer2.Content = jArray[1].ToString();
-            //if there are only two answers
 
+            //if there are only two answers
             if(jArray.Count == 2)
             {
                 this.Answer3.Visibility = Visibility.Hidden;
@@ -250,7 +205,7 @@ namespace client
             this.TimeLeft.Text = this.timeLeft.ToString();
         }
 
-        private void gameCompleted(object sender, RunWorkerCompletedEventArgs e)
+        private void GameCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             //opens new window
             Utils.OpenWindow(this, new Results());
@@ -278,19 +233,21 @@ namespace client
 
         private void AnswerQuestion(int index)
         {
-            if (!wait && this.selectedAnswerIndex != index)
+            if (!answersAreDisplayed && this.selectedAnswerIndex != index)
             {
-                //TODO: Display the current time
+                this.ResetAnswerColors();
                 this.currentTime = Convert.ToInt32(this.stopwatch.ElapsedMilliseconds / 1000.0);
                 this.selectedAnswerIndex = index;
-                Button selectedButton = this.getAnswerButtonFromIndex(index);
-                selectedButton.Background = Brushes.LightGreen;
+                
+                Button selectedButton = this.GetAnswerButtonFromIndex(index);
+                selectedButton.Background = Brushes.LightBlue;
+                
                 this.SelectedAnswerOutput.Text = (string)selectedButton.Content;
                 this.TimeTookForAnswerOutput.Text = this.currentTime.ToString();
             }
         }
 
-        private void UpdateQuestion()
+        private void SubmitAnswer()
         {
             JObject jObject = new JObject
             {
@@ -304,7 +261,7 @@ namespace client
             if (Stream.Response(response, Codes.SUBMIT_ANSWER))
             {
                 int correctAnswerIndex = (int)response.jObject[Keys.correctAnswerIndex];
-                Button selectedButton = this.getAnswerButtonFromIndex(this.selectedAnswerIndex);
+                Button selectedButton = this.GetAnswerButtonFromIndex(this.selectedAnswerIndex);
 
                 if (correctAnswerIndex != this.selectedAnswerIndex)
                 {
@@ -312,31 +269,28 @@ namespace client
                 }
                 else
                 {
-                    numCorrectanswers++;
+                    numCorrectAnswers++;
                 }
-                Button correctButton = this.getAnswerButtonFromIndex(correctAnswerIndex);
+                Button correctButton = this.GetAnswerButtonFromIndex(correctAnswerIndex);
                 correctButton.Background = Brushes.Green;
 
                 this.numQuestionsLeft--;
             }
-            //this.mtx.ReleaseMutex();
         }
 
         private void GetNewQuestion()
         {
-            for(int i = 0; i < 4; i++)
-            {
-                this.resetColor(this.getAnswerButtonFromIndex(i));
-            }
+            this.ResetAnswerColors();
 
-            this.CorrectAnswers.Text = this.numCorrectanswers.ToString();
+            this.CorrectAnswers.Text = this.numCorrectAnswers.ToString();
             this.AnswersLeft.Text = numQuestionsLeft.ToString();
             this.TimeLeft.Text = this.timeLeft.ToString();
+            this.selectedAnswerIndex = -1;
 
-            this.getQuestion();
+            this.GetQuestion();
         }
 
-        private Button getAnswerButtonFromIndex(int index)
+        private Button GetAnswerButtonFromIndex(int index)
         {
             switch (index)
             {
@@ -356,7 +310,7 @@ namespace client
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
             this.stopwatch.Stop();
-            this.timeThread.CancelAsync();
+            this.thread.CancelAsync();
             Utils.OpenWindow(this, new MainWindow());
         }
     }

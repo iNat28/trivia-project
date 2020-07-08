@@ -164,8 +164,7 @@ namespace client
 
                 backgroundWorker.ReportProgress(0, "");
 
-                string error;
-                if (Stream.ResponseForThread(usersResponse, Codes.GET_ROOM_STATE, out error))
+                if (Stream.ResponseForThread(usersResponse, Codes.GET_ROOM_STATE, out string error))
                 {
                     this.roomStatus = (Status)(int)usersResponse.jObject[Keys.roomStatus];
                     

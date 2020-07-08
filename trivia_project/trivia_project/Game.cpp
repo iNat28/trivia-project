@@ -73,15 +73,15 @@ const Question& Game::getQuestion() const
 	return this->m_questions.back();
 }
 
-unsigned int Game::submitAnswer(LoggedUser user, unsigned int answerIndex, unsigned int answerTime)
+unsigned int Game::submitAnswer(LoggedUser user, int answerIndex, unsigned int answerTime)
 {
-	PlayerResults& playerResults = this->m_players[user].playerResults;
-	const Question& question = this->getQuestion();
-	
 	if (answerTime < 1 || answerTime > MAX_ANSWER_TIME)
 	{
 		throw Exception("Invalid answer time!");
 	}
+
+	PlayerResults& playerResults = this->m_players[user].playerResults;
+	const Question& question = this->getQuestion();
 
 	playerResults.averageAnswerTime = 
 		(playerResults.averageAnswerTime * playerResults.totalNumAnswers() + answerTime) / (playerResults.totalNumAnswers() + 1);
@@ -99,42 +99,49 @@ unsigned int Game::submitAnswer(LoggedUser user, unsigned int answerIndex, unsig
 	return question.correctAnswerIndex;
 }
 
-PlayerResults Game::removePlayer(LoggedUser user)
+void Game::removePlayer(LoggedUser user)
 {
-	PlayerResults playerResults = this->m_players.at(user).playerResults;
-
-	this->m_players.erase(user);
-
-	return playerResults;
+	this->m_players[user].gotResults = true;
 }
 
 //TODO: Change to struct, or change to find a different solution
 //Returns the players results, and if all of the users received the game results
-std::pair<map<LoggedUser, PlayerResults>, bool> Game::getGameResults(LoggedUser user)
+map<LoggedUser, PlayerResults> Game::getGameResults(LoggedUser user)
 {
 	if (!this->m_questions.empty())
 	{
 		throw Exception("The game isn't over!");
 	}
 
+	this->m_players[user].gotResults = true;
+
+	return this->getGameResults();
+}
+
+map<LoggedUser, PlayerResults> Game::getGameResults()
+{
 	map<LoggedUser, PlayerResults> playersResults;
-	bool gotResults = true;
-
-	this->m_players[user].gotData = true;
-
+	
 	//Converts the map so the value will be PlayerResults and not GameData
 	for (const auto& player : this->m_players)
 	{
 		playersResults[player.first] = player.second.playerResults;
-		gotResults = gotResults && player.second.gotData;
 	}
 
-	return { playersResults, gotResults };
+	return playersResults;
 }
 
-bool Game::empty() const
+bool Game::allPlayersGotResults() const
 {
-	return this->m_players.empty();
+	for (const auto& player : this->m_players)
+	{
+		if (!player.second.gotResults)
+		{
+			return false;
+		}
+	}
+
+	return true;
 }
 
 bool Game::operator==(const Game& other) const

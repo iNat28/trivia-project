@@ -340,7 +340,7 @@ HighScores SqliteDataBase::getHighScores() const
 	return highScores;
 }
 
-Questions SqliteDataBase::getQuestions() const
+Questions SqliteDataBase::getQuestions(unsigned int questionsCount) const
 {
 	Questions questions;
 	std::srand((unsigned int)std::time(0));
@@ -348,6 +348,9 @@ Questions SqliteDataBase::getQuestions() const
 	send_query("select * from questions", questions_callback, &questions);
 
 	std::random_shuffle(questions.begin(), questions.end());
+
+	//Assumes that the questions count is valid, since it was already checked
+	questions.resize(questionsCount);
 
 	return questions;
 }

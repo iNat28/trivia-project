@@ -49,10 +49,12 @@ RequestResult GameRequestHandler::_submitAnswer(const RequestInfo& requestInfo) 
 
 RequestResult GameRequestHandler::_getGameResults(const RequestInfo& requestInfo) const
 {
+	GetGameResultsResponse getGameResultsResponse(this->m_game.getGameResults(this->m_user));
+
+	this->_deleteGameIfEmpty();
+
 	return RequestResult(
-		JsonResponsePacketSerializer::serializeResponse(
-			GetGameResultsResponse(this->m_game.getGameResults(this->m_user).first)
-		),
+		JsonResponsePacketSerializer::serializeResponse(getGameResultsResponse),
 		this->m_handlerFactory.createMenuRequestHandler(this->m_user)
 	);
 }
@@ -61,12 +63,22 @@ RequestResult GameRequestHandler::_leaveGame(const RequestInfo& requestInfo) con
 {
 	this->m_game.removePlayer(this->m_user);
 
+	this->_deleteGameIfEmpty();
+
 	return RequestResult(
 		JsonResponsePacketSerializer::serializeResponse(
 			LeaveRoomResponse()
 		),
 		this->m_handlerFactory.createMenuRequestHandler(this->m_user)
 	);
+}
+
+void GameRequestHandler::_deleteGameIfEmpty() const
+{
+	if (this->m_game.allPlayersGotResults())
+	{
+		this->m_handlerFactory.getGameManager().deleteGame(this->m_game);
+	}
 }
 
 const map<Codes, GameRequestHandler::requests_func_t> GameRequestHandler::m_requests = {
