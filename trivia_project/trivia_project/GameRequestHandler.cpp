@@ -29,7 +29,7 @@ RequestResult GameRequestHandler::_getQuestion(const RequestInfo& requestInfo) c
 {
 	return RequestResult(
 		JsonResponsePacketSerializer::serializeResponse(
-			GetQuestionResponse(this->m_game.getQuestion())
+			GetQuestionResponse(this->m_game.getQuestion(this->m_user))
 		),
 		this->m_handlerFactory.createGameRequestHandler(this->m_user, this->m_game)
 	);
@@ -77,6 +77,7 @@ void GameRequestHandler::_deleteGameIfEmpty() const
 {
 	if (this->m_game.allPlayersGotResults())
 	{
+		this->m_handlerFactory.getRoomManager().closeRoom(this->m_game.getRoom());
 		this->m_handlerFactory.getGameManager().deleteGame(this->m_game);
 	}
 }

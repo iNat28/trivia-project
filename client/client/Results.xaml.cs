@@ -19,74 +19,51 @@ namespace client
     /// <summary>
     /// Interaction logic for Results.xaml
     /// </summary>
-    struct myResults
-    {        
-        private string playerName;
-        private int numCorrectAnswers;
-        private int averageAnswerTime;
-        private int numPoints;
+    struct MyResults
+    {
+        public string PlayerName { get; set; }
+        public int NumCorrectAnswers { get; set; }
+        public int AverageAnswerTime { get; set; }
+        public int NumPoints { get; set; }
 
-        public myResults(string playerName, int numCorrectAnswers, int averageAnswerTime, int numPoints)
+        public MyResults(string playerName, int numCorrectAnswers, int averageAnswerTime, int numPoints)
         {
-            this.playerName = playerName;
-            this.numCorrectAnswers = numCorrectAnswers;
-            this.averageAnswerTime = averageAnswerTime;
-            this.numPoints = numPoints;
+            this.PlayerName = playerName;
+            this.NumCorrectAnswers = numCorrectAnswers;
+            this.AverageAnswerTime = averageAnswerTime;
+            this.NumPoints = numPoints;
         }
     }
+
     public partial class Results : Window
     {
-        private DataGrid playerStats = new DataGrid();
         public Results()
         {            
-            InitializeComponent();
-            createTable();           
+            InitializeComponent();          
 
             Stream.Send(new JObject(), Codes.GET_GAME_RESULTS);
 
             Response response = Stream.Recieve();
-           
+
             if (Stream.Response(response, Codes.GET_GAME_RESULTS))
             {
                 JArray results = (JArray)response.jObject[Keys.playersResults];
-                
+
                 foreach (var result in results)
                 {
-                    myResults playerResult = new myResults((string)result[Keys.username], (int)result[Keys.numCorrectAnswers], (int)result[Keys.averageAnswerTime], (int)result[Keys.numPoints]);
+                    MyResults playerResult = new MyResults((string)result[Keys.username], (int)result[Keys.numCorrectAnswers], (int)result[Keys.averageAnswerTime], (int)result[Keys.numPoints]);
                     playerStats.Items.Add(playerResult);
                 }
             }
         }
-        private void createTable()
+
+        protected override void OnClosed(EventArgs e)
         {
-            this.playerStats.HorizontalAlignment = HorizontalAlignment.Left;
-            this.playerStats.Height = 278;
-            this.playerStats.VerticalAlignment = VerticalAlignment.Top;
-            this.playerStats.Margin = new Thickness(177,37,0,0);
-            this.playerStats.Width = 448;
-            
-            DataGridTextColumn col1 = new DataGridTextColumn();
-            DataGridTextColumn col2 = new DataGridTextColumn();
-            DataGridTextColumn col3 = new DataGridTextColumn();
-            DataGridTextColumn col4 = new DataGridTextColumn();
-
-            this.playerStats.Columns.Add(col1);
-            this.playerStats.Columns.Add(col2);
-            this.playerStats.Columns.Add(col3);
-            this.playerStats.Columns.Add(col4);
-
-            col1.Binding = new Binding("PLAYER NAME");
-            col2.Binding = new Binding("NUM OF CORRECT ANSWERS");
-            col3.Binding = new Binding("AVERAGE ANSWER TIME");
-            col4.Binding = new Binding("TOTAL POINTS");
-
-            col1.Header = "PLAYER NAME";
-            col2.Header = "NUM OF CORRECT ANSWERS";
-            col3.Header = "AVERAGE ANSWER TIME";
-            col4.Header = "TOTAL POINTS";          
+            base.OnClosed(e);
+            Utils.OpenWindow(this, new MainWindow());
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void ExitButton_Click(object sender, RoutedEventArgs e)
         {
             Utils.OpenWindow(this, new MainWindow());
         }

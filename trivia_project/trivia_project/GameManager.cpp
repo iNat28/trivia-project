@@ -39,6 +39,7 @@ Game& GameManager::getGame(Room& room)
 			return game;
 		}
 	}
+	throw Exception("Couldn't find game to match the room");
 }
 //
 //map<LoggedUser, PlayerResults> GameManager::getGameResults(Game& game, LoggedUser user)

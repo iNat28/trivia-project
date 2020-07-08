@@ -41,11 +41,12 @@ public:
 	Game(Room& room, Questions questions);
 	Game();
 
-	const Question& getQuestion() const;
-	unsigned int submitAnswer(LoggedUser user, int answerIndex, unsigned int answerTime);
+	const Question& getQuestion(LoggedUser user) const;
+	unsigned int submitAnswer(LoggedUser user, int answerIndex, int answerTime);
 	void removePlayer(LoggedUser user);
 	vector<UserResults> getGameResults(LoggedUser user);
 	vector<UserResults> getGameResults();
+	Room& getRoom();
 	bool allPlayersGotResults() const;
 	bool operator==(const Game& other) const;
 	bool operator==(const Room& other) const;
@@ -53,7 +54,7 @@ public:
 	//Needed for unknown reason
 	Game& operator=(const Game& other);
 private:
-	Questions m_questions;
+	map<LoggedUser, Questions> m_questions;
 	map<LoggedUser, GameData> m_players;
 	Room& m_room;
 };

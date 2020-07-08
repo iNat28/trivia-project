@@ -51,7 +51,7 @@ namespace client
             InitializeComponent();
             
             this.numCorrectAnswers = 0;
-            this.currentTime = 0;
+            this.currentTime = answerTime;
             this.numQuestionsLeft = numQuestions;
             this.CorrectAnswers.Text = numCorrectAnswers.ToString();
             this.timeLeft = answerTime;
@@ -96,7 +96,6 @@ namespace client
 
                 if (timerTemp == 0)
                 {
-                    //this.mtx.ReleaseMutex();
                     //Submit the answer
                     this.mutex.ReleaseMutex();
                     this.thread.ReportProgress((int)ThreadCodes.SUBMIT_ANSWER, null);
@@ -265,16 +264,19 @@ namespace client
             if (Stream.Response(response, Codes.SUBMIT_ANSWER))
             {
                 int correctAnswerIndex = (int)response.jObject[Keys.correctAnswerIndex];
-                Button selectedButton = this.GetAnswerButtonFromIndex(this.selectedAnswerIndex);
-
-                if (correctAnswerIndex != this.selectedAnswerIndex)
+                
+                if (this.selectedAnswerIndex != -1)
                 {
-                    selectedButton.Background = Brushes.Red;
+                    if (correctAnswerIndex != this.selectedAnswerIndex)
+                    {
+                        this.GetAnswerButtonFromIndex(this.selectedAnswerIndex).Background = Brushes.Red;
+                    }
+                    else
+                    {
+                        numCorrectAnswers++;
+                    }
                 }
-                else
-                {
-                    numCorrectAnswers++;
-                }
+                
                 Button correctButton = this.GetAnswerButtonFromIndex(correctAnswerIndex);
                 correctButton.Background = Brushes.Green;
 
@@ -290,6 +292,7 @@ namespace client
             this.AnswersLeft.Text = numQuestionsLeft.ToString();
             this.TimeLeft.Text = this.timeLeft.ToString();
             this.selectedAnswerIndex = -1;
+            this.currentTime = this.timeLeft;
 
             this.GetQuestion();
         }
@@ -316,7 +319,13 @@ namespace client
             this.stopwatch.Stop();
             this.showResults = false;
             this.thread.CancelAsync();
+
             Utils.OpenWindow(this, new MainWindow());
+        }
+
+        private void LeaveGame()
+        {
+
         }
     }
 }

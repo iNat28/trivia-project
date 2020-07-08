@@ -51,11 +51,12 @@ void from_json(const json& j, Question& question)
 }
 
 Game::Game(Room& room, Questions questions) :
-	m_room(room), m_questions(questions)
+	m_room(room)
 {
 	for (const auto& player : m_room.getAllUsers())
 	{
 		this->m_players[player];
+		this->m_questions[player] = questions;
 	}
 }
 
@@ -64,24 +65,19 @@ Game::Game() :
 {
 }
 
-const Question& Game::getQuestion() const
+const Question& Game::getQuestion(LoggedUser user) const
 {
 	if (this->m_questions.empty())
 	{
 		throw Exception("Couldn't get question - no questions left!");
 	}
-	return this->m_questions.back();
+	return this->m_questions.at(user).back();
 }
 
-unsigned int Game::submitAnswer(LoggedUser user, int answerIndex, unsigned int answerTime)
+unsigned int Game::submitAnswer(LoggedUser user, int answerIndex, int answerTime)
 {
-	if (answerTime < 1 || answerTime > MAX_ANSWER_TIME)
-	{
-		throw Exception("Invalid answer time!");
-	}
-
 	PlayerResults& playerResults = this->m_players[user].playerResults;
-	const Question& question = this->getQuestion();
+	const Question& question = this->getQuestion(user);
 
 	playerResults.averageAnswerTime = 
 		(playerResults.averageAnswerTime * playerResults.totalNumAnswers() + answerTime) / (playerResults.totalNumAnswers() + 1);
@@ -95,7 +91,7 @@ unsigned int Game::submitAnswer(LoggedUser user, int answerIndex, unsigned int a
 		playerResults.numWrongAnswers++;
 	}
 
-	this->m_questions.pop_back();
+	this->m_questions[user].pop_back();
 	return question.correctAnswerIndex;
 }
 
@@ -108,7 +104,7 @@ void Game::removePlayer(LoggedUser user)
 //Returns the players results, and if all of the users received the game results
 vector<UserResults> Game::getGameResults(LoggedUser user)
 {
-	if (!this->m_questions.empty())
+	if (!this->m_questions[user].empty())
 	{
 		throw Exception("The game isn't over!");
 	}
@@ -129,6 +125,11 @@ vector<UserResults> Game::getGameResults()
 	}
 
 	return playersResults;
+}
+
+Room& Game::getRoom()
+{
+	return this->m_room;
 }
 
 bool Game::allPlayersGotResults() const

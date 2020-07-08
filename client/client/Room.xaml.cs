@@ -130,7 +130,7 @@ namespace client
 
             if (Stream.Response(response, Codes.START_GAME))
             {
-                Utils.OpenWindow(this, this.createQuestionWindow());
+                Utils.OpenWindow(this, this.CreateQuestionWindow());
             }
         }
 
@@ -199,7 +199,7 @@ namespace client
                 }
 
                 sendingMutex.ReleaseMutex();
-                Thread.Sleep(3000);
+                Thread.Sleep(500);
             }
         }
         
@@ -232,14 +232,14 @@ namespace client
                     newWindow = new MainWindow();
                     break;
                 case Status.GAME_STARTED:
-                    newWindow = this.createQuestionWindow();
+                    newWindow = this.CreateQuestionWindow();
                     break;
             }
 
             Utils.OpenWindow(this, newWindow);
         }
 
-        private Question createQuestionWindow()
+        private Question CreateQuestionWindow()
         {
             return new Question(Convert.ToInt32(this.NumQuestions.Text), Convert.ToInt32(this.TimePerQuestion.Text));
         }
