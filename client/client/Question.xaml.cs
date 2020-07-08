@@ -29,7 +29,7 @@ namespace client
         private readonly int timeLeft;
         private int timerTemp;
         private int selectedAnswerIndex;
-        private readonly bool answersAreDisplayed;
+        private bool answersAreDisplayed;
         private bool showResults;
 
         //mutex
@@ -70,22 +70,21 @@ namespace client
                 WorkerReportsProgress = true,
                 WorkerSupportsCancellation = true
             };
-
-
+            
             this.GetQuestion();
+            this.ResetAnswerColors();
 
             this.thread.DoWork += WorkForThread;
             this.thread.ProgressChanged += UpdateThread;
             this.thread.RunWorkerCompleted += GameCompleted;
             this.thread.RunWorkerAsync();
-
-            this.stopwatch.Start();
         }
 
         private void WorkForThread(object sender, DoWorkEventArgs e)
         {
             this.mutex.WaitOne();
-            
+            Thread.Sleep(1000);
+            this.stopwatch.Start();
             while (true)
             {
                 //Update time
@@ -96,6 +95,9 @@ namespace client
 
                 if (timerTemp == 0)
                 {
+                    //Makes sure the user can't press the buttons
+                    this.answersAreDisplayed = true;
+                    
                     //Submit the answer
                     this.mutex.ReleaseMutex();
                     this.thread.ReportProgress((int)ThreadCodes.SUBMIT_ANSWER, null);
@@ -109,6 +111,7 @@ namespace client
                         this.mutex.ReleaseMutex();
                         //Get the next question
                         this.thread.ReportProgress((int)ThreadCodes.GET_NEW_QUESTION, null);
+                        this.answersAreDisplayed = false;
                         Thread.Sleep(100);
                         this.mutex.WaitOne();
 
@@ -316,16 +319,26 @@ namespace client
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
-            this.stopwatch.Stop();
-            this.showResults = false;
-            this.thread.CancelAsync();
+            this.LeaveGame();
+        }
 
-            Utils.OpenWindow(this, new MainWindow());
+        protected override void OnClosed(EventArgs e)
+        {
+            if (LogoutWindow.toClose)
+            {
+                LeaveGame();
+            }
         }
 
         private void LeaveGame()
         {
+            this.stopwatch.Stop();
+            this.showResults = false;
+            this.thread.CancelAsync();
 
+            Stream.Send(new JObject(), Codes.LEAVE_GAME);
+            Stream.Response(Stream.Recieve(), Codes.LEAVE_GAME);
+            Utils.OpenWindow(this, new MainWindow());
         }
     }
 }
