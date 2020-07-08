@@ -19,7 +19,10 @@ namespace client
     /// Interaction logic for CreateRoom.xaml
     /// </summary>
     public partial class CreateRoom : LogoutWindow
-    {
+    {       
+        private int numMaxPlayers;
+        private int numQuestions;
+        private int answerTime;
         public CreateRoom()
         {
             InitializeComponent();
@@ -28,18 +31,19 @@ namespace client
         }
         
         private void CreateRoomButton_Click(object sender, RoutedEventArgs e)
-        {
-            //TODO throw error about blank fields
-            if (!(this.RoomName.Text == "") && !(this.MaxPlayers.Text == "") && !(this.AnswerTime.Text == ""))
+        {                          
+            if (!(this.RoomName.Text == "") && !(this.MaxPlayers.Text == "") && !(this.AnswerTime.Text == "") && !(this.NumQuestion.Text == "") && Convert.ToInt32(this.NumQuestion.Text) > 0 && Convert.ToInt32(this.NumQuestion.Text) < 10)
             {
+                this.numQuestions = Convert.ToInt32(this.NumQuestion.Text);
+                this.numMaxPlayers = Convert.ToInt32(this.MaxPlayers.Text);
+                this.answerTime = Convert.ToInt32(this.AnswerTime.Text);
+
                 JObject jObject = new JObject
                 {
-                    [Keys.roomName] = this.RoomName.Text,
-                    //TODO: Move converts to its own variable
-                    [Keys.maxPlayers] = Convert.ToInt32(this.MaxPlayers.Text),
-                    //TODO: Add questions count
-                    [Keys.questionsCount] = 10,
-                    [Keys.timePerQuestion] = Convert.ToInt32(this.AnswerTime.Text),
+                    [Keys.roomName] = this.RoomName.Text,                    
+                    [Keys.maxPlayers] = this.numMaxPlayers,                    
+                    [Keys.questionsCount] = this.numQuestions,
+                    [Keys.timePerQuestion] = this.answerTime,
                     [Keys.username] = User.username
                 };
                 
@@ -49,8 +53,16 @@ namespace client
 
                 if (Stream.Response(response, Codes.CREATE_ROOM))
                 {
-                    Utils.OpenWindow(this, new Room(true, new RoomData(0, this.RoomName.Text, Convert.ToInt32(this.MaxPlayers.Text), 10, Convert.ToInt32(this.AnswerTime.Text), Room.Status.OPEN)));
+                    Utils.OpenWindow(this, new Room(true, new RoomData(0, this.RoomName.Text, this.numMaxPlayers, this.numQuestions, this.answerTime, Room.Status.OPEN)));
                 }
+            }
+            else if(this.NumQuestion.Text != "" && (Convert.ToInt32(this.NumQuestion.Text) <= 0 || Convert.ToInt32(this.NumQuestion.Text) > 10))
+            {
+                this.errorOutput.Text = "Invalid number of questions";
+            }
+            else
+            {
+                this.errorOutput.Text = "One or more fields are empty";
             }
         }
 

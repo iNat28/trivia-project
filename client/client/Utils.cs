@@ -62,8 +62,7 @@ namespace client
         ERROR_RESPONSE,
 	    SUCCESFUL
     };
-
-    //TODO: Add Keys for Json
+    
     public static class Keys
     {
         public const string username = "username";

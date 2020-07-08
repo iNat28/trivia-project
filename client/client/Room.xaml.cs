@@ -27,11 +27,7 @@ namespace client
         private readonly bool isAdmin;
         private readonly BackgroundWorker backgroundWorker;
         private readonly Mutex sendingMutex;
-        private Status roomStatus = Status.OPEN;
-
-        //TODO: Need to get room state instead of get players in room, and needs to check if the room closed or if the game started
-        //Might want to do if(!isAdmin) before checking
-        //TODO: Make sure all of the json keys are the same as in the back end
+        private Status roomStatus = Status.OPEN;                     
 
         public enum Status
         { 
@@ -59,8 +55,9 @@ namespace client
             this.RoomName.Text = roomData.name;
             this.MaxPlayers.Text = roomData.maxPlayers.ToString();
             this.TimePerQuestion.Text = roomData.timePerQuestion.ToString();
+            this.NumQuestions.Text = roomData.questionsCount.ToString();
+            
             //adding users
-
             backgroundWorker = new BackgroundWorker
             {
                 WorkerReportsProgress = true,

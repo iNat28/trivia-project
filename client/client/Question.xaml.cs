@@ -279,8 +279,7 @@ namespace client
         private void AnswerQuestion(int index)
         {
             if (!wait && this.selectedAnswerIndex != index)
-            {
-                //TODO: Display the current time
+            {                
                 this.currentTime = Convert.ToInt32(this.stopwatch.ElapsedMilliseconds / 1000.0);
                 this.selectedAnswerIndex = index;
                 Button selectedButton = this.getAnswerButtonFromIndex(index);

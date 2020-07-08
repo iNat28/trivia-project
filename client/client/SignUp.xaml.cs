@@ -19,8 +19,7 @@ namespace client
     /// Interaction logic for SignUp.xaml
     /// </summary>
     public partial class SignUpWindow : Window
-    {
-        //TODO: Add verify password
+    {       
         public SignUpWindow()
         {
             InitializeComponent();
