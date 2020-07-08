@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Room" Height="450" Width="800">
+        Title="Room Menu" Height="450" Width="800">
     <Grid>
         <ListBox x:Name="NamesList" HorizontalAlignment="Left" Height="135" Margin="303,158,0,0" VerticalAlignment="Top" Width="159" SelectionChanged="ListBox_SelectionChanged"/>
         <TextBlock x:Name="errorOutput" HorizontalAlignment="Left" Margin="25,35,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="310" Width="181"/>

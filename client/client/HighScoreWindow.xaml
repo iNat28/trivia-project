@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:client"
         mc:Ignorable="d"
-        Title="HighScoreWindow" Height="450" Width="800">
+        Title="High Scores" Height="450" Width="800">
     <Grid>
         <TextBlock x:Name="HighScoresHeader" HorizontalAlignment="Center" Margin="237,42,436.6,0" TextWrapping="Wrap" Text="High Scores" VerticalAlignment="Top" Height="26" Width="120"/>
         <Button x:Name="BackButton" Content="Back" HorizontalAlignment="Left" Margin="347,337,0,0" VerticalAlignment="Top" Width="117" Height="42" Click="BackButton_Click"/>

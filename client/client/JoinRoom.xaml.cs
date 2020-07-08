@@ -61,7 +61,8 @@ namespace client
 
         public override string ToString()
         {
-            return name;
+            return this.name + " | Max players: " + this.maxPlayers + " | Number of questions: " + this.questionsCount + " | Time per questions: " + this.timePerQuestion + 
+                " | Room status: " + this.roomStatus;
         }
     };
 

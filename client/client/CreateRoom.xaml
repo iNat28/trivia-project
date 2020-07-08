@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:client"
         mc:Ignorable="d"
-        Title="CreateRoom" Height="450" Width="800">
+        Title="Create Room" Height="450" Width="800">
     <Grid>
         
         <TextBlock x:Name="RoomNameHeader" HorizontalAlignment="Left" Margin="247,46,0,0" TextWrapping="Wrap" Text="Room Name:" VerticalAlignment="Top"/>
