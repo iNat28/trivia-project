@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:client"
         mc:Ignorable="d"
-        Title="Player Results" Height="450" Width="800">
+        Title="Results" Height="450" Width="800">
     <Grid>
         <DataGrid x:Name="playerStats" HorizontalAlignment="Left" Height="223" Margin="130,72,0,0" VerticalAlignment="Top" Width="503">
             <DataGrid.Columns>

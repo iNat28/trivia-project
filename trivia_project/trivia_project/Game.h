@@ -46,6 +46,8 @@ public:
 	void removePlayer(LoggedUser user);
 	vector<UserResults> getGameResults(LoggedUser user);
 	vector<UserResults> getGameResults();
+	
+
 	Room& getRoom();
 	bool allPlayersGotResults() const;
 	bool operator==(const Game& other) const;
@@ -58,3 +60,5 @@ private:
 	map<LoggedUser, GameData> m_players;
 	Room& m_room;
 };
+
+bool comaprePlayerPoints(UserResults i1, UserResults i2);

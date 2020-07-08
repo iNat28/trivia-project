@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:src="clr-namespace:client"
         mc:Ignorable="d"
-        Title="Statistics" Height="450" Width="800">
+        Title="Statistics Menu" Height="450" Width="800">
     <Grid>
         <Button x:Name="MyStatusButton" Content="My Status" HorizontalAlignment="Left" VerticalAlignment="Top" Width="102" Margin="334,80,0,0" Height="50" Click="MyStatusButton_Click"/>
         <Button x:Name="HighScoresButton" Content="High Scores" HorizontalAlignment="Left" Margin="334,166,0,0" VerticalAlignment="Top" Width="102" Height="51" Click="HighScoresButton_Click"/>

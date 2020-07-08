@@ -26,18 +26,6 @@ void RoomManager::closeRoom(Room& room)
 	}
 }
 
-//RoomData RoomManager::getRoomState(unsigned int id) const
-//{
-//	//TODO: Change
-//	//TODO: Make sure to update Get Activty when the game starts
-//	return RoomData(
-//		this->_getRoom(id).didGameStart(),
-//		this->getUsersInRoom(id),
-//		0,
-//		0
-//	);
-//}
-
 Room& RoomManager::getRoom(unsigned int id)
 {
 	try

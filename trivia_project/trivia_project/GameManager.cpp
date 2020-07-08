@@ -41,23 +41,6 @@ Game& GameManager::getGame(Room& room)
 	}
 	throw Exception("Couldn't find game to match the room");
 }
-//
-//map<LoggedUser, PlayerResults> GameManager::getGameResults(Game& game, LoggedUser user)
-//{
-//	auto gameResults = game.getGameResults(user);
-//
-//	for (const auto& playerResult : gameResults)
-//	{
-//		this->m_database.addGameStats(playerResult.first, playerResult.second);
-//	}
-//
-//	if (game.allPlayersGotResults())
-//	{
-//		this->deleteGame(game);
-//	}
-//
-//	return gameResults;
-//}
 
 Questions GameManager::getQuestions(unsigned int questionsCount) const
 {

@@ -1,7 +1,6 @@
 #pragma once
 #include "pch.h"
 
-//TODO: Move
 typedef char Byte;
 typedef std::vector<Byte> Buffer;
 
