@@ -6,7 +6,6 @@
 #include "Keys.h"
 #include "Statistics.h"
 #include "Game.h"
-#include <mutex>
 
 #define QUESTIONS_FILE  "questions.txt"
 #define BUFFER_SIZE 1024
