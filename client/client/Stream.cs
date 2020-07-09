@@ -22,7 +22,6 @@ namespace client
     {
         private static TcpClient tcpClient;
         private static NetworkStream client;
-        private static bool open = false;
 
         private const int MSG_CODE_SIZE = 1;
         private const int MSG_LEN_SIZE = 4;
@@ -35,12 +34,6 @@ namespace client
             {
                 if (client == null)
                 {
-                    if(open)
-                    {
-                        System.Environment.Exit(1);
-                    }
-                    open = true;
-
                     tcpClient = new TcpClient();
                     tcpClient.Connect(new IPEndPoint(IPAddress.Parse(IP_ADDRESS), PORT));
                     client = tcpClient.GetStream();
@@ -52,24 +45,16 @@ namespace client
 
         public static void Close()
         {
-            try
-            {
-                if (!(User.currentWindow is LoginWindow))
-                {
-                    Utils.OpenWindow(User.currentWindow, new LoginWindow());
-                }
-                client.Close();
-                tcpClient = null;
-                client = null;
-            }
-            catch (Exception e)
-            {
-                User.PrintError(e);
-            }
+            Utils.OpenWindow(User.currentWindow, new LoginWindow(), CloseClient);
+        }
+
+        private static void CloseClient()
+        {
+            client?.Close();
+            tcpClient = null;
+            client = null;
 
             User.PrintError("Error connecting to back end");
-
-            open = false;
         }
 
         public static void Signout()

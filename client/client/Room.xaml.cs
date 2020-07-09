@@ -72,7 +72,7 @@ namespace client
             backgroundWorker.RunWorkerCompleted += GetUsersCompleted;
             backgroundWorker.RunWorkerAsync();            
         }
-
+        
         protected override void OnClosed(EventArgs e)
         {
             if (LogoutWindow.toClose)

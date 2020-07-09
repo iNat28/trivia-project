@@ -80,7 +80,8 @@ unsigned int Game::submitAnswer(LoggedUser user, int answerIndex, int answerTime
 	const Question& question = this->getQuestion(user);
 
 	playerResults.averageAnswerTime = 
-		(playerResults.averageAnswerTime * playerResults.totalNumAnswers() + answerTime) / (playerResults.totalNumAnswers() + 1);
+		(playerResults.averageAnswerTime * playerResults.totalNumAnswers() + answerTime) / 
+		(float)(playerResults.totalNumAnswers() + 1);
 	if (question.correctAnswerIndex == answerIndex)
 	{
 		playerResults.numCorrectAnswers++;

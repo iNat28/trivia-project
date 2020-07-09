@@ -15,12 +15,12 @@ typedef std::vector<UserHighScore> HighScores;
 
 struct PlayerResults
 {
-	PlayerResults(unsigned int numCorrectAnswers, unsigned int numWrongAnswers, unsigned int averageAnswerTime, unsigned int numPoints);
+	PlayerResults(unsigned int numCorrectAnswers, unsigned int numWrongAnswers, float averageAnswerTime, unsigned int numPoints);
 	PlayerResults();
 
 	unsigned int numCorrectAnswers;
 	unsigned int numWrongAnswers;
-	unsigned int averageAnswerTime;
+	float averageAnswerTime;
 	unsigned int numPoints;
 
 	void setAverageAnswerTime(const PlayerResults& other);

@@ -70,7 +70,7 @@ namespace client
     /// <summary>
     /// Interaction logic for JoinRoom.xaml
     /// </summary>
-    public partial class JoinRoom : Window
+    public partial class JoinRoom : LogoutWindow
     {
         private RoomData selectedRoom;
         private readonly BackgroundWorker backgroundWorker;
@@ -101,6 +101,7 @@ namespace client
         protected override void OnClosed(EventArgs e)
         {
             backgroundWorker.CancelAsync();
+
             base.OnClosed(e);
         }
 

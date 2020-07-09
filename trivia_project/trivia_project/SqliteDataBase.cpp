@@ -51,7 +51,7 @@ void SqliteDataBase::addNewUser(string username, string password, string email) 
 	std::string command = "insert into users (username, password, email) values ('" + username + "', '" + password + "', '" + email + "');";
 	send_query(command);
 	command = "insert into statistics (username, numPoints, numTotalGames, numCorrectAnswers, numWrongAnswers, averageAnswerTime) values ('" +
-		username + "', 0, 0, 0, 0, 0);";
+		username + "', 0, 0, 0, 0, 0.0);";
 	send_query(command);
 }
 
@@ -83,7 +83,7 @@ void SqliteDataBase::openDB()
 		send_query(command);
 
 		//statistics table
-		command = "create table if not exists statistics (username text primary key not null, numPoints integer not null, numTotalGames integer not null, numCorrectAnswers integer not null, numWrongAnswers integer not null, averageAnswerTime integer not null);";
+		command = "create table if not exists statistics (username text primary key not null, numPoints integer not null, numTotalGames integer not null, numCorrectAnswers integer not null, numWrongAnswers integer not null, averageAnswerTime real not null);";
 		send_query(command);
 
 		//questions table
@@ -145,7 +145,7 @@ int SqliteDataBase::statistics_callback(void* data, int argc, char** argv, char*
 		else if (std::string(azColName[i]) == "numWrongAnswers")
 			userStats.playerResults.numWrongAnswers = atoi(argv[i]);
 		else if (std::string(azColName[i]) == "averageAnswerTime")
-			userStats.playerResults.averageAnswerTime = atoi(argv[i]);
+			userStats.playerResults.averageAnswerTime = (float)atof(argv[i]);
 	}
 		
 	SqliteDataBase::m_usersStats.push_back(userStats);

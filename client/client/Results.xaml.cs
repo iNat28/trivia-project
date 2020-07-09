@@ -23,10 +23,10 @@ namespace client
     {
         public string PlayerName { get; set; }
         public int NumCorrectAnswers { get; set; }
-        public int AverageAnswerTime { get; set; }
+        public float AverageAnswerTime { get; set; }
         public int NumPoints { get; set; }
 
-        public MyResults(string playerName, int numCorrectAnswers, int averageAnswerTime, int numPoints)
+        public MyResults(string playerName, int numCorrectAnswers, float averageAnswerTime, int numPoints)
         {
             this.PlayerName = playerName;
             this.NumCorrectAnswers = numCorrectAnswers;
@@ -53,7 +53,7 @@ namespace client
 
                 foreach (var result in results)
                 {
-                    MyResults playerResult = new MyResults((string)result[Keys.username], (int)result[Keys.numCorrectAnswers], (int)result[Keys.averageAnswerTime], (int)result[Keys.numPoints]);
+                    MyResults playerResult = new MyResults((string)result[Keys.username], (int)result[Keys.numCorrectAnswers], (float)result[Keys.averageAnswerTime], (int)result[Keys.numPoints]);
                     playerStats.Items.Add(playerResult);
                 }
             }
@@ -61,8 +61,10 @@ namespace client
 
         protected override void OnClosed(EventArgs e)
         {
-            base.OnClosed(e);
-            Utils.OpenWindow(this, new MainWindow());
+            if (LogoutWindow.toClose)
+            {
+                Utils.OpenWindow(this, new MainWindow());
+            }
         }
 
         private void ExitButton_Click(object sender, RoutedEventArgs e)

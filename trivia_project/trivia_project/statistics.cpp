@@ -22,7 +22,7 @@ UserStats::UserStats() :
 }
 
 PlayerResults::PlayerResults(unsigned int numCorrectAnswers, unsigned int numWrongAnswers, 
-								unsigned int averageAnswerTime, unsigned int numPoints) :
+								float averageAnswerTime, unsigned int numPoints) :
 	numCorrectAnswers(numCorrectAnswers), numWrongAnswers(numWrongAnswers), averageAnswerTime(averageAnswerTime), numPoints(numPoints)
 {
 }
@@ -36,7 +36,7 @@ void PlayerResults::setAverageAnswerTime(const PlayerResults& other)
 {
 	this->averageAnswerTime =
 		(other.averageAnswerTime * other.totalNumAnswers() + this->averageAnswerTime * this->totalNumAnswers()) /
-		(other.totalNumAnswers() + this->totalNumAnswers());
+		(float)(other.totalNumAnswers() + this->totalNumAnswers());
 }
 
 unsigned int PlayerResults::totalNumAnswers() const
