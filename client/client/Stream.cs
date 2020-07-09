@@ -41,16 +41,9 @@ namespace client
                     }
                     open = true;
 
-                    try
-                    {
-                        tcpClient = new TcpClient();
-                        tcpClient.Connect(new IPEndPoint(IPAddress.Parse(IP_ADDRESS), PORT));
-                        client = tcpClient.GetStream();
-                    }
-                    catch(Exception e)
-                    {
-                        User.PrintErrorAndKeep(e);
-                    }
+                    tcpClient = new TcpClient();
+                    tcpClient.Connect(new IPEndPoint(IPAddress.Parse(IP_ADDRESS), PORT));
+                    client = tcpClient.GetStream();
                 }
 
                 return client;
@@ -61,14 +54,21 @@ namespace client
         {
             try
             {
+                if (!(User.currentWindow is LoginWindow))
+                {
+                    Utils.OpenWindow(User.currentWindow, new LoginWindow());
+                }
                 client.Close();
                 tcpClient = null;
                 client = null;
             }
             catch (Exception e)
             {
-                User.PrintErrorAndKeep(e);
+                User.PrintError(e);
             }
+
+            User.PrintError("Error connecting to back end");
+
             open = false;
         }
 
@@ -95,9 +95,9 @@ namespace client
                 Client.Write(memoryStream.ToArray(), 0, (int)memoryStream.Length);
                 Client.Flush();
             }
-            catch (Exception e)
+            catch
             {
-                User.PrintErrorAndClose(e);
+                Stream.Close();
             }
         }
 
@@ -128,9 +128,9 @@ namespace client
                     response.jObject = (JObject)JToken.ReadFrom(new BsonDataReader(new MemoryStream(bufferBson)));
                 }
             }
-            catch (Exception e)
+            catch
             {
-                User.PrintErrorAndClose(e);
+                Stream.Close();
             }
 
             return response;
@@ -144,7 +144,7 @@ namespace client
             }
             catch (Exception e)
             {
-                User.PrintErrorAndKeep(e);
+                User.PrintError(e);
             }
 
             return false;

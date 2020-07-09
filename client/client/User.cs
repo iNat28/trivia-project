@@ -21,32 +21,26 @@ namespace client
         public static string username;
         public static TextBlock errorOutput;
         public static Mutex mutex = new Mutex();
+        public static Window currentWindow;
 
-        public static void PrintErrorAndClose(Exception e)
+        public static void PrintError(string error)
         {
+            //In case there are multiple errors to be printed
             mutex.WaitOne();
-            PrintError(e);
-            Stream.Close();
-            mutex.ReleaseMutex();
-        }
-
-        public static void PrintErrorAndKeep(Exception e)
-        {
-            mutex.WaitOne();
-            PrintError(e);
-            mutex.ReleaseMutex();
-        }
-
-        private static void PrintError(Exception e)
-        {
-            if(e is NullReferenceException || errorOutput == null)
+            if (errorOutput == null)
             {
-                Console.WriteLine(e.Message);
+                Console.WriteLine(error);
             }
             else
             {
-                errorOutput.Text = e.Message;
+                errorOutput.Text = error;
             }
+            mutex.ReleaseMutex();
+        }
+
+        public static void PrintError(Exception e)
+        {
+            User.PrintError(e.Message);
         }
     }
 }

@@ -39,7 +39,9 @@ namespace client
     {
         public Results()
         {            
-            InitializeComponent();          
+            InitializeComponent();
+            User.errorOutput = this.ErrorOutput;
+            User.currentWindow = this;
 
             Stream.Send(new JObject(), Codes.GET_GAME_RESULTS);
 

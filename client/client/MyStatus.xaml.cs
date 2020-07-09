@@ -24,6 +24,7 @@ namespace client
         {
             InitializeComponent();
             User.errorOutput = errorOutput;
+            User.currentWindow = this;
 
             Stream.Send(new JObject(), Codes.USER_STATS);
 

@@ -29,6 +29,7 @@ namespace client
             InitializeComponent();
 
             User.errorOutput = this.errorOutput;
+            User.currentWindow = this;
         }
         
         private void CreateRoomButton_Click(object sender, RoutedEventArgs e)

@@ -49,7 +49,10 @@ namespace client
         public Question(int numQuestions, int answerTime)
         {
             InitializeComponent();
-            
+
+            User.errorOutput = this.ErrorOutput;
+            User.currentWindow = this;
+
             this.numCorrectAnswers = 0;
             this.currentTime = answerTime;
             this.numQuestionsLeft = numQuestions;

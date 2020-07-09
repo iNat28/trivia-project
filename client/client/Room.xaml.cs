@@ -39,7 +39,10 @@ namespace client
         public Room(bool isAdmin, RoomData roomData)
         {
             InitializeComponent();
+
             User.errorOutput = this.errorOutput;
+            User.currentWindow = this;
+
             sendingMutex = new Mutex();
             this.isAdmin = isAdmin;
 

@@ -23,6 +23,7 @@ namespace client
         public Statistics()
         {
             InitializeComponent();
+            User.currentWindow = this;
         }
 
         private void MyStatusButton_Click(object sender, RoutedEventArgs e)

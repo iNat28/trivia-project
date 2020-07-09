@@ -29,6 +29,7 @@ namespace client
             InitializeComponent();
 
             User.errorOutput = this.errorOutput;
+            User.currentWindow = this;
         }
 
         //Move to functions and classes

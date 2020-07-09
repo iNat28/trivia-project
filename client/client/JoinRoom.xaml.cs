@@ -85,6 +85,7 @@ namespace client
             this.sendingMutex = new Mutex();
             this.rooms = new List<RoomData>();
             User.errorOutput = this.ErrorBox;
+            User.currentWindow = this;
 
             backgroundWorker = new BackgroundWorker
             {

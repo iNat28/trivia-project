@@ -56,12 +56,6 @@ namespace client
         GET_QUESTION,
         LEAVE_GAME
     };
-
-    public enum ResponseCodes
-    {
-        ERROR_RESPONSE,
-	    SUCCESFUL
-    };
     
     public static class Keys
     {

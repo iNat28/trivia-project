@@ -25,6 +25,7 @@ namespace client
             InitializeComponent();
 
             User.errorOutput = this.errorOutput;
+            User.currentWindow = this;
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)

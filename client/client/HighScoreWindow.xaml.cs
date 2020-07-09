@@ -23,6 +23,7 @@ namespace client
         public HighScoreWindow()
         {
             User.errorOutput = this.errorOutput;
+            User.currentWindow = this;
 
             InitializeComponent();
 
