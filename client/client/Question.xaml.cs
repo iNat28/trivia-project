@@ -21,12 +21,12 @@ namespace client
     /// <summary>
     /// Interaction logic for Question.xaml
     /// </summary>
-    public partial class Question : Window
+    public partial class QuestionWindow : CustomWindow
     {
         private readonly Stopwatch stopwatch;
         private int numCorrectAnswers;
         private int numQuestionsLeft;
-        private readonly int timeLeft;
+        private int timeLeft;
         private int timerTemp;
         private int selectedAnswerIndex;
         private bool answersAreDisplayed;
@@ -46,22 +46,16 @@ namespace client
             GET_NEW_QUESTION
         };
 
-        public Question(int numQuestions, int answerTime)
+        public QuestionWindow()
         {
             InitializeComponent();
 
-            User.errorOutput = this.ErrorOutput;
-            User.currentWindow = this;
+            base.ErrorOutput = this.ErrorOutput;
 
             this.numCorrectAnswers = 0;
-            this.currentTime = answerTime;
-            this.numQuestionsLeft = numQuestions;
-            this.CorrectAnswers.Text = numCorrectAnswers.ToString();
-            this.timeLeft = answerTime;
-            this.timerTemp = this.timeLeft;
-            this.AnswersLeft.Text = numQuestionsLeft.ToString();
-            this.TimeLeft.Text = answerTime.ToString();
-            this.stopwatch = new Stopwatch();
+            this.numQuestionsLeft = 0;
+            this.timeLeft = 0;
+            this.timerTemp = 0;
             this.selectedAnswerIndex = -1;
             this.answersAreDisplayed = false;
             this.showResults = true;
@@ -73,13 +67,33 @@ namespace client
                 WorkerReportsProgress = true,
                 WorkerSupportsCancellation = true
             };
-            
-            this.GetQuestion();
-            this.ResetAnswerColors();
+
+            this.stopwatch = new Stopwatch();
 
             this.thread.DoWork += WorkForThread;
             this.thread.ProgressChanged += UpdateThread;
             this.thread.RunWorkerCompleted += GameCompleted;
+        }
+
+        public override void OnShow(params object[] param)
+        {
+            int numQuestions = (int)param[0];
+            int answerTime = (int)param[1];
+
+            this.numCorrectAnswers = 0;
+            this.currentTime = answerTime;
+            this.numQuestionsLeft = numQuestions;
+            this.CorrectAnswers.Text = "0";
+            this.timeLeft = answerTime;
+            this.timerTemp = this.timeLeft;
+            this.AnswersLeft.Text = numQuestionsLeft.ToString();
+            this.TimeLeft.Text = answerTime.ToString();
+            this.selectedAnswerIndex = -1;
+            this.answersAreDisplayed = false;
+            this.showResults = true;
+
+            this.GetQuestion();
+            this.ResetAnswerColors();
             this.thread.RunWorkerAsync();
         }
 
@@ -216,7 +230,7 @@ namespace client
         {
             if (this.showResults)
             {
-                Utils.OpenWindow(this, new Results());
+                WindowManager.OpenWindow(WindowTypes.RESULT);
             }
         }
         
@@ -347,7 +361,7 @@ namespace client
 
             Stream.Send(new JObject(), Codes.LEAVE_GAME);
             Stream.Response(Stream.Recieve(), Codes.LEAVE_GAME);
-            Utils.OpenWindow(this, new MainWindow());
+            WindowManager.OpenWindow(WindowTypes.MAIN);
         }
     }
 }

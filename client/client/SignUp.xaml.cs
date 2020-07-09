@@ -18,19 +18,18 @@ namespace client
     /// <summary>
     /// Interaction logic for SignUp.xaml
     /// </summary>
-    public partial class SignUpWindow : Window
-    {       
+    public partial class SignUpWindow : CustomWindow
+    {
         public SignUpWindow()
         {
             InitializeComponent();
 
-            User.errorOutput = this.errorOutput;
-            User.currentWindow = this;
+            base.ErrorOutput = this.errorOutput;
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
-            Utils.OpenWindow(this, new LoginWindow());
+            WindowManager.OpenWindow(WindowTypes.LOGIN);
         }
 
         private void SignupButton_Click(object sender, RoutedEventArgs e)
@@ -49,7 +48,7 @@ namespace client
             if (Stream.Response(response, Codes.SIGNUP))
             {
                 User.username = (string)signUp["username"];
-                Utils.OpenWindow(this, new MainWindow());
+                WindowManager.OpenWindow(WindowTypes.MAIN);
             }
         }
     }

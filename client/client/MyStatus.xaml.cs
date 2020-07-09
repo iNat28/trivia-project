@@ -18,14 +18,16 @@ namespace client
     /// <summary>
     /// Interaction logic for MyStatus.xaml
     /// </summary>
-    public partial class MyStatus : LogoutWindow
+    public partial class MyStatusWindow : LogoutWindow
     {
-        public MyStatus()
+        public MyStatusWindow()
         {
             InitializeComponent();
-            User.errorOutput = errorOutput;
-            User.currentWindow = this;
+            base.ErrorOutput = errorOutput;
+        }
 
+        public override void OnShow(params object[] param)
+        {
             Stream.Send(new JObject(), Codes.USER_STATS);
 
             Response response = Stream.Recieve();
@@ -44,7 +46,7 @@ namespace client
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
-            Utils.OpenWindow(this, new Statistics());
+            WindowManager.OpenWindow(WindowTypes.STATISTICS);
         }
     }
 }

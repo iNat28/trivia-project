@@ -22,11 +22,13 @@ namespace client
     {
         public HighScoreWindow()
         {
-            User.errorOutput = this.errorOutput;
-            User.currentWindow = this;
+            base.ErrorOutput = this.errorOutput;
 
             InitializeComponent();
+        }
 
+        public override void OnShow(params object[] param)
+        {
             Stream.Send(new JObject(), Codes.HIGH_SCORES);
 
             Response response = Stream.Recieve();
@@ -42,7 +44,7 @@ namespace client
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
-            Utils.OpenWindow(this, new Statistics());
+            WindowManager.OpenWindow(WindowTypes.STATISTICS);
         }
     }
 }

@@ -24,9 +24,9 @@ namespace client
         public int maxPlayers;
         public int questionsCount;
         public int timePerQuestion;
-        public Room.Status roomStatus;
+        public RoomWindow.Status roomStatus;
 
-        public RoomData(int id, string name, int maxPlayers, int questionsCount, int timePerQuestion, Room.Status roomStatus)
+        public RoomData(int id, string name, int maxPlayers, int questionsCount, int timePerQuestion, RoomWindow.Status roomStatus)
         {
             this.id = id;
             this.name = name;
@@ -70,7 +70,7 @@ namespace client
     /// <summary>
     /// Interaction logic for JoinRoom.xaml
     /// </summary>
-    public partial class JoinRoom : LogoutWindow
+    public partial class JoinRoomWindow : LogoutWindow
     {
         private RoomData selectedRoom;
         private readonly BackgroundWorker backgroundWorker;
@@ -79,13 +79,12 @@ namespace client
         
         //TODO: Need to show the rooms and all of it's room state, and if it's game started, or if it is maxed out for players
         
-        public JoinRoom()
+        public JoinRoomWindow()
         {
             InitializeComponent();
             this.sendingMutex = new Mutex();
             this.rooms = new List<RoomData>();
             User.errorOutput = this.ErrorBox;
-            User.currentWindow = this;
 
             backgroundWorker = new BackgroundWorker
             {
@@ -95,6 +94,11 @@ namespace client
 
             backgroundWorker.DoWork += GetRoomsList;
             backgroundWorker.ProgressChanged += ChangeWPF;
+        }
+
+        public override void OnShow(params object[] param)
+        {
+            this.rooms.Clear();
             backgroundWorker.RunWorkerAsync();
         }
 
@@ -126,7 +130,7 @@ namespace client
             if (Stream.Response(response, Codes.JOIN_ROOM) && this.RoomsList.SelectedItem != null)
             {
                 backgroundWorker.CancelAsync();
-                Utils.OpenWindow(this, new Room(false, this.selectedRoom));
+                WindowManager.OpenWindow(WindowTypes.ROOM, false, this.selectedRoom);
             }
             sendingMutex.ReleaseMutex();
         }
@@ -134,7 +138,7 @@ namespace client
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
             backgroundWorker.CancelAsync();
-            Utils.OpenWindow(this, new MainWindow());
+            WindowManager.OpenWindow(WindowTypes.MAIN);
         }
 
         private void RoomsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -175,7 +179,7 @@ namespace client
                             (int)jObject[Keys.maxPlayers],
                             (int)jObject[Keys.questionsCount],
                             (int)jObject[Keys.timePerQuestion],
-                            (Room.Status)(int)jObject[Keys.roomStatus]
+                            (RoomWindow.Status)(int)jObject[Keys.roomStatus]
                         );
                         if (!this.rooms.Contains(room))
                         {

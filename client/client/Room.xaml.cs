@@ -20,11 +20,9 @@ namespace client
     /// <summary>
     /// Interaction logic for Room.xaml
     /// </summary>
-    public partial class Room : Window
+    public partial class RoomWindow : CustomWindow
     {
-        //private readonly int roomId;
-        //private static bool updateUserList;
-        private readonly bool isAdmin;
+        private bool isAdmin;
         private readonly BackgroundWorker backgroundWorker;
         private readonly Mutex sendingMutex;
         private Status roomStatus = Status.OPEN;                     
@@ -36,29 +34,13 @@ namespace client
 	        GAME_STARTED
         };
 
-        public Room(bool isAdmin, RoomData roomData)
+        public RoomWindow()
         {
             InitializeComponent();
 
-            User.errorOutput = this.errorOutput;
-            User.currentWindow = this;
+            base.ErrorOutput = this.errorOutput;
 
             sendingMutex = new Mutex();
-            this.isAdmin = isAdmin;
-
-            if (isAdmin)
-                this.LeaveRoomButton.Visibility = Visibility.Hidden;
-            else
-            {
-                this.CloseRoomButton.Visibility = Visibility.Hidden;
-                this.StartGameButton.Visibility = Visibility.Hidden;
-            }
-            
-            //TODO: add a thread here that updates this data when we add the functionality of changing these stats in the room window
-            this.RoomName.Text = roomData.name;
-            this.MaxPlayers.Text = roomData.maxPlayers.ToString();
-            this.TimePerQuestion.Text = roomData.timePerQuestion.ToString();
-            this.NumQuestions.Text = roomData.questionsCount.ToString();
             
             //adding users
             backgroundWorker = new BackgroundWorker
@@ -69,10 +51,31 @@ namespace client
 
             backgroundWorker.DoWork += GetUsersList;
             backgroundWorker.ProgressChanged += ChangeWPF;
-            backgroundWorker.RunWorkerCompleted += GetUsersCompleted;
-            backgroundWorker.RunWorkerAsync();            
+            backgroundWorker.RunWorkerCompleted += GetUsersCompleted;         
         }
-        
+
+        public override void OnShow(params object[] param)
+        {
+            this.isAdmin = (bool)param[0];
+            RoomData roomData = (RoomData)param[1];
+
+            if (isAdmin)
+                this.LeaveRoomButton.Visibility = Visibility.Hidden;
+            else
+            {
+                this.CloseRoomButton.Visibility = Visibility.Hidden;
+                this.StartGameButton.Visibility = Visibility.Hidden;
+            }
+
+            //TODO: add a thread here that updates this data when we add the functionality of changing these stats in the room window
+            this.RoomName.Text = roomData.name;
+            this.MaxPlayers.Text = roomData.maxPlayers.ToString();
+            this.TimePerQuestion.Text = roomData.timePerQuestion.ToString();
+            this.NumQuestions.Text = roomData.questionsCount.ToString();
+
+            backgroundWorker.RunWorkerAsync();
+        }
+
         protected override void OnClosed(EventArgs e)
         {
             if (LogoutWindow.toClose)
@@ -99,7 +102,7 @@ namespace client
 
             if (Stream.Response(response, Codes.CLOSE_ROOM))
             {
-                Utils.OpenWindow(this, new MainWindow());
+                WindowManager.OpenWindow(WindowTypes.MAIN);
             }
         }
 
@@ -114,7 +117,7 @@ namespace client
 
             if (Stream.Response(response, Codes.LEAVE_ROOM))
             {
-                Utils.OpenWindow(this, new MainWindow());
+                WindowManager.OpenWindow(WindowTypes.MAIN);
             }
         }
 
@@ -133,7 +136,7 @@ namespace client
 
             if (Stream.Response(response, Codes.START_GAME))
             {
-                Utils.OpenWindow(this, this.CreateQuestionWindow());
+                this.ShowQuestionWindow();
             }
         }
 
@@ -225,26 +228,24 @@ namespace client
 
         private void GetUsersCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            Window newWindow = null;
-            
             switch(roomStatus)
             {
                 case Status.OPEN:
                     return;
                 case Status.CLOSED:
-                    newWindow = new MainWindow();
+                    WindowManager.OpenWindow(WindowTypes.MAIN);
                     break;
                 case Status.GAME_STARTED:
-                    newWindow = this.CreateQuestionWindow();
+                    this.ShowQuestionWindow();
                     break;
+                default:
+                    throw new IndexOutOfRangeException();
             }
-
-            Utils.OpenWindow(this, newWindow);
         }
 
-        private Question CreateQuestionWindow()
+        private void ShowQuestionWindow()
         {
-            return new Question(Convert.ToInt32(this.NumQuestions.Text), Convert.ToInt32(this.TimePerQuestion.Text));
+            WindowManager.OpenWindow(WindowTypes.QUESTION, Convert.ToInt32(this.NumQuestions.Text), Convert.ToInt32(this.TimePerQuestion.Text));
         }
     }
 }

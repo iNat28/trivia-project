@@ -9,16 +9,7 @@ namespace client
 {
     public static class Utils
     {
-        public delegate void OpenWindowFunc();
-
-        public static void OpenWindow(Window windowToHide, Window windowToOpen, OpenWindowFunc func = null)
-        {
-            LogoutWindow.toClose = false;
-            windowToHide.Close();
-            LogoutWindow.toClose = true;
-            func?.Invoke();
-            windowToOpen.Show();
-        }
+        
     }
 
     public enum Codes

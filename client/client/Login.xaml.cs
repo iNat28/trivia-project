@@ -22,14 +22,17 @@ namespace client
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class LoginWindow : Window
+    public partial class LoginWindow : CustomWindow
     {
         public LoginWindow()
         {
             InitializeComponent();
+            base.ErrorOutput = this.errorOutput;
+        }
 
-            User.errorOutput = this.errorOutput;
-            User.currentWindow = this;
+        protected override void OnClosed(EventArgs e)
+        {
+            WindowManager.Close();
         }
 
         //Move to functions and classes
@@ -48,18 +51,18 @@ namespace client
             if(Stream.Response(response, Codes.LOGIN))
             {
                 User.username = (string)login["username"];
-                Utils.OpenWindow(this, new MainWindow());
+                WindowManager.OpenWindow(WindowTypes.MAIN);
             }
         }
 
         private void SignUpButton_Click(object sender, RoutedEventArgs e)
         {
-            Utils.OpenWindow(this, new SignUpWindow());
+            WindowManager.OpenWindow(WindowTypes.SIGN_UP);
         }
 
         private void ExitButton_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            WindowManager.Close();
         }
     }
 }

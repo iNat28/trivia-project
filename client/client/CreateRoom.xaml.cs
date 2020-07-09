@@ -19,17 +19,17 @@ namespace client
     /// Interaction logic for CreateRoom.xaml
     /// </summary>
     //TODO: when the user chooses stats for the game, make them tickers
-    public partial class CreateRoom : LogoutWindow
+    public partial class CreateRoomWindow : LogoutWindow
     {       
         private int numMaxPlayers;
         private int numQuestions;
         private int answerTime;
-        public CreateRoom()
+        
+        public CreateRoomWindow()
         {
             InitializeComponent();
 
-            User.errorOutput = this.errorOutput;
-            User.currentWindow = this;
+            base.ErrorOutput = this.errorOutput;
         }
         
         private void CreateRoomButton_Click(object sender, RoutedEventArgs e)
@@ -71,14 +71,14 @@ namespace client
 
                 if (Stream.Response(response, Codes.CREATE_ROOM))
                 {
-                    Utils.OpenWindow(this, new Room(true, new RoomData(0, this.RoomName.Text, this.numMaxPlayers, this.numQuestions, this.answerTime, Room.Status.OPEN)));
+                    WindowManager.OpenWindow(WindowTypes.ROOM, new RoomData(0, this.RoomName.Text, this.numMaxPlayers, this.numQuestions, this.answerTime, RoomWindow.Status.OPEN));
                 }
             }           
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
-            Utils.OpenWindow(this, new MainWindow());
+            WindowManager.OpenWindow(WindowTypes.MAIN);
         }
     }
 }

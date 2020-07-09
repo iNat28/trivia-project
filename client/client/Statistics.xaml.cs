@@ -18,31 +18,30 @@ namespace client
     /// <summary>
     /// Interaction logic for Statistics.xaml
     /// </summary>
-    public partial class Statistics : LogoutWindow
+    public partial class StatisticsWindow : LogoutWindow
     {
-        public Statistics()
+        public StatisticsWindow()
         {
             InitializeComponent();
-            User.currentWindow = this;
         }
 
         private void MyStatusButton_Click(object sender, RoutedEventArgs e)
         {
             //moves to my status page
-            Utils.OpenWindow(this, new MyStatus());
+            WindowManager.OpenWindow(WindowTypes.MY_STATUS);
         }
 
         private void HighScoresButton_Click(object sender, RoutedEventArgs e)
         {
             //moves to high scores page
-            Utils.OpenWindow(this, new HighScoreWindow());
+            WindowManager.OpenWindow(WindowTypes.HIGH_SCORE);
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
             //moves back to main window
-            
-            Utils.OpenWindow(this, new MainWindow());
+
+            WindowManager.OpenWindow(WindowTypes.MAIN);
         }
     }
 }

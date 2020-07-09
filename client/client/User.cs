@@ -21,7 +21,6 @@ namespace client
         public static string username;
         public static TextBlock errorOutput;
         public static Mutex mutex = new Mutex();
-        public static Window currentWindow;
 
         public static void PrintError(string error)
         {

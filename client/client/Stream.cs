@@ -45,11 +45,8 @@ namespace client
 
         public static void Close()
         {
-            Utils.OpenWindow(User.currentWindow, new LoginWindow(), CloseClient);
-        }
+            WindowManager.OpenWindow(WindowTypes.LOGIN);
 
-        private static void CloseClient()
-        {
             client?.Close();
             tcpClient = null;
             client = null;

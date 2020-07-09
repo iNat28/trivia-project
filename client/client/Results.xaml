@@ -1,4 +1,4 @@
-﻿<Window x:Class="client.Results"
+﻿<local:CustomWindow x:Class="client.ResultsWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -18,4 +18,4 @@
         <Button x:Name="ExitButton" Content="Exit" HorizontalAlignment="Left" Margin="300,330,0,0" VerticalAlignment="Top" Width="161" Height="43" Click="ExitButton_Click"/>
         <TextBlock x:Name="ErrorOutput" HorizontalAlignment="Left" Margin="55,339,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="54" Width="196"/>
     </Grid>
-</Window>
+</local:CustomWindow>

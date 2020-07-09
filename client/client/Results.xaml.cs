@@ -35,14 +35,16 @@ namespace client
         }
     }
 
-    public partial class Results : Window
+    public partial class ResultsWindow : CustomWindow
     {
-        public Results()
+        public ResultsWindow()
         {            
             InitializeComponent();
-            User.errorOutput = this.ErrorOutput;
-            User.currentWindow = this;
+            base.ErrorOutput = this.ErrorOutput;
+        }
 
+        public override void OnShow(params object[] param)
+        {
             Stream.Send(new JObject(), Codes.GET_GAME_RESULTS);
 
             Response response = Stream.Recieve();
@@ -63,13 +65,13 @@ namespace client
         {
             if (LogoutWindow.toClose)
             {
-                Utils.OpenWindow(this, new MainWindow());
+                WindowManager.OpenWindow(WindowTypes.MAIN);
             }
         }
 
         private void ExitButton_Click(object sender, RoutedEventArgs e)
         {
-            Utils.OpenWindow(this, new MainWindow());
+            WindowManager.OpenWindow(WindowTypes.MAIN);
         }
     }
 }
