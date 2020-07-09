@@ -23,14 +23,14 @@ namespace client
     {
         public string PlayerName { get; set; }
         public int NumCorrectAnswers { get; set; }
-        public double AverageAnswerTime { get; set; }
+        public string AverageAnswerTime { get; set; }
         public int NumPoints { get; set; }
 
         public MyResults(string playerName, int numCorrectAnswers, double averageAnswerTime, int numPoints)
         {
             this.PlayerName = playerName;
             this.NumCorrectAnswers = numCorrectAnswers;
-            this.AverageAnswerTime = averageAnswerTime;
+            this.AverageAnswerTime = averageAnswerTime.ToString("0.00");
             this.NumPoints = numPoints;
         }
     }

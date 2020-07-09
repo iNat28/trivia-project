@@ -252,7 +252,7 @@ namespace client
                 selectedButton.Background = Brushes.LightBlue;
                 
                 this.SelectedAnswerOutput.Text = (string)selectedButton.Content;
-                this.TimeTookForAnswerOutput.Text = String.Format("{0:.##}", this.currentTime);
+                this.TimeTookForAnswerOutput.Text = this.currentTime.ToString("0.00");
             }
         }
 
