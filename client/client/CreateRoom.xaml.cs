@@ -37,24 +37,13 @@ namespace client
             if(this.RoomName.Text == "")
             {
                 this.errorOutput.Text = "Room name field is empty!";
-            }
-            else if (this.MaxPlayers.Text == "")
-            {
-                this.errorOutput.Text = "Max players field is empty!";
-            }
-            else if (this.AnswerTime.Text == "")
-            {
-                this.errorOutput.Text = "Answer time field is empty!";
-            }
-            else if (this.NumQuestion.Text == "")
-            {
-                this.errorOutput.Text = "Num questions field is empty!";
-            }
+            }                     
+            
             else
             {
-                this.numQuestions = Convert.ToInt32(this.NumQuestion.Text);
-                this.numMaxPlayers = Convert.ToInt32(this.MaxPlayers.Text);
-                this.answerTime = Convert.ToInt32(this.AnswerTime.Text);
+                this.numQuestions = (int)this.NumQuestionsSlider.Value;
+                this.numMaxPlayers = (int)this.MaxPlayersSlider.Value;
+                this.answerTime = (int)this.AnswerTimeSlider.Value;
 
                 JObject jObject = new JObject
                 {
@@ -79,6 +68,59 @@ namespace client
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
             Utils.OpenWindow(this, new MainWindow());
+        }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            int temp;
+            if (int.TryParse(this.QuestionsSliderTextBox.Text, out temp) && Convert.ToInt32(this.QuestionsSliderTextBox.Text) <= this.NumQuestionsSlider.Maximum && Convert.ToInt32(this.QuestionsSliderTextBox.Text) > 0)
+                this.NumQuestionsSlider.Value = Convert.ToDouble(this.QuestionsSliderTextBox.Text);
+        }
+
+        private void NumQuestionsSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (this.QuestionsSliderTextBox != null)
+            {
+                this.QuestionsSliderTextBox.Text = this.NumQuestionsSlider.Value.ToString();
+            }
+        }
+
+        private void AnswerTimeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (this.AnswerTimeTextBox != null)
+            {
+                this.AnswerTimeTextBox.Text = this.AnswerTimeSlider.Value.ToString();
+            }
+        }
+
+        private void AnswerTimeTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            int temp;
+            if (this.AnswerTimeTextBox == null)
+            {
+                this.errorOutput.Text = "text box problem";
+            }
+            else if (int.TryParse(this.AnswerTimeTextBox.Text, out temp) && Convert.ToDouble(this.AnswerTimeTextBox.Text) <= this.AnswerTimeSlider.Maximum && Convert.ToDouble(this.AnswerTimeTextBox.Text) > 0)
+                this.AnswerTimeSlider.Value = Convert.ToDouble(this.AnswerTimeTextBox.Text);                      
+        }
+
+        private void MaxPlayersSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (this.MaxPlayersTextBox != null)
+            {
+                this.MaxPlayersTextBox.Text = this.MaxPlayersSlider.Value.ToString();
+            }
+        }
+
+        private void MaxPlayersTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            int temp;
+            if (this.MaxPlayersTextBox == null)
+            {
+                this.errorOutput.Text = "text box problem";
+            }
+            else if (int.TryParse(this.MaxPlayersTextBox.Text, out temp) && Convert.ToDouble(this.MaxPlayersTextBox.Text) <= this.MaxPlayersSlider.Maximum && Convert.ToDouble(this.MaxPlayersTextBox.Text) > 0)
+                this.MaxPlayersSlider.Value = Convert.ToDouble(this.MaxPlayersTextBox.Text);
         }
     }
 }
