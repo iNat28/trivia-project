@@ -78,7 +78,7 @@ namespace client
             int numQuestions = (int)param[0];
             int answerTime = (int)param[1];
 
-            base.ErrorOutput = this.ErrorBox;
+            base.ErrorOutput = this.ErrorOutput;
 
             this.numCorrectAnswers = 0;
             this.currentTime = answerTime;

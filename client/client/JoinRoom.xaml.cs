@@ -115,7 +115,7 @@ namespace client
 
             if(this.RoomsList.SelectedItem == null)
             {
-                this.ErrorBox.Text = "Room not selected!";
+                this.ErrorOutput.Text = "Room not selected!";
                 return;
             }
 
@@ -221,7 +221,7 @@ namespace client
                     this.RoomsList.Items.Remove(param);
                     break;
                 case 3:
-                    this.ErrorBox.Text = param;
+                    this.ErrorOutput.Text = param;
                     break;
             }
         }

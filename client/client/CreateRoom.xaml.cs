@@ -36,7 +36,7 @@ namespace client
 
         public override void OnShow(params object[] param)
         {
-            base.ErrorOutput = this.errorOutput;
+            base.ErrorOutput = this.ErrorOutput;
 
             this.RoomName.Text = "";
             this.NumQuestionsSlider.Value = 1;
@@ -48,7 +48,7 @@ namespace client
         {
             if (this.RoomName.Text == "")
             {
-                this.errorOutput.Text = "Room name field is empty!";
+                this.ErrorOutput.Text = "Room name field is empty!";
             }
             else
             {
@@ -105,7 +105,7 @@ namespace client
         {
             if (this.AnswerTimeTextBox == null)
             {
-                this.errorOutput.Text = "text box problem";
+                this.ErrorOutput.Text = "text box problem";
             }
             else if (int.TryParse(this.AnswerTimeTextBox.Text, out _) && Convert.ToDouble(this.AnswerTimeTextBox.Text) <= this.AnswerTimeSlider.Maximum && Convert.ToDouble(this.AnswerTimeTextBox.Text) > 0)
                 this.AnswerTimeSlider.Value = Convert.ToDouble(this.AnswerTimeTextBox.Text);                      
@@ -123,7 +123,7 @@ namespace client
         {
             if (this.MaxPlayersTextBox == null)
             {
-                this.errorOutput.Text = "text box problem";
+                this.ErrorOutput.Text = "text box problem";
             }
             else if (int.TryParse(this.MaxPlayersTextBox.Text, out _) && Convert.ToDouble(this.MaxPlayersTextBox.Text) <= this.MaxPlayersSlider.Maximum && Convert.ToDouble(this.MaxPlayersTextBox.Text) > 0)
                 this.MaxPlayersSlider.Value = Convert.ToDouble(this.MaxPlayersTextBox.Text);

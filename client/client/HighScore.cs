@@ -27,7 +27,7 @@ namespace client
 
         public override void OnShow(params object[] param)
         {
-            base.ErrorOutput = this.errorOutput;
+            base.ErrorOutput = this.ErrorOutput;
 
             Response response = Stream.Send(Codes.HIGH_SCORES);
             if (Stream.Response(response, Codes.HIGH_SCORES))

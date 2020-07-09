@@ -8,19 +8,19 @@
         Closing="OnHide"
         Title="Room Menu" Height="450" Width="800">
     <Grid>
-        <ListBox x:Name="NamesList" HorizontalAlignment="Left" Height="135" Margin="325,163,0,0" VerticalAlignment="Top" Width="159" SelectionChanged="ListBox_SelectionChanged"/>
-        <TextBlock x:Name="errorOutput" HorizontalAlignment="Left" Margin="25,35,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="310" Width="181"/>
-        <TextBlock x:Name="RoomName" HorizontalAlignment="Left" Margin="364,27,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="29" Width="120"/>
-        <TextBlock x:Name="NumQuestions" HorizontalAlignment="Left" Margin="402,60,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="27" Width="82"/>
-        <TextBlock x:Name="MaxPlayers" HorizontalAlignment="Left" Margin="364,83,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="29" Width="82"/>
-        <TextBlock x:Name="TimePerQuestion" HorizontalAlignment="Left" Margin="402,117,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="27" Width="82"/>
-        <Button x:Name="StartGameButton" Content="Start Game" HorizontalAlignment="Left" Margin="233,311,0,0" VerticalAlignment="Top" Width="115" Click="StartGameButton_Click"/>
-        <Button x:Name="CloseRoomButton" Content="Close Room" HorizontalAlignment="Left" Margin="233,353,0,0" VerticalAlignment="Top" Width="115" Click="CloseRoomButton_Click"/>
-        <Button x:Name="LeaveRoomButton" Content="Leave Room" HorizontalAlignment="Left" Margin="492,305,0,0" VerticalAlignment="Top" Width="121" Click="LeaveGameButton_Click"/>
-        <TextBlock x:Name="RoomNameHeader" HorizontalAlignment="Left" Margin="263,27,0,0" TextWrapping="Wrap" Text="Room Name:" VerticalAlignment="Top" Height="29" Width="70"/>
-        <TextBlock x:Name="MaxPlayersHeader" HorizontalAlignment="Left" Margin="263,83,0,0" TextWrapping="Wrap" Text="Max Players:" VerticalAlignment="Top" Height="29" Width="71"/>
-        <TextBlock x:Name="TimePerQuestionHeader" HorizontalAlignment="Left" Margin="263,117,0,0" TextWrapping="Wrap" Text="Time Per Question:" VerticalAlignment="Top" Height="27" Width="107"/>
-        <TextBlock x:Name="NumQuestionsHeader" HorizontalAlignment="Left" Margin="263,61,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="119" Height="17"><Run Text="Number of Questions:"/></TextBlock>
-        <TextBlock x:Name="PlayersListHeader" HorizontalAlignment="Left" Margin="209,172,0,0" TextWrapping="Wrap" Text="List of players:" VerticalAlignment="Top" Height="28" Width="94"/>
+        <ListBox x:Name="NamesList" HorizontalAlignment="Left" Height="135" Margin="238,164,0,0" VerticalAlignment="Top" Width="159" SelectionChanged="ListBox_SelectionChanged"/>
+        <TextBlock x:Name="ErrorOutput" HorizontalAlignment="Left" Margin="557,27,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="150" Width="181"/>
+        <TextBlock x:Name="RoomName" HorizontalAlignment="Left" Margin="155,27,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="29" Width="120"/>
+        <TextBlock x:Name="NumQuestions" HorizontalAlignment="Left" Margin="193,61,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="27" Width="82"/>
+        <TextBlock x:Name="MaxPlayers" HorizontalAlignment="Left" Margin="193,83,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="29" Width="82"/>
+        <TextBlock x:Name="TimePerQuestion" HorizontalAlignment="Left" Margin="193,117,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="27" Width="82"/>
+        <Button x:Name="StartGameButton" Content="Start Game" HorizontalAlignment="Left" Margin="62,305,0,0" VerticalAlignment="Top" Width="115" Click="StartGameButton_Click"/>
+        <Button x:Name="CloseRoomButton" Content="Close Room" HorizontalAlignment="Left" Margin="62,355,0,0" VerticalAlignment="Top" Width="115" Click="CloseRoomButton_Click"/>
+        <Button x:Name="LeaveRoomButton" Content="Leave Room" HorizontalAlignment="Left" Margin="62,253,0,0" VerticalAlignment="Top" Width="121" Click="LeaveGameButton_Click"/>
+        <TextBlock x:Name="RoomNameHeader" HorizontalAlignment="Left" Margin="58,27,0,0" TextWrapping="Wrap" Text="Room Name:" VerticalAlignment="Top" Height="29" Width="70"/>
+        <TextBlock x:Name="MaxPlayersHeader" HorizontalAlignment="Left" Margin="58,83,0,0" TextWrapping="Wrap" Text="Max Players:" VerticalAlignment="Top" Height="29" Width="71"/>
+        <TextBlock x:Name="TimePerQuestionHeader" HorizontalAlignment="Left" Margin="58,117,0,0" TextWrapping="Wrap" Text="Time Per Question:" VerticalAlignment="Top" Height="27" Width="107"/>
+        <TextBlock x:Name="NumQuestionsHeader" HorizontalAlignment="Left" Margin="58,60,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="119" Height="17"><Run Text="Number of Questions:"/></TextBlock>
+        <TextBlock x:Name="PlayersListHeader" HorizontalAlignment="Left" Margin="58,164,0,0" TextWrapping="Wrap" Text="List of players:" VerticalAlignment="Top" Height="28" Width="94"/>
     </Grid>
 </local:CustomWindow>

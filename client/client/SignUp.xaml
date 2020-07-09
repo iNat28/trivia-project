@@ -16,7 +16,7 @@
         <TextBlock FontWeight="DemiBold" HorizontalAlignment="Left" Height="29" Margin="220,79,0,0" TextWrapping="Wrap" Text="Username:" VerticalAlignment="Top" Width="74"/>
         <TextBlock FontWeight="DemiBold" HorizontalAlignment="Left" Height="29" Margin="220,148,0,0" TextWrapping="Wrap" Text="Password:" VerticalAlignment="Top" Width="74"/>
         <TextBlock FontWeight="DemiBold" HorizontalAlignment="Left" Height="44" Margin="220,216,0,0" TextWrapping="Wrap" Text="Email:" VerticalAlignment="Top" Width="74"/>
-        <TextBlock x:Name="errorOutput" HorizontalAlignment="Left" Margin="220,265,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="57" Width="342"/>
+        <TextBlock x:Name="ErrorOutput" HorizontalAlignment="Left" Margin="220,265,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="57" Width="342"/>
 
     </Grid>
 </local:CustomWindow>

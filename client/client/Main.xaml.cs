@@ -27,7 +27,7 @@ namespace client
 
         public override void OnShow(params object[] param)
         {
-            base.ErrorOutput = this.errorOutput;
+            base.ErrorOutput = this.ErrorOutput;
 
             UsernameHeader.Text = "Hello " + User.username;
         }

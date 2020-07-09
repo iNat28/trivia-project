@@ -28,7 +28,7 @@ namespace client
 
         public override void OnShow(params object[] param)
         {
-            base.ErrorOutput = this.errorOutput;
+            base.ErrorOutput = this.ErrorOutput;
 
             this.usernameInput.Text = "";
             this.passwordInput.Password = "";
