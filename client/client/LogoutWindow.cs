@@ -27,7 +27,7 @@ namespace client
                     e.Cancel = true;
                 }
                 Stream.Signout();
-                WindowManager.OpenWindow(WindowTypes.LOGIN);
+                WindowManager.Close();
             }
         }
     }

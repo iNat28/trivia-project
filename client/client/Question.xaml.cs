@@ -76,7 +76,7 @@ namespace client
             int numQuestions = (int)param[0];
             int answerTime = (int)param[1];
 
-            base.ErrorOutput = this.ErrorBox;
+            base.ErrorBox = this.ErrorOutput;
             this.mutex?.Close();
             this.mutex = new Mutex();
 
@@ -119,6 +119,12 @@ namespace client
                 Thread.Sleep(100);
                 this.mutex.WaitOne();
 
+                if (this.thread.CancellationPending)
+                {
+                    e.Cancel = true;
+                    break;
+                }
+
                 if (timerTemp == 0)
                 {
                     //Makes sure the user can't press the buttons
@@ -131,6 +137,11 @@ namespace client
                     this.mutex.WaitOne();
 
                     Thread.Sleep(3000);
+                    if (this.thread.CancellationPending)
+                    {
+                        e.Cancel = true;
+                        break;
+                    }
 
                     if (this.numQuestionsLeft != 0)
                     {
@@ -159,7 +170,7 @@ namespace client
         private void UpdateThread(object sender, ProgressChangedEventArgs e)
         {
             this.mutex.WaitOne();
-            
+
             switch((ThreadCodes)e.ProgressPercentage)
             {
                 case ThreadCodes.UPDATE_TIME:

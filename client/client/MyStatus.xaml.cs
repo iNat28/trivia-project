@@ -27,7 +27,7 @@ namespace client
 
         public override void OnShow(params object[] param)
         {
-            base.ErrorOutput = this.ErrorOutput;
+            base.ErrorBox = this.ErrorOutput;
 
             Response response = Stream.Send(Codes.USER_STATS);
             if (Stream.Response(response, Codes.USER_STATS))

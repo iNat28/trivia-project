@@ -57,7 +57,7 @@ namespace client
             this.isAdmin = (bool)param[0];
             RoomData roomData = (RoomData)param[1];
 
-            base.ErrorOutput = this.ErrorOutput;
+            base.ErrorBox = this.ErrorOutput;
 
             this.roomStatus = Status.OPEN;
             sendingMutex?.Close();

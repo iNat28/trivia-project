@@ -36,7 +36,7 @@ namespace client
 
         public override void OnShow(params object[] param)
         {
-            base.ErrorOutput = this.ErrorOutput;
+            base.ErrorBox = this.ErrorOutput;
 
             this.RoomName.Text = "";
             this.NumQuestionsSlider.Value = 1;

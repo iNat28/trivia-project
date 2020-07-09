@@ -50,9 +50,9 @@ namespace client
             currentWindow = windows[windowToOpen];
             currentWindow.OnShow(param);
             
-            if (currentWindow.ErrorOutput != null)
+            if (currentWindow.ErrorBox != null)
             {
-                currentWindow.ErrorOutput.Text = "";
+                currentWindow.ErrorBox.Text = "";
             }
 
             oldWindow.Hide();
@@ -74,13 +74,13 @@ namespace client
 
         public static void PrintError(string error)
         {
-            if (currentWindow.ErrorOutput == null)
+            if (currentWindow.ErrorBox == null)
             {
                 Console.WriteLine(error);
             }
             else
             {
-                currentWindow.ErrorOutput.Text = error;
+                currentWindow.ErrorBox.Text = error;
             }
         }
 

@@ -11,7 +11,7 @@ namespace client
 {
     public abstract class CustomWindow : Window
     {
-        public TextBlock ErrorOutput;
+        public TextBlock ErrorBox;
 
         public abstract void OnShow(params object[] param);
 

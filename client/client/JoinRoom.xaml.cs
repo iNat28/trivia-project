@@ -96,7 +96,7 @@ namespace client
 
         public override void OnShow(params object[] param)
         {
-            base.ErrorOutput = this.ErrorBox;
+            base.ErrorBox = this.ErrorOutput;
             this.rooms.Clear();
             this.RoomsList.Items.Clear();
             this.sendingMutex?.Close();
