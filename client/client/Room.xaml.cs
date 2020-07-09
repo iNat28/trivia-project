@@ -27,11 +27,7 @@ namespace client
         private readonly bool isAdmin;
         private readonly BackgroundWorker backgroundWorker;
         private readonly Mutex sendingMutex;
-        private Status roomStatus = Status.OPEN;
-
-        //TODO: Need to get room state instead of get players in room, and needs to check if the room closed or if the game started
-        //Might want to do if(!isAdmin) before checking
-        //TODO: Make sure all of the json keys are the same as in the back end
+        private Status roomStatus = Status.OPEN;                     
 
         public enum Status
         { 
@@ -43,7 +39,10 @@ namespace client
         public Room(bool isAdmin, RoomData roomData)
         {
             InitializeComponent();
+
             User.errorOutput = this.errorOutput;
+            User.currentWindow = this;
+
             sendingMutex = new Mutex();
             this.isAdmin = isAdmin;
 
@@ -59,8 +58,9 @@ namespace client
             this.RoomName.Text = roomData.name;
             this.MaxPlayers.Text = roomData.maxPlayers.ToString();
             this.TimePerQuestion.Text = roomData.timePerQuestion.ToString();
+            this.NumQuestions.Text = roomData.questionsCount.ToString();
+            
             //adding users
-
             backgroundWorker = new BackgroundWorker
             {
                 WorkerReportsProgress = true,
@@ -72,7 +72,7 @@ namespace client
             backgroundWorker.RunWorkerCompleted += GetUsersCompleted;
             backgroundWorker.RunWorkerAsync();            
         }
-
+        
         protected override void OnClosed(EventArgs e)
         {
             if (LogoutWindow.toClose)
@@ -133,7 +133,7 @@ namespace client
 
             if (Stream.Response(response, Codes.START_GAME))
             {
-                Utils.OpenWindow(this, new GameWindow());
+                Utils.OpenWindow(this, this.CreateQuestionWindow());
             }
         }
 
@@ -164,8 +164,7 @@ namespace client
 
                 backgroundWorker.ReportProgress(0, "");
 
-                string error;
-                if (Stream.ResponseForThread(usersResponse, Codes.GET_ROOM_STATE, out error))
+                if (Stream.ResponseForThread(usersResponse, Codes.GET_ROOM_STATE, out string error))
                 {
                     this.roomStatus = (Status)(int)usersResponse.jObject[Keys.roomStatus];
                     
@@ -203,7 +202,7 @@ namespace client
                 }
 
                 sendingMutex.ReleaseMutex();
-                Thread.Sleep(3000);
+                Thread.Sleep(500);
             }
         }
         
@@ -236,11 +235,16 @@ namespace client
                     newWindow = new MainWindow();
                     break;
                 case Status.GAME_STARTED:
-                    newWindow = new GameWindow();
+                    newWindow = this.CreateQuestionWindow();
                     break;
             }
 
             Utils.OpenWindow(this, newWindow);
+        }
+
+        private Question CreateQuestionWindow()
+        {
+            return new Question(Convert.ToInt32(this.NumQuestions.Text), Convert.ToInt32(this.TimePerQuestion.Text));
         }
     }
 }

@@ -18,40 +18,62 @@ namespace client
     /// <summary>
     /// Interaction logic for CreateRoom.xaml
     /// </summary>
+    //TODO: when the user chooses stats for the game, make them tickers
     public partial class CreateRoom : LogoutWindow
-    {
+    {       
+        private int numMaxPlayers;
+        private int numQuestions;
+        private int answerTime;
         public CreateRoom()
         {
             InitializeComponent();
 
             User.errorOutput = this.errorOutput;
+            User.currentWindow = this;
         }
         
         private void CreateRoomButton_Click(object sender, RoutedEventArgs e)
         {
-            //TODO throw error about blank fields
-            if (!(this.RoomName.Text == "") && !(this.MaxPlayers.Text == "") && !(this.AnswerTime.Text == ""))
+            if(this.RoomName.Text == "")
             {
+                this.errorOutput.Text = "Room name field is empty!";
+            }
+            else if (this.MaxPlayers.Text == "")
+            {
+                this.errorOutput.Text = "Max players field is empty!";
+            }
+            else if (this.AnswerTime.Text == "")
+            {
+                this.errorOutput.Text = "Answer time field is empty!";
+            }
+            else if (this.NumQuestion.Text == "")
+            {
+                this.errorOutput.Text = "Num questions field is empty!";
+            }
+            else
+            {
+                this.numQuestions = Convert.ToInt32(this.NumQuestion.Text);
+                this.numMaxPlayers = Convert.ToInt32(this.MaxPlayers.Text);
+                this.answerTime = Convert.ToInt32(this.AnswerTime.Text);
+
                 JObject jObject = new JObject
                 {
                     [Keys.roomName] = this.RoomName.Text,
-                    //TODO: Move converts to its own variable
-                    [Keys.maxPlayers] = Convert.ToInt32(this.MaxPlayers.Text),
-                    //TODO: Add questions count
-                    [Keys.questionsCount] = 10,
-                    [Keys.timePerQuestion] = Convert.ToInt32(this.AnswerTime.Text),
+                    [Keys.maxPlayers] = this.numMaxPlayers,
+                    [Keys.questionsCount] = this.numQuestions,
+                    [Keys.timePerQuestion] = this.answerTime,
                     [Keys.username] = User.username
                 };
-                
+
                 Stream.Send(jObject, Codes.CREATE_ROOM);
 
                 Response response = Stream.Recieve();
 
                 if (Stream.Response(response, Codes.CREATE_ROOM))
                 {
-                    Utils.OpenWindow(this, new Room(true, new RoomData(0, this.RoomName.Text, Convert.ToInt32(this.MaxPlayers.Text), 10, Convert.ToInt32(this.AnswerTime.Text), Room.Status.OPEN)));
+                    Utils.OpenWindow(this, new Room(true, new RoomData(0, this.RoomName.Text, this.numMaxPlayers, this.numQuestions, this.answerTime, Room.Status.OPEN)));
                 }
-            }
+            }           
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)

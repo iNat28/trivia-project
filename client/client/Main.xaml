@@ -1,11 +1,11 @@
-﻿<src:LogoutWindow x:Class="client.MainWindow"
+﻿<local:LogoutWindow x:Class="client.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:src="clr-namespace:client"
+        xmlns:local="clr-namespace:client"
         mc:Ignorable="d"
-        Title="Main" Height="467.85" Width="989.75">
+        Title="Main Menu" Height="467.85" Width="989.75">
     <Grid>
         <TextBlock x:Name="UsernameHeader" HorizontalAlignment="Center" Height="36" Margin="431,56,417,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="134"/>
         <Button x:Name="SignoutButton" Content="Sign Out" HorizontalAlignment="Left" Margin="451,122,0,0" VerticalAlignment="Top" Width="94" Height="32" Click="SignoutButton_Click"/>
@@ -15,4 +15,4 @@
         <TextBlock x:Name="errorOutput" HorizontalAlignment="Left" Margin="108,122,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="209" Width="237"/>
 
     </Grid>
-</src:LogoutWindow>
+</local:LogoutWindow>

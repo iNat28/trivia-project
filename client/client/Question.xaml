@@ -1,0 +1,34 @@
+﻿<Window x:Class="client.Question"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:client"
+        mc:Ignorable="d"
+        Title="Game" Height="450" Width="800">
+    <Grid>
+        <TextBlock x:Name="QuestionHeader" HorizontalAlignment="Left" Margin="183,44,0,0" TextWrapping="Wrap" Text="Question:" VerticalAlignment="Top" Height="24" Width="91"/>
+        <TextBlock x:Name="QuestionText" HorizontalAlignment="Left" Margin="298,19,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="49" Width="445"/>
+        <TextBlock x:Name="NumAnswersLeftHeader" HorizontalAlignment="Left" Margin="521,88,0,0" TextWrapping="Wrap" Text="Answers Left:" VerticalAlignment="Top" Height="35" Width="96"/>
+        <TextBlock x:Name="NumCorrectAnswersHeader" HorizontalAlignment="Left" Margin="521,137,0,0" TextWrapping="Wrap" Text="Correct Answers:" VerticalAlignment="Top" Height="35" Width="96"/>
+        <TextBlock x:Name="CorrectAnswers" HorizontalAlignment="Left" Margin="631,137,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="35" Width="112"/>
+        <TextBlock x:Name="AnswersLeft" HorizontalAlignment="Left" Margin="631,88,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="35" Width="112"/>
+        <TextBlock x:Name="TimeLeftHeader" HorizontalAlignment="Left" Margin="521,235,0,0" TextWrapping="Wrap" Text="Time Left:" VerticalAlignment="Top" Height="35" Width="96"/>
+        <TextBlock x:Name="TimeLeft" HorizontalAlignment="Left" Margin="631,235,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="35" Width="112"/>
+        <Button x:Name="Answer1" Content="" HorizontalAlignment="Left" Margin="315,88,0,0" VerticalAlignment="Top" Width="114" Height="35" Click="Answer1_Click"/>
+        <Button x:Name="Answer2" Content="" HorizontalAlignment="Left" Margin="315,137,0,0" VerticalAlignment="Top" Width="114" Height="35" Click="Answer2_Click"/>
+        <Button x:Name="Answer3" Content="" HorizontalAlignment="Left" Margin="315,185,0,0" VerticalAlignment="Top" Width="114" Height="35" Click="Answer3_Click"/>
+        <Button x:Name="Answer4" Content="" HorizontalAlignment="Left" Margin="315,235,0,0" VerticalAlignment="Top" Width="114" Height="35" Click="Answer4_Click"/>
+        <Button x:Name="BackButton" Content="Leave Game" HorizontalAlignment="Left" Margin="298,329,0,0" VerticalAlignment="Top" Width="150" Height="41" Click="BackButton_Click"/>
+        <TextBlock x:Name="DifficultyHeader" HorizontalAlignment="Left" Margin="46,88,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="27" Width="99"><Run Text="Difficulty:"/></TextBlock>
+        <TextBlock x:Name="CategoryHeader" HorizontalAlignment="Left" Margin="46,120,0,0" TextWrapping="Wrap" Text="Category:" VerticalAlignment="Top" Width="99" Height="27"/>
+        <TextBlock x:Name="Category" HorizontalAlignment="Left" Margin="150,120,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="34" Width="113"><Run Text=""/></TextBlock>
+        <TextBlock x:Name="Difficulty" HorizontalAlignment="Left" Margin="150,88,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="27" Width="77"><Run Text=""/></TextBlock>
+        <TextBlock x:Name="ErrorOutput" HorizontalAlignment="Left" Margin="46,159,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="211" Width="228"/>
+        <TextBlock HorizontalAlignment="Left" Margin="521,172,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="96" Text="Selected Answer:"/>
+        <TextBlock HorizontalAlignment="Left" Margin="521,193,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="119" Text="Time took for answer:"/>
+        <TextBlock x:Name="SelectedAnswerOutput" HorizontalAlignment="Left" Margin="645,172,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="137"/>
+        <TextBlock x:Name="TimeTookForAnswerOutput" HorizontalAlignment="Left" Margin="645,193,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="137"/>
+
+    </Grid>
+</Window>

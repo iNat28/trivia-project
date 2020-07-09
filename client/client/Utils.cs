@@ -9,12 +9,15 @@ namespace client
 {
     public static class Utils
     {
-        public static void OpenWindow(Window windowToHide, Window windowToOpen)
+        public delegate void OpenWindowFunc();
+
+        public static void OpenWindow(Window windowToHide, Window windowToOpen, OpenWindowFunc func = null)
         {
             LogoutWindow.toClose = false;
             windowToHide.Close();
             LogoutWindow.toClose = true;
-            windowToOpen.ShowDialog();
+            func?.Invoke();
+            windowToOpen.Show();
         }
     }
 
@@ -22,37 +25,41 @@ namespace client
     {
         ERROR_CODE = 0,
 
-	    //Login
-	    LOGIN = 10,
-	    SIGNUP,
-	    LOGOUT,
+        //Login
+        LOGIN = 10,
+        SIGNUP,
+        LOGOUT,
 
-	    //Room
-	    GET_ROOM = 20,
-	    GET_PLAYERS_IN_ROOM,
-	    JOIN_ROOM,
-	    CREATE_ROOM,
-	    GET_ROOM_STATE,
 
-	    //RoomAdmin
-	    CLOSE_ROOM = 30,
-	    START_GAME,
+        //Menu
+        GET_ROOM = 20,
+        GET_PLAYERS_IN_ROOM,
+        JOIN_ROOM,
+        CREATE_ROOM,
 
-	    //RoomMember
-	    LEAVE_ROOM = 40,
+        //Statistics
+        USER_STATS,
+        HIGH_SCORES,
 
-	    //Statistics
-	    USER_STATS = 50,
-	    HIGH_SCORES
+
+        //Room
+        GET_ROOM_STATE = 30,
+
+        //RoomAdmin
+        CLOSE_ROOM,
+        START_GAME,
+
+        //RoomMember
+        LEAVE_ROOM,
+
+
+        //Game
+        GET_GAME_RESULTS,
+        SUBMIT_ANSWER,
+        GET_QUESTION,
+        LEAVE_GAME
     };
-
-    public enum ResponseCodes
-    {
-        ERROR_RESPONSE,
-	    SUCCESFUL
-    };
-
-    //TODO: Add Keys for Json
+    
     public static class Keys
     {
         public const string username = "username";
@@ -66,11 +73,14 @@ namespace client
 
         public const string userStats = "userStats";
 
+        public const string answerIndex = "answerIndex";
+        public const string playersResults = "playersResults";
+
         public const string status = "status";
         public const string message = "message";
 
-        public const string rooms = "Rooms";
-        public const string playersInRoom = "PlayersInRoom";
+        public const string rooms = "rooms";
+        public const string playersInRoom = "playersInRoom";
         public const string roomData = "roomData";
         public const string roomState = "roomState";
 
@@ -92,9 +102,9 @@ namespace client
         public const string category = "category";
         public const string difficulty = "difficulty";
         public const string question = "question";
-        public const string correctAnswer = "correctAnswer";
-        public const string incorrectAnswer1 = "incorrectAnswer1";
-        public const string incorrectAnswer2 = "incorrectAnswer2";
-        public const string incorrectAnswer3 = "incorrectAnswer3";
+        public const string answers = "answers";
+        public const string correctAnswerIndex = "correctAnswerIndex";
+
+        public const string answerTime = "answerTime";
     }
 }

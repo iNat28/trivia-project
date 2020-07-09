@@ -2,9 +2,10 @@
 #include "SqliteDataBase.h"
 
 std::unordered_map<string, string> SqliteDataBase::m_usersList;
-std::vector<UserStats> SqliteDataBase::m_gamesList;
+std::vector<UserStats> SqliteDataBase::m_usersStats;
 bool SqliteDataBase::moreData = false;
 int SqliteDataBase::highestRoomId = 1;
+std::mutex mtx;
 
 SqliteDataBase::SqliteDataBase()
 {
@@ -50,7 +51,7 @@ void SqliteDataBase::addNewUser(string username, string password, string email) 
 	std::string command = "insert into users (username, password, email) values ('" + username + "', '" + password + "', '" + email + "');";
 	send_query(command);
 	command = "insert into statistics (username, numPoints, numTotalGames, numCorrectAnswers, numWrongAnswers, averageAnswerTime) values ('" +
-		username + "', 0, 0, 0, 0, 0);";
+		username + "', 0, 0, 0, 0, 0.0);";
 	send_query(command);
 }
 
@@ -82,11 +83,11 @@ void SqliteDataBase::openDB()
 		send_query(command);
 
 		//statistics table
-		command = "create table if not exists statistics (username text primary key not null, numPoints integer not null, numTotalGames integer not null, numCorrectAnswers integer not null, numWrongAnswers integer not null, averageAnswerTime integer not null);";
+		command = "create table if not exists statistics (username text primary key not null, numPoints integer not null, numTotalGames integer not null, numCorrectAnswers integer not null, numWrongAnswers integer not null, averageAnswerTime real not null);";
 		send_query(command);
 
 		//questions table
-		command = "create table if not exists questions (question text primary key not null, category text, difficulty text, correct_answer text not null, incorrect_answer1 text not null, incorrect_answer2 text, incorrect_answer3 text);";
+		command = "create table if not exists questions (question text primary key not null, category text, difficulty integer not null, correct_answer text not null, incorrect_answer1 text not null, incorrect_answer2 text, incorrect_answer3 text);";
 		send_query(command);
 		//adding the questions
 		openQuestionsFile();
@@ -127,7 +128,7 @@ int SqliteDataBase::users_callback(void* data, int argc, char** argv, char** azC
 int SqliteDataBase::statistics_callback(void* data, int argc, char** argv, char** azColName)
 {
 	if (!SqliteDataBase::moreData)
-		SqliteDataBase::m_gamesList.clear();
+		SqliteDataBase::m_usersStats.clear();
 
 	UserStats userStats;
 	
@@ -136,18 +137,18 @@ int SqliteDataBase::statistics_callback(void* data, int argc, char** argv, char*
 		if (std::string(azColName[i]) == "username")
 			userStats.username = argv[i];
 		else if (std::string(azColName[i]) == "numPoints")
-			userStats.numPoints = atoi(argv[i]);
+			userStats.playerResults.numPoints = atoi(argv[i]);
 		else if (std::string(azColName[i]) == "numTotalGames")
-			userStats.averageAnswerTime = atoi(argv[i]);
+			userStats.numTotalGames = atoi(argv[i]);
 		else if (std::string(azColName[i]) == "numCorrectAnswers")
-			userStats.numCorrectAnswers = atoi(argv[i]);
+			userStats.playerResults.numCorrectAnswers = atoi(argv[i]);
 		else if (std::string(azColName[i]) == "numWrongAnswers")
-			userStats.numWrongAnswers = atoi(argv[i]);
+			userStats.playerResults.numWrongAnswers = atoi(argv[i]);
 		else if (std::string(azColName[i]) == "averageAnswerTime")
-			userStats.averageAnswerTime = atoi(argv[i]);
+			userStats.playerResults.averageAnswerTime = atof(argv[i]);
 	}
 		
-	SqliteDataBase::m_gamesList.push_back(userStats);
+	SqliteDataBase::m_usersStats.push_back(userStats);
 	SqliteDataBase::moreData = true;
 	return 0;
 }
@@ -164,9 +165,57 @@ int SqliteDataBase::int_callback(void* data, int argc, char** argv, char** azCol
 	return 0;
 }
 
+int SqliteDataBase::questions_callback(void* data, int argc, char** argv, char** azColName)
+{
+	Questions* questions = static_cast<Questions*>(data);
+	Question question;
+	int i = 0;
+	//TODO: Change from pairs (maybe)
+	vector<std::pair<unsigned int, string>> answers;
+
+	for (int i = 0; i < argc; i++)
+	{
+		if (std::string(azColName[i]) == "question")
+			question.question = argv[i];
+		else if (std::string(azColName[i]) == "category")
+			question.category = argv[i];
+		else if (std::string(azColName[i]) == "difficulty")
+			question.difficulty = atoi(argv[i]);
+		else if (std::string(azColName[i]) == "correct_answer")
+			answers.push_back({ 0, argv[i] });
+		else if (std::string(azColName[i]) == "incorrect_answer1")
+			answers.push_back({ 1, argv[i] });
+		else if (std::string(azColName[i]) == "incorrect_answer2" && string(argv[i]) != "")
+			answers.push_back({ 2, argv[i] });
+		else if (std::string(azColName[i]) == "incorrect_answer3" && string(argv[i]) != "")
+			answers.push_back({ 3, argv[i] });
+	}
+
+	std::random_shuffle(answers.begin(), answers.end());
+
+	for (auto& answer : answers)
+	{
+		//If it's the first index (the correct answer)
+		if (answer.first == 0)
+		{
+			question.correctAnswerIndex = i;
+		}
+		question.answers.push_back(answer.second);
+		i++;
+	}
+
+	if (questions != nullptr)
+	{
+		questions->push_back(question);
+	}
+
+	return 0;
+}
+
 void SqliteDataBase::send_query(std::string command, int(*callback)(void*, int, char**, char**), void* data) const
 {
 	char* errMessage = nullptr;
+	std::lock_guard<std::mutex> guard(mtx);
 	if (SQLITE_OK != sqlite3_exec(this->db, command.c_str(), callback, data, &errMessage))
 	{
 		Exception::ex << errMessage;
@@ -177,40 +226,60 @@ void SqliteDataBase::send_query(std::string command, int(*callback)(void*, int, 
 
 void SqliteDataBase::openQuestionsFile()
 {
+	//If the question file doesn't exist
+	if (_access(QUESTIONS_FILE, 0) == ENOENT)
+	{
+		throw Exception("Question file needed to create database");
+	}
+
 	std::ifstream file(QUESTIONS_FILE);
-	string buffer;
-	vector<Question> questionList;
-	file >> buffer;
-	
-	questionList = getQuestionsIntoVectorFormat(buffer);
+
+	json j;
+	file >> j;
+	vector<Question> questionList = j["results"];
+
+	//questionList = getQuestionsIntoVectorFormat(buffer);
 	addToDB(questionList);
 }
 
 vector<Question> SqliteDataBase::getQuestionsIntoVectorFormat(string questionsStr)
 {
 	string questionInfo;
-	json questionList(questionsStr);
+	json questionList = json::parse(questionsStr);
 
 	vector<Question> questions = questionList;
 	return questions;
 }
 
-
+//TODO: Replace the quotes in the questions somewhere
 void SqliteDataBase::addToDB(vector<Question> questionsList)
 {
 	sstream buffer;
 
 	for (const auto& question : questionsList)
 	{
-		buffer << "insert into questions(question, category, difficulty, correct_answer, incorrect_answer1, incorrect_answer2, incorrect_answer3) values(" <<
-			question.question << ", " <<
-			question.category << ", " <<
-			question.difficulty << ", " <<
-			question.correctAnswer << ", " <<
-			question.incorrectAnswers[0] << ", " <<
-			question.incorrectAnswers[1] << ", " <<
-			question.incorrectAnswers[2] << "')";
+		string correctAnswer = question.answers[question.correctAnswerIndex];
+		vector<string> incorrectAnswers;
 
+		int i = 0;
+		for (const auto& answer : question.answers)
+		{
+			if (i != question.correctAnswerIndex)
+			{
+				incorrectAnswers.push_back(answer);
+			}
+			i++;
+		}
+
+		buffer << "insert into questions(question, category, difficulty, correct_answer, incorrect_answer1, incorrect_answer2, incorrect_answer3) values(" <<
+			'"' << question.question << "\", " <<
+			'"' << question.category << "\", " <<
+			question.difficulty << ", " <<
+			'"' << correctAnswer << "\", " <<
+			'"' << incorrectAnswers[0] << "\", " <<
+			'"' << incorrectAnswers[1] << "\", " <<
+			'"' << incorrectAnswers[2] << "\");";
+		
 		send_query(buffer.str().c_str());
 		buffer.str("");
 	}
@@ -221,29 +290,24 @@ int SqliteDataBase::getHighestRoomId() const
 	return this->highestRoomId++;
 }
 
-void SqliteDataBase::addGameStats(UserStats userStats)
+void SqliteDataBase::addGameStats(LoggedUser user, PlayerResults playerResults)
 {
 	sstream buffer;
+	UserStats otherUserStats = SqliteDataBase::getUserStats(user.username);
 	
-	UserStats otherUserStats = SqliteDataBase::getUserStats(userStats.username);
-	
-	userStats.averageAnswerTime = 
-		(otherUserStats.averageAnswerTime	* (otherUserStats.numCorrectAnswers + otherUserStats.numWrongAnswers) +
-		userStats.averageAnswerTime			* (userStats.numCorrectAnswers + userStats.numWrongAnswers)) 
-		/ 
-		(otherUserStats.numCorrectAnswers + otherUserStats.numWrongAnswers + userStats.numCorrectAnswers + userStats.numWrongAnswers);
-	userStats.numPoints += otherUserStats.numPoints;
-	userStats.numTotalGames += otherUserStats.numTotalGames;
-	userStats.numCorrectAnswers += otherUserStats.numCorrectAnswers;
-	userStats.numWrongAnswers += otherUserStats.numWrongAnswers;
+	otherUserStats.playerResults.setAverageAnswerTime(playerResults);
+	otherUserStats.playerResults.numPoints += playerResults.numPoints;
+	otherUserStats.numTotalGames++;
+	otherUserStats.playerResults.numCorrectAnswers += playerResults.numCorrectAnswers;
+	otherUserStats.playerResults.numWrongAnswers += playerResults.numWrongAnswers;
 	
 	buffer << "update statistics set" <<
-		", numPoints = " << userStats.numPoints <<
-		", numTotalGames = " << userStats.numTotalGames <<
-		", numCorrectAnswers = " << userStats.numCorrectAnswers <<
-		", numWrongAnswers = " << userStats.numWrongAnswers <<
-		", averageAnswerTime = " << userStats.averageAnswerTime <<
-		" where username = " << userStats.username << ';';
+		" numPoints = " << otherUserStats.playerResults.numPoints <<
+		", numTotalGames = " << otherUserStats.numTotalGames <<
+		", numCorrectAnswers = " << otherUserStats.playerResults.numCorrectAnswers <<
+		", numWrongAnswers = " << otherUserStats.playerResults.numWrongAnswers <<
+		", averageAnswerTime = " << otherUserStats.playerResults.averageAnswerTime <<
+		" where username = \"" << otherUserStats.username << "\";";
 
 	send_query(buffer.str().c_str());
 }
@@ -256,7 +320,7 @@ UserStats SqliteDataBase::getUserStats(string username) const
 	buffer << "select * from statistics where username = '" << username << "';";
 	send_query(buffer.str().c_str(), statistics_callback);
 	
-	return m_gamesList[0];
+	return m_usersStats[0];
 }
 
 HighScores SqliteDataBase::getHighScores() const
@@ -265,13 +329,28 @@ HighScores SqliteDataBase::getHighScores() const
 	SqliteDataBase::moreData = false;
 	sstream buffer;
 
-	buffer << "select username, numPoints from statistics order by numPoints DESC limit << " << SqliteDataBase::HIGH_SCORE_NUMS << ';';
+	buffer << "select username, numPoints from statistics order by numPoints DESC limit " << SqliteDataBase::HIGH_SCORE_NUMS << ';';
 	send_query(buffer.str().c_str(), statistics_callback);
 
-	for (auto& game : m_gamesList)
+	for (auto& userStats : m_usersStats)
 	{
-		highScores.push_back(UserHighScore(game.username, game.numPoints));
+		highScores.push_back(UserHighScore(userStats.username, userStats.playerResults.numPoints));
 	}
 
 	return highScores;
+}
+
+Questions SqliteDataBase::getQuestions(unsigned int questionsCount) const
+{
+	Questions questions;
+	std::srand((unsigned int)std::time(0));
+
+	send_query("select * from questions", questions_callback, &questions);
+
+	std::random_shuffle(questions.begin(), questions.end());
+
+	//Assumes that the questions count is valid, since it was already checked
+	questions.resize(questionsCount);
+
+	return questions;
 }

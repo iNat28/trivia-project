@@ -61,7 +61,8 @@ namespace client
 
         public override string ToString()
         {
-            return name;
+            return this.name + " | Max players: " + this.maxPlayers + " | Number of questions: " + this.questionsCount + " | Time per questions: " + this.timePerQuestion + 
+                " | Room status: " + this.roomStatus;
         }
     };
 
@@ -69,20 +70,22 @@ namespace client
     /// <summary>
     /// Interaction logic for JoinRoom.xaml
     /// </summary>
-    public partial class JoinRoom : Window
+    public partial class JoinRoom : LogoutWindow
     {
         private RoomData selectedRoom;
         private readonly BackgroundWorker backgroundWorker;
         private readonly Mutex sendingMutex;
-        private List<RoomData> rooms = new List<RoomData>();
+        private readonly List<RoomData> rooms;
         
         //TODO: Need to show the rooms and all of it's room state, and if it's game started, or if it is maxed out for players
         
         public JoinRoom()
         {
             InitializeComponent();
-            sendingMutex = new Mutex();
+            this.sendingMutex = new Mutex();
+            this.rooms = new List<RoomData>();
             User.errorOutput = this.ErrorBox;
+            User.currentWindow = this;
 
             backgroundWorker = new BackgroundWorker
             {
@@ -98,6 +101,7 @@ namespace client
         protected override void OnClosed(EventArgs e)
         {
             backgroundWorker.CancelAsync();
+
             base.OnClosed(e);
         }
 
@@ -157,8 +161,7 @@ namespace client
 
                 Response response = Stream.Recieve();
 
-                string error;
-                if (Stream.ResponseForThread(response, Codes.GET_ROOM, out error))
+                if (Stream.ResponseForThread(response, Codes.GET_ROOM, out string error))
                 {
                     JArray jArray = (JArray)response.jObject[Keys.rooms];
                     
@@ -197,7 +200,7 @@ namespace client
                 }
 
                 sendingMutex.ReleaseMutex();
-                Thread.Sleep(3000);
+                Thread.Sleep(500);
             }
         }
 

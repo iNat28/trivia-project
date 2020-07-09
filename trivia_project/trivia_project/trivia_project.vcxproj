@@ -130,12 +130,15 @@
     <ClCompile Include="AllRoomMembersRequestHandler.cpp" />
     <ClCompile Include="Communicator.cpp" />
     <ClCompile Include="Exception.cpp" />
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GameRequestHandler.cpp" />
     <ClCompile Include="IRequestHandler.cpp" />
     <ClCompile Include="JsonRequestPacketDeserializer.cpp" />
     <ClCompile Include="JsonResponsePacketSerializer.cpp" />
     <ClCompile Include="Keys.cpp" />
     <ClCompile Include="LoggedUser.cpp" />
+    <ClCompile Include="LoggedUserRequestHandler.cpp" />
     <ClCompile Include="LoginManager.cpp" />
     <ClCompile Include="LoginRequestHandler.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -146,7 +149,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="Question.cpp" />
     <ClCompile Include="RequestHandlerFactory.cpp" />
     <ClCompile Include="Requests.cpp" />
     <ClCompile Include="Responses.cpp" />
@@ -170,6 +172,8 @@
     <ClInclude Include="Communicator.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="Exception.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="GameManager.h" />
     <ClInclude Include="GameRequestHandler.h" />
     <ClInclude Include="IDatabase.h" />
     <ClInclude Include="IRequestHandler.h" />
@@ -177,11 +181,11 @@
     <ClInclude Include="JsonResponsePacketSerializer.h" />
     <ClInclude Include="Keys.h" />
     <ClInclude Include="LoggedUser.h" />
+    <ClInclude Include="LoggedUserRequestHandler.h" />
     <ClInclude Include="LoginManager.h" />
     <ClInclude Include="LoginRequestHandler.h" />
     <ClInclude Include="MenuRequestHandler.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="Question.h" />
     <ClInclude Include="RequestHandlerFactory.h" />
     <ClInclude Include="Requests.h" />
     <ClInclude Include="Responses.h" />

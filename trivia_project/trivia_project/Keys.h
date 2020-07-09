@@ -18,6 +18,11 @@ struct Keys
 	//Statistics
 	static const char* userStats;
 	
+	//Game
+	static const char* answerIndex;
+	static const char* answerTime;
+	static const char* playersResults;
+
 	/* Responses */
 
 	static const char* message;
@@ -52,8 +57,6 @@ struct Keys
 	static const char* category;
 	static const char* difficulty;
 	static const char* question;
-	static const char* correctAnswer;
-	static const char* incorrectAnswer1;
-	static const char* incorrectAnswer2;
-	static const char* incorrectAnswer3;
+	static const char* answers;
+	static const char* correctAnswerIndex;
 };

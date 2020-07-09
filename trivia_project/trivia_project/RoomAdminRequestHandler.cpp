@@ -39,26 +39,27 @@ RequestResult RoomAdminRequestHandler::_closeRoom(const RequestInfo& requestInfo
 
 RequestResult RoomAdminRequestHandler::_startGame(const RequestInfo& requestInfo) const
 {
-	return RequestResult();
+	this->m_room.setRoomStatus(RoomStatus::GAME_STARTED);
+
+	return RequestResult(
+		JsonResponsePacketSerializer::serializeResponse(
+			StartGameResponse()
+		),
+		this->m_handlerFactory.createGameRequestHandler(
+			this->m_user,
+			this->m_handlerFactory.getGameManager().createGame(
+				this->m_room,
+				this->m_handlerFactory.getGameManager().getQuestions(this->m_room.getQuestionsCount())
+			)
+		)
+	);
 }
 
 RequestResult RoomAdminRequestHandler::_getRoomState(const RequestInfo& requestInfo) const
 {
 	RequestResult requestResult = this->_getRoomStateNoHandler(requestInfo);
 
-	switch (this->m_room.getRoomStatus())
-	{
-	case RoomStatus::OPEN:
-		requestResult.newHandler = this->m_handlerFactory.createRoomAdminRequestHandler(this->m_user, this->m_room);
-		break;
-	case RoomStatus::CLOSED:
-		requestResult.newHandler = this->m_handlerFactory.createMenuRequestHandler(this->m_user);
-		break;
-	case RoomStatus::GAME_STARTED:
-		//TODO
-		//handler = this->m_handlerFactory.createGameRequestHandler();
-		break;
-	}
+	requestResult.newHandler = this->m_handlerFactory.createRoomAdminRequestHandler(this->m_user, this->m_room);
 
 	return requestResult;
 }

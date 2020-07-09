@@ -2,6 +2,8 @@
 #include "pch.h"
 #include "Room.h"
 #include "Codes.h"
+#include "statistics.h"
+#include "Game.h"
 
 struct Response
 {
@@ -99,6 +101,38 @@ struct GetRoomStateResponse : Response
 };
 
 struct StartGameResponse : Response
+{
+	virtual Codes getResponseCode() const override;
+};
+
+struct GetGameResultsResponse : Response
+{
+	GetGameResultsResponse(vector<UserResults> playersResults);
+
+	virtual Codes getResponseCode() const override;
+
+	vector<UserResults> playersResults;
+};
+
+struct SubmitAnswerResponse : Response
+{
+	SubmitAnswerResponse(unsigned int correctAnswerIndex);
+
+	virtual Codes getResponseCode() const override;
+
+	unsigned int correctAnswerIndex;
+};
+
+struct GetQuestionResponse : Response
+{
+	GetQuestionResponse(Question question);
+
+	virtual Codes getResponseCode() const override;
+
+	Question question;
+};
+
+struct LeaveGameResponse : Response
 {
 	virtual Codes getResponseCode() const override;
 };

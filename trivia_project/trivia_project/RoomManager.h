@@ -7,11 +7,9 @@ class RoomManager
 {
 public:
 	RoomManager(IDatabase& database);
-
+	
 	void createRoom(Room& room);
 	void closeRoom(Room& room);
-	//void deleteRoom(unsigned int id);
-	//RoomData getRoomState(unsigned int id) const;
 	Room& getRoom(unsigned int id);
 	vector<LoggedUser> getUsersInRoom(unsigned int id) const;
 	vector<Room> getRooms() const;

@@ -2,10 +2,10 @@
 #include "AllRoomMembersRequestHandler.h"
 
 AllRoomMembersRequestHandler::AllRoomMembersRequestHandler(LoggedUser user, Room& room) : 
-	m_user(user), m_room(room)
+	LoggedUserRequestHandler(user), m_room(room)
 {
 }
-
+//getting room state of room
 RequestResult AllRoomMembersRequestHandler::_getRoomStateNoHandler(const RequestInfo& requestInfo) const
 {
 	return RequestResult(

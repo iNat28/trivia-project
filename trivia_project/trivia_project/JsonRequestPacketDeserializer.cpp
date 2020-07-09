@@ -55,3 +55,13 @@ CreateRoomRequest JsonRequestPacketDeserializer::deserializeCreateRoomRequest(co
 		)
 	));
 }
+
+SubmitAnswerRequest JsonRequestPacketDeserializer::deserializeSubmitAnswerRequest(const Buffer& buffer)
+{
+	json jsonFromBson = json::from_bson(buffer);
+
+	return SubmitAnswerRequest(
+		jsonFromBson[Keys::answerIndex],
+		jsonFromBson[Keys::answerTime]
+	);
+}

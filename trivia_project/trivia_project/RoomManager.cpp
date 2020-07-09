@@ -15,7 +15,7 @@ void RoomManager::createRoom(Room& room)
 
 void RoomManager::closeRoom(Room& room)
 {
-	room.close();
+	room.setRoomStatus(RoomStatus::CLOSED);
 
 	if (room.getAllUsers().empty())
 	{
@@ -25,18 +25,6 @@ void RoomManager::closeRoom(Room& room)
 		}
 	}
 }
-
-//RoomData RoomManager::getRoomState(unsigned int id) const
-//{
-//	//TODO: Change
-//	//TODO: Make sure to update Get Activty when the game starts
-//	return RoomData(
-//		this->_getRoom(id).didGameStart(),
-//		this->getUsersInRoom(id),
-//		0,
-//		0
-//	);
-//}
 
 Room& RoomManager::getRoom(unsigned int id)
 {

@@ -39,3 +39,11 @@ struct CreateRoomRequest
 
 	Room room;
 };
+
+struct SubmitAnswerRequest
+{
+	SubmitAnswerRequest(unsigned int answerIndex, double answerTime);
+
+	unsigned int answerIndex;
+	double answerTime;
+};

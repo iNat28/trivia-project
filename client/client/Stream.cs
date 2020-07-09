@@ -22,7 +22,6 @@ namespace client
     {
         private static TcpClient tcpClient;
         private static NetworkStream client;
-        private static bool open = false;
 
         private const int MSG_CODE_SIZE = 1;
         private const int MSG_LEN_SIZE = 4;
@@ -35,22 +34,9 @@ namespace client
             {
                 if (client == null)
                 {
-                    if(open)
-                    {
-                        System.Environment.Exit(1);
-                    }
-                    open = true;
-
-                    try
-                    {
-                        tcpClient = new TcpClient();
-                        tcpClient.Connect(new IPEndPoint(IPAddress.Parse(IP_ADDRESS), PORT));
-                        client = tcpClient.GetStream();
-                    }
-                    catch(Exception e)
-                    {
-                        User.PrintErrorAndKeep(e);
-                    }
+                    tcpClient = new TcpClient();
+                    tcpClient.Connect(new IPEndPoint(IPAddress.Parse(IP_ADDRESS), PORT));
+                    client = tcpClient.GetStream();
                 }
 
                 return client;
@@ -59,17 +45,16 @@ namespace client
 
         public static void Close()
         {
-            try
-            {
-                client.Close();
-                tcpClient = null;
-                client = null;
-            }
-            catch (Exception e)
-            {
-                User.PrintErrorAndKeep(e);
-            }
-            open = false;
+            Utils.OpenWindow(User.currentWindow, new LoginWindow(), CloseClient);
+        }
+
+        private static void CloseClient()
+        {
+            client?.Close();
+            tcpClient = null;
+            client = null;
+
+            User.PrintError("Error connecting to back end");
         }
 
         public static void Signout()
@@ -95,9 +80,9 @@ namespace client
                 Client.Write(memoryStream.ToArray(), 0, (int)memoryStream.Length);
                 Client.Flush();
             }
-            catch (Exception e)
+            catch
             {
-                User.PrintErrorAndClose(e);
+                Stream.Close();
             }
         }
 
@@ -128,9 +113,9 @@ namespace client
                     response.jObject = (JObject)JToken.ReadFrom(new BsonDataReader(new MemoryStream(bufferBson)));
                 }
             }
-            catch (Exception e)
+            catch
             {
-                User.PrintErrorAndClose(e);
+                Stream.Close();
             }
 
             return response;
@@ -140,11 +125,11 @@ namespace client
         {
             try
             {
-                return _Response(response, code);
+                return ResponseWithoutTryCatch(response, code);
             }
             catch (Exception e)
             {
-                User.PrintErrorAndKeep(e);
+                User.PrintError(e);
             }
 
             return false;
@@ -156,7 +141,7 @@ namespace client
 
             try
             {
-                return _Response(response, code);
+                return ResponseWithoutTryCatch(response, code);
             }
             catch (Exception e)
             {
@@ -166,7 +151,7 @@ namespace client
             return false;
         }
 
-        private static bool _Response(Response response, Codes code)
+        private static bool ResponseWithoutTryCatch(Response response, Codes code)
         {
             string error;
 

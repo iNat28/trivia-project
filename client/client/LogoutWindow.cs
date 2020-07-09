@@ -21,18 +21,11 @@ namespace client
 
         protected override void OnClosed(EventArgs e)
         {
-            base.OnClosed(e);
-
             if (toClose)
             {
                 Stream.Signout();
                 Stream.Close();
             }
-        }
-
-        protected void OnClosedBase(EventArgs e)
-        {
-            base.OnClosed(e);
         }
     }
 }

@@ -25,6 +25,24 @@ void to_json(json& j, const RoomData& roomData)
 Room::Room(RoomData roomData) : 
 	m_roomdata(roomData)
 {
+	if (roomData.timePerQuestion > MAX_ANSWER_TIME)
+	{
+		Exception::ex << "Max answer time is " << MAX_ANSWER_TIME << '!';
+		throw Exception();
+	}
+	else if (roomData.timePerQuestion < 1)
+	{
+		throw Exception("Minimum answer time is 1!");
+	}
+	else if (roomData.questionsCount > MAX_QUESTION_COUNT)
+	{
+		Exception::ex << "Max amount of questions is " << MAX_QUESTION_COUNT << '!';
+		throw Exception();
+	}
+	else if (roomData.questionsCount < 1)
+	{
+		throw Exception("Minimum amount of questions is 1!");
+	}
 }
 
 Room::Room()
@@ -61,9 +79,9 @@ void Room::removeUser(LoggedUser user)
 	throw Exception("User not found");
 }
 
-void Room::close()
+unsigned int Room::getQuestionsCount() const
 {
-	this->m_roomdata.roomStatus = RoomStatus::CLOSED;
+	return this->m_roomdata.questionsCount;
 }
 
 vector<LoggedUser> Room::getAllUsers() const
@@ -84,6 +102,11 @@ unsigned int Room::getId() const
 void Room::setId(unsigned int id)
 {
 	this->m_roomdata.id = id;
+}
+
+void Room::setRoomStatus(RoomStatus roomStatus)
+{
+	this->m_roomdata.roomStatus = roomStatus;
 }
 
 void to_json(json& j, const Room& room)
