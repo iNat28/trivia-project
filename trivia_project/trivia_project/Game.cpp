@@ -51,18 +51,12 @@ void from_json(const json& j, Question& question)
 }
 
 Game::Game(Room& room, Questions questions) :
-	m_room(room)
+	m_room(room), m_questions(questions)
 {
 	for (const auto& player : m_room.getAllUsers())
 	{
 		this->m_players[player];
-		this->m_questions[player] = questions;
 	}
-}
-
-Game::Game() : 
-	m_room(*std::make_shared<Room>())
-{
 }
 
 const Question& Game::getQuestion(LoggedUser user) const
@@ -71,28 +65,28 @@ const Question& Game::getQuestion(LoggedUser user) const
 	{
 		throw Exception("Couldn't get question - no questions left!");
 	}
-	return this->m_questions.at(user).back();
+	return this->m_questions[this->m_players.at(user).currentQuestionIndex];
 }
 
 unsigned int Game::submitAnswer(LoggedUser user, int answerIndex, double answerTime)
 {
-	PlayerResults& playerResults = this->m_players[user].playerResults;
+	GameData& gameData = this->m_players[user];
 	const Question& question = this->getQuestion(user);
 
-	playerResults.averageAnswerTime = 
-		(playerResults.averageAnswerTime * playerResults.totalNumAnswers() + answerTime) / 
-		(playerResults.totalNumAnswers() + 1.0);
+	gameData.playerResults.averageAnswerTime =
+		(gameData.playerResults.averageAnswerTime * gameData.playerResults.totalNumAnswers() + answerTime) /
+		(gameData.playerResults.totalNumAnswers() + 1.0);
 	if (question.correctAnswerIndex == answerIndex)
 	{
-		playerResults.numCorrectAnswers++;
-		playerResults.numPoints += (unsigned int)(question.difficulty * (MAX_ANSWER_TIME + 1 - answerTime) * POINT_MULTIPLIER);
+		gameData.playerResults.numCorrectAnswers++;
+		gameData.playerResults.numPoints += (unsigned int)(question.difficulty * (MAX_ANSWER_TIME + 1.0 - answerTime) * POINT_MULTIPLIER);
 	}
 	else
 	{
-		playerResults.numWrongAnswers++;
+		gameData.playerResults.numWrongAnswers++;
 	}
 
-	this->m_questions[user].pop_back();
+	gameData.currentQuestionIndex++;
 	return question.correctAnswerIndex;
 }
 
@@ -101,15 +95,13 @@ void Game::removePlayer(LoggedUser user)
 	this->m_players[user].gotResults = true;
 }
 
-//Returns the players results, and if all of the users received the game results
+//Makes sure to check that the game isn't over
 vector<UserResults> Game::getGameResults(LoggedUser user)
 {
-	if (!this->m_questions[user].empty())
+	if (this->m_players.at(user).currentQuestionIndex < this->m_questions.size())
 	{
 		throw Exception("The game isn't over!");
 	}
-
-	this->m_players[user].gotResults = true;
 
 	return this->getGameResults();
 }
@@ -117,7 +109,7 @@ vector<UserResults> Game::getGameResults(LoggedUser user)
 vector<UserResults> Game::getGameResults()
 {
 	vector<UserResults> playersResults;
-	
+
 	//Converts the map so the value will be PlayerResults and not GameData
 	for (const auto& player : this->m_players)
 	{
@@ -170,12 +162,12 @@ Game& Game::operator=(const Game& other)
 	return *this;
 }
 
-GameData::GameData(PlayerResults playerResults, bool gotResults) : 
-	playerResults(playerResults), gotResults(gotResults)
+GameData::GameData(PlayerResults playerResults, bool gotResults, unsigned int currentQuestionIndex) :
+	playerResults(playerResults), gotResults(gotResults), currentQuestionIndex(currentQuestionIndex)
 {
 }
 
-GameData::GameData() : 
-	playerResults(), gotResults(false)
+GameData::GameData() :
+	playerResults(), gotResults(false), currentQuestionIndex(0)
 {
 }

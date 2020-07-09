@@ -11,7 +11,7 @@ RequestResult LoginRequestHandler::handleRequest(const RequestInfo& requestInfo)
 	return this->handleAllRequests(requestInfo, *this, this->m_requests);
 }
 
-RequestResult LoginRequestHandler::_login(const RequestInfo& requestInfo) const
+RequestResult LoginRequestHandler::_login(const RequestInfo& requestInfo)
 {
 	LoginRequest loginRequest = JsonRequestPacketDeserializer::deserializeLoginRequest(requestInfo.buffer);
 	
@@ -26,7 +26,7 @@ RequestResult LoginRequestHandler::_login(const RequestInfo& requestInfo) const
 	);
 }
 
-RequestResult LoginRequestHandler::_signup(const RequestInfo& requestInfo) const
+RequestResult LoginRequestHandler::_signup(const RequestInfo& requestInfo)
 {
 	SignupRequest signupRequest = JsonRequestPacketDeserializer::deserializeSignupRequest(requestInfo.buffer);
 

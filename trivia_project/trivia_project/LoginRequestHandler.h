@@ -17,9 +17,9 @@ public:
 	virtual RequestResult handleRequest(const RequestInfo& requestInfo) override;
 private:
 	RequestHandlerFactory& m_handlerFactory;
-	using requests_func_t = RequestResult (LoginRequestHandler::*)(const RequestInfo&) const;
+	using requests_func_t = RequestResult (LoginRequestHandler::*)(const RequestInfo&);
 	static const map<Codes, LoginRequestHandler::requests_func_t> m_requests;
 	
-	RequestResult _login(const RequestInfo& requestInfo) const;
-	RequestResult _signup(const RequestInfo& requestInfo) const;
+	RequestResult _login(const RequestInfo& requestInfo);
+	RequestResult _signup(const RequestInfo& requestInfo);
 };

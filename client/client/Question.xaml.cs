@@ -33,7 +33,7 @@ namespace client
         private bool showResults;
 
         //mutex
-        private readonly Mutex mutex;
+        private Mutex mutex;
         private double currentTime;
 
         //threads
@@ -58,8 +58,6 @@ namespace client
             this.answersAreDisplayed = false;
             this.showResults = true;
 
-            this.mutex = new Mutex();
-
             this.thread = new BackgroundWorker
             {
                 WorkerReportsProgress = true,
@@ -79,6 +77,8 @@ namespace client
             int answerTime = (int)param[1];
 
             base.ErrorOutput = this.ErrorBox;
+            this.mutex?.Close();
+            this.mutex = new Mutex();
 
             this.numCorrectAnswers = 0;
             this.currentTime = answerTime;
@@ -95,6 +95,7 @@ namespace client
             this.TimeTookForAnswerOutput.Text = "";
 
             this.GetQuestion();
+            this.stopwatch.Restart();
             this.ResetAnswerColors();
             this.thread.RunWorkerAsync();
         }
@@ -103,9 +104,15 @@ namespace client
         {
             this.mutex.WaitOne();
             Thread.Sleep(1000);
-            this.stopwatch.Start();
+            
             while (true)
             {
+                if (this.thread.CancellationPending)
+                {
+                    e.Cancel = true;
+                    break;
+                }
+
                 //Update time
                 this.mutex.ReleaseMutex();
                 this.thread.ReportProgress((int)ThreadCodes.UPDATE_TIME, null);
@@ -138,14 +145,9 @@ namespace client
                     }
                     else
                     {
-                        this.thread.CancelAsync();
+                        e.Cancel = true;
+                        break;
                     }
-                }
-
-                if (this.thread.CancellationPending)
-                {
-                    e.Cancel = true;
-                    break;
                 }
 
                 Thread.Sleep(900);
@@ -188,6 +190,10 @@ namespace client
             if (Stream.Response(usersResponse, Codes.GET_QUESTION))
             {
                 UpdateNewQuestion(usersResponse.jObject);
+            }
+            else
+            {
+                this.thread.CancelAsync();
             }
         }
 
@@ -305,6 +311,10 @@ namespace client
 
                 this.numQuestionsLeft--;
             }
+            else
+            {
+                this.thread.CancelAsync();
+            }
         }
 
         private void GetNewQuestion()
@@ -346,7 +356,7 @@ namespace client
 
         protected override void OnHide(object sender, CancelEventArgs e)
         {
-            if(!WindowManager.exit)
+            if (!WindowManager.exit)
             {
                 base.OnHide(sender, e);
                 LeaveGame();
@@ -357,10 +367,11 @@ namespace client
         {
             this.stopwatch.Stop();
             this.showResults = false;
-            this.thread.CancelAsync();
 
             if (Stream.Response(Stream.Send(Codes.LEAVE_GAME), Codes.LEAVE_GAME))
             {
+                this.thread.CancelAsync();
+
                 WindowManager.OpenWindow(WindowTypes.MAIN);
             }
         }

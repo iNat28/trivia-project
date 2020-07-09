@@ -3,8 +3,8 @@
 
 //TODO: Make sure things are const
 
-MenuRequestHandler::MenuRequestHandler(RequestHandlerFactory& handlerFactory, LoggedUser user) :
-	LoggedUserRequestHandler(user), m_handlerFactory(handlerFactory)
+MenuRequestHandler::MenuRequestHandler(RequestHandlerFactory& handlerFactory) :
+	m_handlerFactory(handlerFactory)
 {
 }
 
@@ -13,7 +13,12 @@ RequestResult MenuRequestHandler::handleRequest(const RequestInfo& requestInfo)
 	return this->handleAllRequests(requestInfo, *this, this->m_requests);
 }
 
-RequestResult MenuRequestHandler::_signout(const RequestInfo& requestInfo) const
+void MenuRequestHandler::reset(LoggedUser user)
+{
+	this->m_user = user;
+}
+
+RequestResult MenuRequestHandler::_signout(const RequestInfo& requestInfo)
 {
 	//Throws an Exception if the login doesn't work
 	this->m_handlerFactory.getLoginManager().logout(this->m_user.username);
@@ -26,17 +31,17 @@ RequestResult MenuRequestHandler::_signout(const RequestInfo& requestInfo) const
 	);
 }
 
-RequestResult MenuRequestHandler::_getRooms(const RequestInfo& requestInfo) const
+RequestResult MenuRequestHandler::_getRooms(const RequestInfo& requestInfo)
 {
 	return RequestResult(
 		JsonResponsePacketSerializer::serializeResponse(
 			GetRoomResponse(this->m_handlerFactory.getRoomManager().getRooms())
 		),
-		this->m_handlerFactory.createMenuRequestHandler(this->m_user)
+		*this
 	);
 }
 
-RequestResult MenuRequestHandler::_getPlayersInRoom(const RequestInfo& requestInfo) const
+RequestResult MenuRequestHandler::_getPlayersInRoom(const RequestInfo& requestInfo)
 {
 	GetPlayersInRoomRequest::RoomIdRequest getPlayersInRoomRequest = JsonRequestPacketDeserializer::deserializeRoomIdRequest(requestInfo.buffer);
 
@@ -44,31 +49,31 @@ RequestResult MenuRequestHandler::_getPlayersInRoom(const RequestInfo& requestIn
 			JsonResponsePacketSerializer::serializeResponse(
 				GetPlayersInRoomResponse(this->m_handlerFactory.getRoomManager().getUsersInRoom(getPlayersInRoomRequest.roomId))
 		),
-		this->m_handlerFactory.createMenuRequestHandler(this->m_user)
+		*this
 	);
 }
 
-RequestResult MenuRequestHandler::_getUserStats(const RequestInfo& requestInfo) const
+RequestResult MenuRequestHandler::_getUserStats(const RequestInfo& requestInfo)
 {
 	return RequestResult(
 		JsonResponsePacketSerializer::serializeResponse(
 			GetUserStatsResponse(this->m_handlerFactory.getStatisticsManager().getUserStats(this->m_user.username))
 		),
-		this->m_handlerFactory.createMenuRequestHandler(this->m_user)
+		*this
 	);
 }
 
-RequestResult MenuRequestHandler::_getHighScores(const RequestInfo& requestInfo) const
+RequestResult MenuRequestHandler::_getHighScores(const RequestInfo& requestInfo)
 {
 	return RequestResult(
 		JsonResponsePacketSerializer::serializeResponse(
 			GetHighScoresResponse(this->m_handlerFactory.getStatisticsManager().getHighScores())
 		),
-		this->m_handlerFactory.createMenuRequestHandler(this->m_user)
+		*this
 	);
 }
 
-RequestResult MenuRequestHandler::_joinRoom(const RequestInfo& requestInfo) const
+RequestResult MenuRequestHandler::_joinRoom(const RequestInfo& requestInfo)
 {
 	JoinRoomRequest::RoomIdRequest joinRoomRequest = JsonRequestPacketDeserializer::deserializeRoomIdRequest(requestInfo.buffer);
 
@@ -85,7 +90,7 @@ RequestResult MenuRequestHandler::_joinRoom(const RequestInfo& requestInfo) cons
 	);
 }
 
-RequestResult MenuRequestHandler::_createRoom(const RequestInfo& requestInfo) const
+RequestResult MenuRequestHandler::_createRoom(const RequestInfo& requestInfo)
 {
 	CreateRoomRequest createRoomRequest = JsonRequestPacketDeserializer::deserializeCreateRoomRequest(requestInfo.buffer);
 

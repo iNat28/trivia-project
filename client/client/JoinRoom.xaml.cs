@@ -74,7 +74,7 @@ namespace client
     {
         private RoomData selectedRoom;
         private readonly BackgroundWorker backgroundWorker;
-        private readonly Mutex sendingMutex;
+        private Mutex sendingMutex;
         private readonly List<RoomData> rooms;
         
         //TODO: Need to show the rooms and all of it's room state, and if it's game started, or if it is maxed out for players
@@ -82,7 +82,6 @@ namespace client
         public JoinRoomWindow()
         {
             InitializeComponent();
-            this.sendingMutex = new Mutex();
             this.rooms = new List<RoomData>();
 
             backgroundWorker = new BackgroundWorker
@@ -97,16 +96,12 @@ namespace client
 
         public override void OnShow(params object[] param)
         {
-            base.ErrorOutput = this.ErrorOutput;
+            base.ErrorOutput = this.ErrorBox;
             this.rooms.Clear();
+            this.RoomsList.Items.Clear();
+            this.sendingMutex?.Close();
+            this.sendingMutex = new Mutex();
             backgroundWorker.RunWorkerAsync();
-        }
-
-        protected override void OnClosed(EventArgs e)
-        {
-            backgroundWorker.CancelAsync();
-
-            base.OnClosed(e);
         }
 
         private void JoinRoomButton_Click(object sender, RoutedEventArgs e)
@@ -128,6 +123,7 @@ namespace client
             if (Stream.Response(response, Codes.JOIN_ROOM) && this.RoomsList.SelectedItem != null)
             {
                 backgroundWorker.CancelAsync();
+                
                 WindowManager.OpenWindow(WindowTypes.ROOM, false, this.selectedRoom);
             }
             sendingMutex.ReleaseMutex();
@@ -196,7 +192,7 @@ namespace client
                 }
                 else
                 {
-                    if (error == "")
+                    if (error == "exit")
                     {
                         e.Cancel = true;
                         break;

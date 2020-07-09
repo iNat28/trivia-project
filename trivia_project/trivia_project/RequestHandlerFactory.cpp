@@ -14,25 +14,29 @@ LoginRequestHandler& RequestHandlerFactory::createLoginRequestHandler()
 
 MenuRequestHandler& RequestHandlerFactory::createMenuRequestHandler(LoggedUser user)
 {
-	static MenuRequestHandler menuRequestHandler(*this, user);
+	static MenuRequestHandler menuRequestHandler(*this);
+	menuRequestHandler.reset(user);
 	return menuRequestHandler;
 }
 
 RoomAdminRequestHandler& RequestHandlerFactory::createRoomAdminRequestHandler(LoggedUser user, Room& room)
 {
-	static RoomAdminRequestHandler roomAdminRequestHandler(*this, user, room);
+	static RoomAdminRequestHandler roomAdminRequestHandler(*this);
+	roomAdminRequestHandler.reset(user, room);
 	return roomAdminRequestHandler;
 }
 
 RoomMemberRequestHandler& RequestHandlerFactory::createRoomMemberRequestHandler(LoggedUser user, Room& room)
 {
-	static RoomMemberRequestHandler roomMemberRequestHandler(*this, user, room);
+	static RoomMemberRequestHandler roomMemberRequestHandler(*this);
+	roomMemberRequestHandler.reset(user, room);
 	return roomMemberRequestHandler;
 }
 
 GameRequestHandler& RequestHandlerFactory::createGameRequestHandler(LoggedUser user, Game& game)
 {
-	static GameRequestHandler gameRequestHandler(*this, user, game);
+	static GameRequestHandler gameRequestHandler(*this);
+	gameRequestHandler.reset(user, game);
 	return gameRequestHandler;
 }
 

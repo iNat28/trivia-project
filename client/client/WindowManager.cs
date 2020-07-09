@@ -39,7 +39,6 @@ namespace client
             { WindowTypes.RESULT, new ResultsWindow() }
         };
 
-        public delegate void OpenWindowFunc();
         public static bool exit = false;
 
         private static CustomWindow currentWindow;
@@ -47,12 +46,17 @@ namespace client
         public static void OpenWindow(WindowTypes windowToOpen, params object[] param)
         {
             CustomWindow oldWindow = currentWindow;
+            
             currentWindow = windows[windowToOpen];
             currentWindow.OnShow(param);
-            currentWindow.ErrorOutput.Text = "";
+            
+            if (currentWindow.ErrorOutput != null)
+            {
+                currentWindow.ErrorOutput.Text = "";
+            }
 
-            currentWindow.Show();
             oldWindow.Hide();
+            currentWindow.Show();
         }
 
         public static void Start()

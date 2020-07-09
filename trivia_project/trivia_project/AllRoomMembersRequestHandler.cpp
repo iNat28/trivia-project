@@ -1,17 +1,24 @@
 #include "pch.h"
 #include "AllRoomMembersRequestHandler.h"
 
-AllRoomMembersRequestHandler::AllRoomMembersRequestHandler(LoggedUser user, Room& room) : 
-	LoggedUserRequestHandler(user), m_room(room)
+void AllRoomMembersRequestHandler::reset(LoggedUser user, Room& room)
+{
+	this->m_user = user;
+	this->m_room = &room;
+}
+
+AllRoomMembersRequestHandler::AllRoomMembersRequestHandler() :
+	m_room(nullptr)
 {
 }
+
 //getting room state of room
-Buffer AllRoomMembersRequestHandler::_getRoomStateNoHandler(const RequestInfo& requestInfo) const
+Buffer AllRoomMembersRequestHandler::_getRoomStateNoHandler(const RequestInfo& requestInfo)
 {
 	return JsonResponsePacketSerializer::serializeResponse(
 		GetRoomStateResponse(
-			this->m_room.getRoomStatus(),
-			this->m_room.getAllUsers()
+			this->m_room->getRoomStatus(),
+			this->m_room->getAllUsers()
 		)
 	);
 }

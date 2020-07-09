@@ -28,18 +28,18 @@ void from_json(const json& j, Question& question);
 
 struct GameData
 {
-	GameData(PlayerResults playerResults, bool gotResults);
+	GameData(PlayerResults playerResults, bool gotResults, unsigned int currentQuestionIndex);
 	GameData();
 
 	PlayerResults playerResults;
 	bool gotResults; //If the player recieved the data
+	unsigned int currentQuestionIndex;
 };
 
 class Game
 {
 public:
 	Game(Room& room, Questions questions);
-	Game();
 
 	const Question& getQuestion(LoggedUser user) const;
 	unsigned int submitAnswer(LoggedUser user, int answerIndex, double answerTime);
@@ -47,7 +47,6 @@ public:
 	vector<UserResults> getGameResults(LoggedUser user);
 	vector<UserResults> getGameResults();
 	
-
 	Room& getRoom();
 	bool allPlayersGotResults() const;
 	bool operator==(const Game& other) const;
@@ -56,7 +55,7 @@ public:
 	//Needed for unknown reason
 	Game& operator=(const Game& other);
 private:
-	map<LoggedUser, Questions> m_questions;
+	Questions m_questions;
 	map<LoggedUser, GameData> m_players;
 	Room& m_room;
 };

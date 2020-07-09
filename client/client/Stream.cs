@@ -153,7 +153,10 @@ namespace client
             }
             catch (Exception e)
             {
-                WindowManager.PrintError(e);
+                if (e.Message != "exit")
+                {
+                    WindowManager.PrintError(e);
+                }
             }
 
             return false;
@@ -179,17 +182,15 @@ namespace client
         {
             string error;
 
-            if(response == null)
+            if (response == null)
             {
-                return false;
+                error = "exit";
             }
-
-            if (response.code == code)
+            else if (response.code == code)
             {
                 return true;
             }
-
-            if (response.code == Codes.ERROR_CODE)
+            else if (response.code == Codes.ERROR_CODE)
             {
                 error = (string)response.jObject["message"];
             }

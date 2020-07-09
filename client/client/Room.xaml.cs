@@ -24,8 +24,8 @@ namespace client
     {
         private bool isAdmin;
         private readonly BackgroundWorker backgroundWorker;
-        private readonly Mutex sendingMutex;
-        private Status roomStatus = Status.OPEN;                     
+        private Mutex sendingMutex;
+        private Status roomStatus;                     
 
         public enum Status
         { 
@@ -38,8 +38,8 @@ namespace client
         {
             InitializeComponent();
 
-            sendingMutex = new Mutex();
-            
+            this.roomStatus = Status.OPEN;
+
             //adding users
             backgroundWorker = new BackgroundWorker
             {
@@ -59,6 +59,10 @@ namespace client
 
             base.ErrorOutput = this.errorOutput;
 
+            this.roomStatus = Status.OPEN;
+            sendingMutex?.Close();
+            sendingMutex = new Mutex();
+
             if (isAdmin)
                 this.LeaveRoomButton.Visibility = Visibility.Hidden;
             else
@@ -72,6 +76,7 @@ namespace client
             this.MaxPlayers.Text = roomData.maxPlayers.ToString();
             this.TimePerQuestion.Text = roomData.timePerQuestion.ToString();
             this.NumQuestions.Text = roomData.questionsCount.ToString();
+            this.NamesList.Items.Clear();
 
             backgroundWorker.RunWorkerAsync();
         }
@@ -94,26 +99,26 @@ namespace client
 
         private void CloseRoom()
         {
-            backgroundWorker.CancelAsync();
-
             sendingMutex.WaitOne();
             Response response = Stream.Send(Codes.CLOSE_ROOM);
 
             if (Stream.Response(response, Codes.CLOSE_ROOM))
             {
+                backgroundWorker.CancelAsync();
+
                 WindowManager.OpenWindow(WindowTypes.MAIN);
             }
         }
 
         private void LeaveRoom()
         {
-            backgroundWorker.CancelAsync();
-
             sendingMutex.WaitOne();
             Response response = Stream.Send(Codes.LEAVE_ROOM);
 
             if (Stream.Response(response, Codes.LEAVE_ROOM))
             {
+                backgroundWorker.CancelAsync();
+
                 WindowManager.OpenWindow(WindowTypes.MAIN);
             }
         }
@@ -124,13 +129,13 @@ namespace client
 
         private void StartGameButton_Click(object sender, RoutedEventArgs e)
         {
-            backgroundWorker.CancelAsync();
-
             sendingMutex.WaitOne();
             Response response = Stream.Send(Codes.START_GAME);
 
             if (Stream.Response(response, Codes.START_GAME))
             {
+                backgroundWorker.CancelAsync();
+
                 this.ShowQuestionWindow();
             }
         }
@@ -157,8 +162,6 @@ namespace client
 
                 sendingMutex.WaitOne();
                 Response usersResponse = Stream.Send(Codes.GET_ROOM_STATE);
-
-                backgroundWorker.ReportProgress(0, "");
 
                 if (Stream.ResponseForThread(usersResponse, Codes.GET_ROOM_STATE, out string error))
                 {
@@ -194,7 +197,7 @@ namespace client
                 }
                 else
                 {
-                    if (error == "")
+                    if (error == "exit")
                     {
                         e.Cancel = true;
                         break;
