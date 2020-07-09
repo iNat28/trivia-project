@@ -74,18 +74,18 @@ const Question& Game::getQuestion(LoggedUser user) const
 	return this->m_questions.at(user).back();
 }
 
-unsigned int Game::submitAnswer(LoggedUser user, int answerIndex, int answerTime)
+unsigned int Game::submitAnswer(LoggedUser user, int answerIndex, double answerTime)
 {
 	PlayerResults& playerResults = this->m_players[user].playerResults;
 	const Question& question = this->getQuestion(user);
 
 	playerResults.averageAnswerTime = 
 		(playerResults.averageAnswerTime * playerResults.totalNumAnswers() + answerTime) / 
-		(float)(playerResults.totalNumAnswers() + 1);
+		(playerResults.totalNumAnswers() + 1.0);
 	if (question.correctAnswerIndex == answerIndex)
 	{
 		playerResults.numCorrectAnswers++;
-		playerResults.numPoints += question.difficulty * (MAX_ANSWER_TIME + 1 - answerTime) * POINT_MULTIPLIER;
+		playerResults.numPoints += (unsigned int)(question.difficulty * (MAX_ANSWER_TIME + 1 - answerTime) * POINT_MULTIPLIER);
 	}
 	else
 	{

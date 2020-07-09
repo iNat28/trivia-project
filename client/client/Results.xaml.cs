@@ -23,10 +23,10 @@ namespace client
     {
         public string PlayerName { get; set; }
         public int NumCorrectAnswers { get; set; }
-        public float AverageAnswerTime { get; set; }
+        public double AverageAnswerTime { get; set; }
         public int NumPoints { get; set; }
 
-        public MyResults(string playerName, int numCorrectAnswers, float averageAnswerTime, int numPoints)
+        public MyResults(string playerName, int numCorrectAnswers, double averageAnswerTime, int numPoints)
         {
             this.PlayerName = playerName;
             this.NumCorrectAnswers = numCorrectAnswers;
@@ -53,7 +53,7 @@ namespace client
 
                 foreach (var result in results)
                 {
-                    MyResults playerResult = new MyResults((string)result[Keys.username], (int)result[Keys.numCorrectAnswers], (float)result[Keys.averageAnswerTime], (int)result[Keys.numPoints]);
+                    MyResults playerResult = new MyResults((string)result[Keys.username], (int)result[Keys.numCorrectAnswers], (double)result[Keys.averageAnswerTime], (int)result[Keys.numPoints]);
                     playerStats.Items.Add(playerResult);
                 }
             }

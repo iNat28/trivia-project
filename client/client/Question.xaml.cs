@@ -34,7 +34,7 @@ namespace client
 
         //mutex
         private readonly Mutex mutex;
-        private int currentTime;
+        private double currentTime;
 
         //threads
         private readonly BackgroundWorker thread;
@@ -245,14 +245,14 @@ namespace client
             if (!answersAreDisplayed && this.selectedAnswerIndex != index)
             {
                 this.ResetAnswerColors();
-                this.currentTime = Convert.ToInt32(this.stopwatch.ElapsedMilliseconds / 1000.0);
+                this.currentTime = this.stopwatch.ElapsedMilliseconds / 1000.0;
                 this.selectedAnswerIndex = index;
                 
                 Button selectedButton = this.GetAnswerButtonFromIndex(index);
                 selectedButton.Background = Brushes.LightBlue;
                 
                 this.SelectedAnswerOutput.Text = (string)selectedButton.Content;
-                this.TimeTookForAnswerOutput.Text = this.currentTime.ToString();
+                this.TimeTookForAnswerOutput.Text = String.Format("{0:.##}", this.currentTime);
             }
         }
 
@@ -282,6 +282,10 @@ namespace client
                         numCorrectAnswers++;
                     }
                 }
+                else
+                {
+                    this.TimeTookForAnswerOutput.Text = this.currentTime.ToString();
+                }
                 
                 Button correctButton = this.GetAnswerButtonFromIndex(correctAnswerIndex);
                 correctButton.Background = Brushes.Green;
@@ -297,6 +301,8 @@ namespace client
             this.CorrectAnswers.Text = this.numCorrectAnswers.ToString();
             this.AnswersLeft.Text = numQuestionsLeft.ToString();
             this.TimeLeft.Text = this.timeLeft.ToString();
+            this.SelectedAnswerOutput.Text = "";
+            this.TimeTookForAnswerOutput.Text = "";
             this.selectedAnswerIndex = -1;
             this.currentTime = this.timeLeft;
 

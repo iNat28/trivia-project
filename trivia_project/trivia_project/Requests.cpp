@@ -21,7 +21,7 @@ CreateRoomRequest::CreateRoomRequest(Room room) :
 {
 }
 
-SubmitAnswerRequest::SubmitAnswerRequest(unsigned int answerIndex, unsigned int answerTime) :
+SubmitAnswerRequest::SubmitAnswerRequest(unsigned int answerIndex, double answerTime) :
 	answerIndex(answerIndex), answerTime(answerTime)
 {
 }

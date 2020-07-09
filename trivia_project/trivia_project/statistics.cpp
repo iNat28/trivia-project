@@ -22,7 +22,7 @@ UserStats::UserStats() :
 }
 
 PlayerResults::PlayerResults(unsigned int numCorrectAnswers, unsigned int numWrongAnswers, 
-								float averageAnswerTime, unsigned int numPoints) :
+								double averageAnswerTime, unsigned int numPoints) :
 	numCorrectAnswers(numCorrectAnswers), numWrongAnswers(numWrongAnswers), averageAnswerTime(averageAnswerTime), numPoints(numPoints)
 {
 }
@@ -36,12 +36,13 @@ void PlayerResults::setAverageAnswerTime(const PlayerResults& other)
 {
 	this->averageAnswerTime =
 		(other.averageAnswerTime * other.totalNumAnswers() + this->averageAnswerTime * this->totalNumAnswers()) /
-		(float)(other.totalNumAnswers() + this->totalNumAnswers());
+		(other.totalNumAnswers() + this->totalNumAnswers());
 }
 
-unsigned int PlayerResults::totalNumAnswers() const
+//It's a double since it's used with the average answer time
+double PlayerResults::totalNumAnswers() const
 {
-	return this->numCorrectAnswers + this->numWrongAnswers;
+	return double(this->numCorrectAnswers + this->numWrongAnswers);
 }
 
 void to_json(json& j, const UserHighScore& userHighScore)

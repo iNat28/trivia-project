@@ -42,7 +42,7 @@ public:
 	Game();
 
 	const Question& getQuestion(LoggedUser user) const;
-	unsigned int submitAnswer(LoggedUser user, int answerIndex, int answerTime);
+	unsigned int submitAnswer(LoggedUser user, int answerIndex, double answerTime);
 	void removePlayer(LoggedUser user);
 	vector<UserResults> getGameResults(LoggedUser user);
 	vector<UserResults> getGameResults();

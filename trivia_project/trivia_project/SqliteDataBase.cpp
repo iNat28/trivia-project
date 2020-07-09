@@ -145,7 +145,7 @@ int SqliteDataBase::statistics_callback(void* data, int argc, char** argv, char*
 		else if (std::string(azColName[i]) == "numWrongAnswers")
 			userStats.playerResults.numWrongAnswers = atoi(argv[i]);
 		else if (std::string(azColName[i]) == "averageAnswerTime")
-			userStats.playerResults.averageAnswerTime = (float)atof(argv[i]);
+			userStats.playerResults.averageAnswerTime = atof(argv[i]);
 	}
 		
 	SqliteDataBase::m_usersStats.push_back(userStats);

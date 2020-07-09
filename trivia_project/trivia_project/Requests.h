@@ -42,8 +42,8 @@ struct CreateRoomRequest
 
 struct SubmitAnswerRequest
 {
-	SubmitAnswerRequest(unsigned int answerIndex, unsigned int answerTime);
+	SubmitAnswerRequest(unsigned int answerIndex, double answerTime);
 
 	unsigned int answerIndex;
-	unsigned int answerTime;
+	double answerTime;
 };

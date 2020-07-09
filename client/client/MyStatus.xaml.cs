@@ -36,7 +36,7 @@ namespace client
                 this.numOfGamesOutput.Text = "Number of Games - " + (int)userStats[Keys.numTotalGames];
                 this.numOfRightAnswersOutput.Text = "Number of Right Answers - " + (int)userStats[Keys.numCorrectAnswers];
                 this.numOfWrongAnswersOutput.Text = "Number of Wrong Answers - " + (int)userStats[Keys.numWrongAnswers];
-                this.avgTimeForAnswersOutput.Text = "Average answer time - " + (int)userStats[Keys.averageAnswerTime];
+                this.avgTimeForAnswersOutput.Text = "Average answer time - " + (double)userStats[Keys.averageAnswerTime];
 
                 response.jObject.ToString();
             }
