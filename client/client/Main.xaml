@@ -7,11 +7,11 @@
         mc:Ignorable="d"
         Title="Main Menu" Height="467.85" Width="989.75">
     <Grid>
-        <TextBlock x:Name="UsernameHeader" HorizontalAlignment="Center" Height="36" Margin="431,56,417,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="134"/>
-        <Button x:Name="SignoutButton" Content="Sign Out" HorizontalAlignment="Left" Margin="451,122,0,0" VerticalAlignment="Top" Width="94" Height="32" Click="SignoutButton_Click"/>
-        <Button x:Name="CreateRoomButton" Content="Create Room" HorizontalAlignment="Left" Margin="451,181,0,0" VerticalAlignment="Top" Width="94" Height="32" Click="CreateRoomButton_Click"/>
-        <Button x:Name="JoinRoomButton" Content="Join Room" HorizontalAlignment="Left" Margin="451,242,0,0" VerticalAlignment="Top" Width="94" Height="32" Click="JoinRoomButton_Click"/>
-        <Button x:Name="StatisticsButton" Content="Statistics" HorizontalAlignment="Left" Margin="451,299,0,0" VerticalAlignment="Top" Width="94" Height="32" Click="StatisticsButton_Click"/>
+        <TextBlock x:Name="UsernameHeader" FontSize="40" FontWeight="bold" FontFamily="cambria" HorizontalAlignment="Center" Height="55" Margin="408,36,395.2,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="180"/>
+        <Button x:Name="SignoutButton" Content="Sign Out" HorizontalAlignment="Left" Margin="432,122,0,0" VerticalAlignment="Top" Width="115" Height="32" Click="SignoutButton_Click"/>
+        <Button x:Name="CreateRoomButton" Content="Create Room" HorizontalAlignment="Left" Margin="432,181,0,0" VerticalAlignment="Top" Width="115" Height="32" Click="CreateRoomButton_Click"/>
+        <Button x:Name="JoinRoomButton" Content="Join Room" HorizontalAlignment="Left" Margin="432,243,0,0" VerticalAlignment="Top" Width="115" Height="32" Click="JoinRoomButton_Click"/>
+        <Button x:Name="StatisticsButton" Content="Statistics" HorizontalAlignment="Left" Margin="432,299,0,0" VerticalAlignment="Top" Width="115" Height="32" Click="StatisticsButton_Click"/>
         <TextBlock x:Name="errorOutput" HorizontalAlignment="Left" Margin="108,122,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="209" Width="237"/>
 
     </Grid>

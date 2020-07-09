@@ -7,12 +7,12 @@
         mc:Ignorable="d"
         Title="Results" Height="450" Width="800">
     <Grid>
-        <DataGrid x:Name="playerStats" HorizontalAlignment="Left" Height="223" Margin="130,72,0,0" VerticalAlignment="Top" Width="503">
+        <DataGrid x:Name="playerStats" HorizontalAlignment="Left" Height="223" Margin="99,77,0,0" VerticalAlignment="Top" Width="594">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Player Name" IsReadOnly="True" Binding="{Binding Path=PlayerName}" Width="85"></DataGridTextColumn>
-                <DataGridTextColumn Header="Number of Correct Answers" IsReadOnly="True"  Binding="{Binding Path=NumCorrectAnswers}" Width="170"></DataGridTextColumn>
-                <DataGridTextColumn Header="Average Answer Time" IsReadOnly="True" Binding="{Binding Path=AverageAnswerTime}" Width="130"></DataGridTextColumn>
-                <DataGridTextColumn Header="Number of Points" IsReadOnly="True"  Binding="{Binding Path=NumPoints}" Width="110"></DataGridTextColumn>
+                <DataGridTextColumn Header="Player Name" IsReadOnly="True" Binding="{Binding Path=PlayerName}" Width="105"></DataGridTextColumn>
+                <DataGridTextColumn Header="Number of Correct Answers" IsReadOnly="True"  Binding="{Binding Path=NumCorrectAnswers}" Width="190"></DataGridTextColumn>
+                <DataGridTextColumn Header="Average Answer Time" IsReadOnly="True" Binding="{Binding Path=AverageAnswerTime}" Width="150"></DataGridTextColumn>
+                <DataGridTextColumn Header="Number of Points" IsReadOnly="True"  Binding="{Binding Path=NumPoints}" Width="150"></DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
         <Button x:Name="ExitButton" Content="Exit" HorizontalAlignment="Left" Margin="300,330,0,0" VerticalAlignment="Top" Width="161" Height="43" Click="ExitButton_Click"/>

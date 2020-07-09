@@ -7,12 +7,12 @@
         mc:Ignorable="d"
         Title="My Status" Height="450" Width="800">
     <Grid>
-        <TextBlock x:Name="numOfGamesOutput" HorizontalAlignment="Left" Margin="296,171,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="212" Height="15"/>
-        <TextBlock x:Name="numOfRightAnswersOutput" HorizontalAlignment="Left" Margin="296,207,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="16" Width="210"/>
-        <TextBlock x:Name="numOfWrongAnswersOutput" HorizontalAlignment="Left" Margin="296,241,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="14" Width="212"/>
-        <TextBlock x:Name="avgTimeForAnswersOutput" HorizontalAlignment="Left" Margin="296,271,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="16" Width="212"/>
+        <TextBlock x:Name="numOfGamesOutput" HorizontalAlignment="Left" Margin="255,100,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="253" Height="40"/>
+        <TextBlock x:Name="numOfRightAnswersOutput" HorizontalAlignment="Left" Margin="255,160,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="40" Width="251"/>
+        <TextBlock x:Name="numOfWrongAnswersOutput" HorizontalAlignment="Left" Margin="255,220,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="40" Width="253"/>
+        <TextBlock x:Name="avgTimeForAnswersOutput" HorizontalAlignment="Left" Margin="255,280,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="40" Width="251"/>
         <Button x:Name="BackButton" Content="Back" HorizontalAlignment="Left" Margin="332,359,0,0" VerticalAlignment="Top" Width="75" Click="BackButton_Click"/>
-        <TextBlock x:Name="errorOutput" HorizontalAlignment="Left" Margin="24,24,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="355" Width="272"/>
-        <TextBlock x:Name="numPointsOutput" HorizontalAlignment="Left" Margin="296,139,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="212" Height="15"/>
+        <TextBlock x:Name="errorOutput" HorizontalAlignment="Left" Margin="24,24,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="355" Width="171"/>
+        <TextBlock x:Name="numPointsOutput" HorizontalAlignment="Left" Margin="255,40,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="253" Height="40"/>
     </Grid>
 </local:LogoutWindow>

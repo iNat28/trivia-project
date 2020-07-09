@@ -7,19 +7,22 @@
         mc:Ignorable="d"
         Title="Create Room" Height="450" Width="800">
     <Grid>
-        
+
         <TextBlock x:Name="RoomNameHeader" HorizontalAlignment="Left" Margin="247,46,0,0" TextWrapping="Wrap" Text="Room Name:" VerticalAlignment="Top"/>
         <TextBlock x:Name="AnswerTimeHeader" HorizontalAlignment="Left" Margin="246,154,0,0" TextWrapping="Wrap" Text="Answer Time:" VerticalAlignment="Top"/>
         <TextBlock x:Name="MaxPlayersHeader" HorizontalAlignment="Left" Margin="246,200,0,0" TextWrapping="Wrap" Text="Max Players:" VerticalAlignment="Top"/>
         <TextBox x:Name="RoomName" HorizontalAlignment="Left" Height="23" Margin="375,46,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
-        <TextBox x:Name="NumQuestion" HorizontalAlignment="Left" Margin="375,98,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Height="34"/>
-        <TextBox x:Name="AnswerTime" HorizontalAlignment="Left" Height="23" Margin="375,153,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
-        <TextBox x:Name="MaxPlayers" HorizontalAlignment="Left" Height="23" Margin="375,200,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+        <Slider x:Name="NumQuestionsSlider" Minimum="1" Maximum="10" TickPlacement="BottomRight" TickFrequency="1" IsSnapToTickEnabled="True" HorizontalAlignment="Left" Margin="358,98,0,0" VerticalAlignment="Top" Width="202" ValueChanged="NumQuestionsSlider_ValueChanged" Height="34"/>
+        <TextBox x:Name="QuestionsSliderTextBox" Text="" DockPanel.Dock="Right" TextAlignment="Right" Margin="565,98,184.6,288" TextChanged="TextBox_TextChanged" />
+        <Slider x:Name="AnswerTimeSlider" Minimum="1" Maximum="60" TickPlacement="BottomRight" TickFrequency="1" IsSnapToTickEnabled="True" HorizontalAlignment="Left" Margin="358,147,0,0" VerticalAlignment="Top" Width="202" ValueChanged="AnswerTimeSlider_ValueChanged" Height="23"/>
+        <TextBox x:Name="AnswerTimeTextBox" HorizontalAlignment="Left" Height="34" Margin="576,147,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="48" TextChanged="AnswerTimeTextBox_TextChanged"/>
+        <Slider x:Name="MaxPlayersSlider" Minimum="1" Maximum="5" TickPlacement="BottomRight" TickFrequency="1" IsSnapToTickEnabled="True" HorizontalAlignment="Left" Margin="358,193,0,0" VerticalAlignment="Top" Width="202" ValueChanged="MaxPlayersSlider_ValueChanged"/>
+        <TextBox x:Name="MaxPlayersTextBox" HorizontalAlignment="Left" Height="23" Margin="576,193,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="48" TextChanged="MaxPlayersTextBox_TextChanged"/>
+
         <Button x:Name="CreateRoomButton" Content="Create Room" HorizontalAlignment="Left" Margin="298,263,0,0" VerticalAlignment="Top" Width="161" Height="46" Click="CreateRoomButton_Click"/>
         <Button x:Name="BackButton" Content="Back" HorizontalAlignment="Left" Margin="329,350,0,0" VerticalAlignment="Top" Width="89" Height="27" Click="BackButton_Click"/>
         <TextBlock x:Name="errorOutput" HorizontalAlignment="Left" Margin="32,59,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="318" Width="180"/>
         <TextBlock x:Name="NumQuestionsHeader" HorizontalAlignment="Left" Margin="247,98,0,0" TextWrapping="Wrap" Text="Number of Questions:" VerticalAlignment="Top" Height="34" Width="69"/>
-        
-
+       
     </Grid>
 </local:LogoutWindow>
