@@ -23,7 +23,7 @@ namespace client
         public MainWindow()
         {
             InitializeComponent();
-            UsernameHeader.Text = "Hello " + User.username;
+            UsernameHeader.Text = " Hello " + User.username;
             User.errorOutput = this.errorOutput;
             User.currentWindow = this;
         }
