@@ -16,8 +16,8 @@ RequestResult LoginRequestHandler::handleRequest(const RequestInfo& requestInfo)
 		handler = m_requests.at(requestInfo.requestId);
 		return (this->*handler)(requestInfo);
 	}
-	//Login manager exception caught
-	catch (const Exception & e)
+	//Exception caught
+	catch (const std::exception & e)
 	{
 		return RequestResult(
 			JsonResponsePacketSerializer::serializeResponse(ErrorResponse(e.what())),
@@ -25,13 +25,6 @@ RequestResult LoginRequestHandler::handleRequest(const RequestInfo& requestInfo)
 		);
 	}
 	//Other exception caught (probably because of the json)
-	catch (const std::exception & e)
-	{
-		return RequestResult(
-			JsonResponsePacketSerializer::serializeResponse(ErrorResponse(e.what())),
-			nullptr
-		);
-	}
 }
 
 RequestResult LoginRequestHandler::_login(const RequestInfo& requestInfo) const

@@ -57,11 +57,10 @@ RequestResult RoomAdminRequestHandler::_startGame(const RequestInfo& requestInfo
 
 RequestResult RoomAdminRequestHandler::_getRoomState(const RequestInfo& requestInfo) const
 {
-	RequestResult requestResult = this->_getRoomStateNoHandler(requestInfo);
-
-	requestResult.newHandler = this->m_handlerFactory.createRoomAdminRequestHandler(this->m_user, this->m_room);
-
-	return requestResult;
+	return RequestResult(
+		this->_getRoomStateNoHandler(requestInfo),
+		this->m_handlerFactory.createRoomAdminRequestHandler(this->m_user, this->m_room)
+	);
 }
 
 const map<Codes, RoomAdminRequestHandler::requests_func_t> RoomAdminRequestHandler::m_requests = {

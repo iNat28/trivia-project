@@ -11,12 +11,7 @@ RequestInfo::RequestInfo() :
 {
 }
 
-RequestResult::RequestResult(Buffer response, IRequestHandlerPtr newHandler) :
+RequestResult::RequestResult(Buffer response, IRequestHandler& newHandler) :
 	response(response), newHandler(newHandler)
-{
-}
-
-RequestResult::RequestResult() : 
-	response(JsonResponsePacketSerializer::serializeResponse(ErrorResponse("Error occurred"))), newHandler(nullptr)
 {
 }

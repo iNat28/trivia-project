@@ -6,15 +6,12 @@ AllRoomMembersRequestHandler::AllRoomMembersRequestHandler(LoggedUser user, Room
 {
 }
 //getting room state of room
-RequestResult AllRoomMembersRequestHandler::_getRoomStateNoHandler(const RequestInfo& requestInfo) const
+Buffer AllRoomMembersRequestHandler::_getRoomStateNoHandler(const RequestInfo& requestInfo) const
 {
-	return RequestResult(
-		JsonResponsePacketSerializer::serializeResponse(
-			GetRoomStateResponse(
-				this->m_room.getRoomStatus(),
-				this->m_room.getAllUsers()
-			)
-		),
-		nullptr
+	return JsonResponsePacketSerializer::serializeResponse(
+		GetRoomStateResponse(
+			this->m_room.getRoomStatus(),
+			this->m_room.getAllUsers()
+		)
 	);
 }

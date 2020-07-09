@@ -25,11 +25,11 @@ class RequestHandlerFactory
 public:
 	RequestHandlerFactory(IDatabase& database);
 
-	std::shared_ptr<LoginRequestHandler> createLoginRequestHandler();
-	std::shared_ptr<MenuRequestHandler> createMenuRequestHandler(LoggedUser user);
-	std::shared_ptr<RoomAdminRequestHandler> createRoomAdminRequestHandler(LoggedUser user, Room& room);
-	std::shared_ptr<RoomMemberRequestHandler> createRoomMemberRequestHandler(LoggedUser user, Room& room);
-	std::shared_ptr<GameRequestHandler> createGameRequestHandler(LoggedUser user, Game& game);
+	LoginRequestHandler& createLoginRequestHandler();
+	MenuRequestHandler& createMenuRequestHandler(LoggedUser user);
+	RoomAdminRequestHandler& createRoomAdminRequestHandler(LoggedUser user, Room& room);
+	RoomMemberRequestHandler& createRoomMemberRequestHandler(LoggedUser user, Room& room);
+	GameRequestHandler& createGameRequestHandler(LoggedUser user, Game& game);
 	
 	LoginManager& getLoginManager();
 	RoomManager& getRoomManager();

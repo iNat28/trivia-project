@@ -19,11 +19,10 @@ struct RequestInfo
 
 struct RequestResult
 {
-	RequestResult(Buffer response, IRequestHandlerPtr newHandler);
-	RequestResult();
+	RequestResult(Buffer response, IRequestHandler& newHandler);
 
 	Buffer response;
-	IRequestHandlerPtr newHandler;
+	IRequestHandler& newHandler;
 };
 
 class IRequestHandler

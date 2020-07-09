@@ -8,6 +8,6 @@ protected:
 	AllRoomMembersRequestHandler(LoggedUser user, Room& room);
 	Room& m_room;
 	
-	RequestResult _getRoomStateNoHandler(const RequestInfo& requestInfo) const;
+	Buffer _getRoomStateNoHandler(const RequestInfo& requestInfo) const;
 };
 

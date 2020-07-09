@@ -39,25 +39,31 @@ RequestResult RoomMemberRequestHandler::_leaveRoom(const RequestInfo& requestInf
 
 RequestResult RoomMemberRequestHandler::_getRoomState(const RequestInfo& requestInfo) const
 {
-	RequestResult requestResult = this->_getRoomStateNoHandler(requestInfo);
+	Buffer resultBuffer = this->_getRoomStateNoHandler(requestInfo);
 
 	switch (this->m_room.getRoomStatus())
 	{
 	case RoomStatus::OPEN:
-		requestResult.newHandler = this->m_handlerFactory.createRoomMemberRequestHandler(this->m_user, this->m_room);
-		break;
-	case RoomStatus::CLOSED:
-		requestResult.newHandler = this->m_handlerFactory.createMenuRequestHandler(this->m_user);
-		break;
-	case RoomStatus::GAME_STARTED:
-		requestResult.newHandler = this->m_handlerFactory.createGameRequestHandler(
-			this->m_user,
-			this->m_handlerFactory.getGameManager().getGame(this->m_room)
+		return RequestResult(
+			resultBuffer,
+			this->m_handlerFactory.createRoomMemberRequestHandler(this->m_user, this->m_room)
 		);
-		break;
+	case RoomStatus::CLOSED:
+		return RequestResult(
+			resultBuffer,
+			this->m_handlerFactory.createRoomMemberRequestHandler(this->m_user, this->m_room)
+		);
+	case RoomStatus::GAME_STARTED:
+		return RequestResult(
+			resultBuffer,
+			this->m_handlerFactory.createGameRequestHandler(
+				this->m_user,
+				this->m_handlerFactory.getGameManager().getGame(this->m_room)
+			)
+		);
 	}
 
-	return requestResult;
+	throw Exception("Room status not found!");
 }
 
 const map<Codes, RoomMemberRequestHandler::requests_func_t> RoomMemberRequestHandler::m_requests = {

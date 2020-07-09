@@ -12,14 +12,13 @@ Communicator::Communicator(IDatabase& database) : m_handlerFactory(database), m_
 
 //Thread for handling new clients
 //Input: A communicator object, the client socket, the handler to start with
-void s_handleNewClient(Communicator& communicator, SOCKET socket, IRequestHandlerPtr handler)
+void s_handleNewClient(Communicator& communicator, SOCKET socket, IRequestHandler* handler)
 {
 	//Recieves from the buffer
 	char msgCodeBuffer[MSG_CODE_SIZE + 1] = "";
 	char msgLenBuffer[MSG_LEN_SIZE + 1] = "";
 	int msgLen = 0;
 	RequestInfo requestInfo;
-	RequestResult requestResult;
 	std::unique_ptr<char[]> msgBuffer;
 	char* msgBufferPtr = nullptr;
 
@@ -46,14 +45,9 @@ void s_handleNewClient(Communicator& communicator, SOCKET socket, IRequestHandle
 				Buffer(msgBufferPtr, msgBufferPtr + msgLen)
 			);
 
-			if (handler == nullptr)
-			{
-				throw Exception("Null handler");
-			}
 			//Handles the request, and gets the request result
-			requestResult = handler->handleRequest(requestInfo);
-			
-			handler = requestResult.newHandler;
+			RequestResult requestResult = handler->handleRequest(requestInfo);
+			handler = &requestResult.newHandler;
 
 			//Sends the request result response
 			Communicator::s_sendToSocket(socket, requestResult.response.data(), (int)requestResult.response.size());
@@ -73,7 +67,7 @@ void Communicator::startHandleRequests()
 {
 	SOCKET clientSocket = 0;
 	std::thread client;
-	IRequestHandlerPtr handler;
+	;
 
 	this->_bindAndListen();
 
@@ -88,14 +82,14 @@ void Communicator::startHandleRequests()
 		}
 
 		//Gets the login handler
-		handler = this->m_handlerFactory.createLoginRequestHandler();
+		IRequestHandler& handler = this->m_handlerFactory.createLoginRequestHandler();
 
 		//Puts the client into a thread
-		client = std::thread(s_handleNewClient, std::ref(*this), clientSocket, handler);
+		client = std::thread(s_handleNewClient, std::ref(*this), clientSocket, &handler);
 		client.detach();
 
 		//Adds the client's socket to the clients
-		this->m_clients[clientSocket] = handler;
+		this->m_clients[clientSocket] = &handler;
 	}
 }
 

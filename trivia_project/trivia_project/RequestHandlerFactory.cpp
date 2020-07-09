@@ -6,29 +6,34 @@ RequestHandlerFactory::RequestHandlerFactory(IDatabase& database) :
 {
 }
 
-std::shared_ptr<LoginRequestHandler> RequestHandlerFactory::createLoginRequestHandler()
+LoginRequestHandler& RequestHandlerFactory::createLoginRequestHandler()
 {
-	return std::make_shared<LoginRequestHandler>(*this);
+	static LoginRequestHandler loginRequestHandler(*this);
+	return loginRequestHandler;
 }
 
-std::shared_ptr<MenuRequestHandler> RequestHandlerFactory::createMenuRequestHandler(LoggedUser user)
+MenuRequestHandler& RequestHandlerFactory::createMenuRequestHandler(LoggedUser user)
 {
-	return std::make_shared<MenuRequestHandler>(*this, user);
+	static MenuRequestHandler menuRequestHandler(*this, user);
+	return menuRequestHandler;
 }
 
-std::shared_ptr<RoomAdminRequestHandler> RequestHandlerFactory::createRoomAdminRequestHandler(LoggedUser user, Room& room)
+RoomAdminRequestHandler& RequestHandlerFactory::createRoomAdminRequestHandler(LoggedUser user, Room& room)
 {
-	return std::make_shared<RoomAdminRequestHandler>(*this, user, room);
+	static RoomAdminRequestHandler roomAdminRequestHandler(*this, user, room);
+	return roomAdminRequestHandler;
 }
 
-std::shared_ptr<RoomMemberRequestHandler> RequestHandlerFactory::createRoomMemberRequestHandler(LoggedUser user, Room& room)
+RoomMemberRequestHandler& RequestHandlerFactory::createRoomMemberRequestHandler(LoggedUser user, Room& room)
 {
-	return std::make_shared<RoomMemberRequestHandler>(*this, user, room);
+	static RoomMemberRequestHandler roomMemberRequestHandler(*this, user, room);
+	return roomMemberRequestHandler;
 }
 
-std::shared_ptr<GameRequestHandler> RequestHandlerFactory::createGameRequestHandler(LoggedUser user, Game& game)
+GameRequestHandler& RequestHandlerFactory::createGameRequestHandler(LoggedUser user, Game& game)
 {
-	return std::make_shared<GameRequestHandler>(*this, user, game);
+	static GameRequestHandler gameRequestHandler(*this, user, game);
+	return gameRequestHandler;
 }
 
 LoginManager& RequestHandlerFactory::getLoginManager()
