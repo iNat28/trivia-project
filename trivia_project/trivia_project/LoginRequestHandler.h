@@ -14,7 +14,7 @@ class LoginRequestHandler : public IRequestHandler
 public:
 	LoginRequestHandler(RequestHandlerFactory& handlerFactory);
 
-	virtual RequestResult handleRequest(const RequestInfo& requestInfo) const override;
+	virtual RequestResult handleRequest(const RequestInfo& requestInfo) override;
 private:
 	RequestHandlerFactory& m_handlerFactory;
 	using requests_func_t = RequestResult (LoginRequestHandler::*)(const RequestInfo&) const;

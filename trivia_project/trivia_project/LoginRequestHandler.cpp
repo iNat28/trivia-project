@@ -6,25 +6,9 @@ LoginRequestHandler::LoginRequestHandler(RequestHandlerFactory& handlerFactory) 
 {
 }
 
-RequestResult LoginRequestHandler::handleRequest(const RequestInfo& requestInfo) const
+RequestResult LoginRequestHandler::handleRequest(const RequestInfo& requestInfo)
 {
-	LoginRequestHandler::requests_func_t handler = nullptr;
-
-	//If at any point the requests don't work, an exception will be thrown, 
-	//and it will be put into an error response
-	try {
-		handler = m_requests.at(requestInfo.requestId);
-		return (this->*handler)(requestInfo);
-	}
-	//Exception caught
-	catch (const std::exception & e)
-	{
-		return RequestResult(
-			JsonResponsePacketSerializer::serializeResponse(ErrorResponse(e.what())),
-			this->m_handlerFactory.createLoginRequestHandler()
-		);
-	}
-	//Other exception caught (probably because of the json)
+	return this->handleAllRequests(requestInfo, *this, this->m_requests);
 }
 
 RequestResult LoginRequestHandler::_login(const RequestInfo& requestInfo) const

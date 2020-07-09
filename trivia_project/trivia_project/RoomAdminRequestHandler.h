@@ -8,7 +8,7 @@ class RoomAdminRequestHandler :
 public:
 	RoomAdminRequestHandler(RequestHandlerFactory& handlerFactory, LoggedUser user, Room& room);
 
-	virtual RequestResult handleRequest(const RequestInfo& requestInfo) const override;
+	virtual RequestResult handleRequest(const RequestInfo& requestInfo) override;
 private:
 	using requests_func_t = RequestResult(RoomAdminRequestHandler::*)(const RequestInfo&) const;
 	static const map<Codes, RoomAdminRequestHandler::requests_func_t> m_requests;

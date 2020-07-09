@@ -10,7 +10,7 @@ class GameRequestHandler :
 public:
 	GameRequestHandler(RequestHandlerFactory& handlerFactory, LoggedUser user, Game& game);
 
-	virtual RequestResult handleRequest(const RequestInfo& requestInfo) const override;
+	virtual RequestResult handleRequest(const RequestInfo& requestInfo) override;
 private:
 	RequestHandlerFactory& m_handlerFactory;
 	using requests_func_t = RequestResult(GameRequestHandler::*)(const RequestInfo&) const;

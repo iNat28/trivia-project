@@ -8,23 +8,9 @@ MenuRequestHandler::MenuRequestHandler(RequestHandlerFactory& handlerFactory, Lo
 {
 }
 
-RequestResult MenuRequestHandler::handleRequest(const RequestInfo& requestInfo) const
+RequestResult MenuRequestHandler::handleRequest(const RequestInfo& requestInfo)
 {
-	MenuRequestHandler::requests_func_t handler = nullptr;
-
-	//If at any point the requests don't work, an exception will be thrown, 
-	//and it will be put into an error response
-	try {
-		handler = m_requests.at(requestInfo.requestId);
-		return (this->*handler)(requestInfo);
-	}
-	catch (const std::exception& e)
-	{
-		return RequestResult(
-			JsonResponsePacketSerializer::serializeResponse(ErrorResponse(e.what())),
-			this->m_handlerFactory.createMenuRequestHandler(this->m_user)
-		);
-	}
+	return this->handleAllRequests(requestInfo, *this, this->m_requests);
 }
 
 RequestResult MenuRequestHandler::_signout(const RequestInfo& requestInfo) const

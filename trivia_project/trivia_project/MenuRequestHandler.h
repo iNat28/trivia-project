@@ -12,7 +12,7 @@ class MenuRequestHandler : public LoggedUserRequestHandler
 public:
 	MenuRequestHandler(RequestHandlerFactory& handlerFactory, LoggedUser user);
 
-	virtual RequestResult handleRequest(const RequestInfo& requestInfo) const override;
+	virtual RequestResult handleRequest(const RequestInfo& requestInfo) override;
 private:
 	RequestHandlerFactory& m_handlerFactory;
 	using requests_func_t = RequestResult(MenuRequestHandler::*)(const RequestInfo&)const;
