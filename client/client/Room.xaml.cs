@@ -38,8 +38,6 @@ namespace client
         {
             InitializeComponent();
 
-            base.ErrorOutput = this.errorOutput;
-
             sendingMutex = new Mutex();
             
             //adding users
@@ -59,6 +57,8 @@ namespace client
             this.isAdmin = (bool)param[0];
             RoomData roomData = (RoomData)param[1];
 
+            base.ErrorOutput = this.errorOutput;
+
             if (isAdmin)
                 this.LeaveRoomButton.Visibility = Visibility.Hidden;
             else
@@ -76,10 +76,11 @@ namespace client
             backgroundWorker.RunWorkerAsync();
         }
 
-        protected override void OnClosed(EventArgs e)
+        protected override void OnHide(object sender, CancelEventArgs e)
         {
-            if (LogoutWindow.toClose)
+            if (!WindowManager.exit)
             {
+                base.OnHide(sender, e);
                 if (isAdmin)
                 {
                     CloseRoom();
@@ -96,9 +97,7 @@ namespace client
             backgroundWorker.CancelAsync();
 
             sendingMutex.WaitOne();
-            Stream.Send(new JObject(), Codes.CLOSE_ROOM);
-
-            Response response = Stream.Recieve();
+            Response response = Stream.Send(Codes.CLOSE_ROOM);
 
             if (Stream.Response(response, Codes.CLOSE_ROOM))
             {
@@ -111,9 +110,7 @@ namespace client
             backgroundWorker.CancelAsync();
 
             sendingMutex.WaitOne();
-            Stream.Send(new JObject(), Codes.LEAVE_ROOM);
-
-            Response response = Stream.Recieve();
+            Response response = Stream.Send(Codes.LEAVE_ROOM);
 
             if (Stream.Response(response, Codes.LEAVE_ROOM))
             {
@@ -130,9 +127,7 @@ namespace client
             backgroundWorker.CancelAsync();
 
             sendingMutex.WaitOne();
-            Stream.Send(new JObject(), Codes.START_GAME);
-
-            Response response = Stream.Recieve();
+            Response response = Stream.Send(Codes.START_GAME);
 
             if (Stream.Response(response, Codes.START_GAME))
             {
@@ -161,9 +156,7 @@ namespace client
                 }
 
                 sendingMutex.WaitOne();
-                Stream.Send(new JObject(), Codes.GET_ROOM_STATE);
-
-                Response usersResponse = Stream.Recieve();
+                Response usersResponse = Stream.Send(Codes.GET_ROOM_STATE);
 
                 backgroundWorker.ReportProgress(0, "");
 
@@ -201,6 +194,11 @@ namespace client
                 }
                 else
                 {
+                    if (error == "")
+                    {
+                        e.Cancel = true;
+                        break;
+                    }
                     backgroundWorker.ReportProgress(3, error);
                 }
 

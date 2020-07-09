@@ -25,6 +25,11 @@ namespace client
             InitializeComponent();
         }
 
+        public override void OnShow(params object[] param)
+        {
+            base.ErrorOutput = null;
+        }
+
         private void MyStatusButton_Click(object sender, RoutedEventArgs e)
         {
             //moves to my status page

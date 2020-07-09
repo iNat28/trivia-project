@@ -16,17 +16,18 @@ using Newtonsoft.Json.Linq;
 
 namespace client
 {
-    public class LogoutWindow : CustomWindow
+    public abstract class LogoutWindow : CustomWindow
     {
-        public static bool toClose = true;
-        
-        protected void WindowClosing(object sender, CancelEventArgs e)
+        protected override void OnHide(object sender, CancelEventArgs e)
         {
-            if(!WindowManager.closeWindow)
+            if (!WindowManager.exit)
             {
-                e.Cancel = true;
+                if (e != null)
+                {
+                    e.Cancel = true;
+                }
                 Stream.Signout();
-                Stream.Close();
+                WindowManager.OpenWindow(WindowTypes.LOGIN);
             }
         }
     }

@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:client"
         mc:Ignorable="d"
+        Closing="OnHide"
         Title="Login" Height="450" Width="800">
     <Grid>
         <TextBox x:Name="usernameInput" HorizontalAlignment="Left" Margin="353,56,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>

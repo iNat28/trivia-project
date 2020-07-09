@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:client"
         mc:Ignorable="d"
+        Closing="OnHide"
         Title="Room Menu" Height="450" Width="800">
     <Grid>
         <ListBox x:Name="NamesList" HorizontalAlignment="Left" Height="135" Margin="325,163,0,0" VerticalAlignment="Top" Width="159" SelectionChanged="ListBox_SelectionChanged"/>

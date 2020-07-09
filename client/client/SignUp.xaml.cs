@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,8 +24,20 @@ namespace client
         public SignUpWindow()
         {
             InitializeComponent();
+        }
 
+        public override void OnShow(params object[] param)
+        {
             base.ErrorOutput = this.errorOutput;
+
+            this.usernameInput.Text = "";
+            this.passwordInput.Password = "";
+            this.emailInput.Text = "";
+        }
+
+        protected override void OnHide(object sender, CancelEventArgs e)
+        {
+            WindowManager.Close();
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
@@ -41,9 +54,7 @@ namespace client
                 ["email"] = emailInput.Text
             };
 
-            Stream.Send(signUp, Codes.SIGNUP);
-
-            Response response = Stream.Recieve();
+            Response response = Stream.Send(signUp, Codes.SIGNUP);
 
             if (Stream.Response(response, Codes.SIGNUP))
             {

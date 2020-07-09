@@ -50,8 +50,6 @@ namespace client
         {
             InitializeComponent();
 
-            base.ErrorOutput = this.ErrorOutput;
-
             this.numCorrectAnswers = 0;
             this.numQuestionsLeft = 0;
             this.timeLeft = 0;
@@ -80,6 +78,8 @@ namespace client
             int numQuestions = (int)param[0];
             int answerTime = (int)param[1];
 
+            base.ErrorOutput = this.ErrorBox;
+
             this.numCorrectAnswers = 0;
             this.currentTime = answerTime;
             this.numQuestionsLeft = numQuestions;
@@ -91,6 +91,8 @@ namespace client
             this.selectedAnswerIndex = -1;
             this.answersAreDisplayed = false;
             this.showResults = true;
+            this.SelectedAnswerOutput.Text = "";
+            this.TimeTookForAnswerOutput.Text = "";
 
             this.GetQuestion();
             this.ResetAnswerColors();
@@ -181,8 +183,7 @@ namespace client
 
         private void GetQuestion()
         {
-            Stream.Send(new JObject(), Codes.GET_QUESTION);
-            Response usersResponse = Stream.Recieve();
+            Response usersResponse = Stream.Send(Codes.GET_QUESTION);
 
             if (Stream.Response(usersResponse, Codes.GET_QUESTION))
             {
@@ -277,9 +278,7 @@ namespace client
                 [Keys.answerIndex] = this.selectedAnswerIndex,
                 [Keys.answerTime] = this.currentTime
             };
-            Stream.Send(jObject, Codes.SUBMIT_ANSWER);
-
-            Response response = Stream.Recieve();
+            Response response = Stream.Send(jObject, Codes.SUBMIT_ANSWER);
 
             if (Stream.Response(response, Codes.SUBMIT_ANSWER))
             {
@@ -345,10 +344,11 @@ namespace client
             this.LeaveGame();
         }
 
-        protected override void OnClosed(EventArgs e)
+        protected override void OnHide(object sender, CancelEventArgs e)
         {
-            if (LogoutWindow.toClose)
+            if(!WindowManager.exit)
             {
+                base.OnHide(sender, e);
                 LeaveGame();
             }
         }
@@ -359,9 +359,10 @@ namespace client
             this.showResults = false;
             this.thread.CancelAsync();
 
-            Stream.Send(new JObject(), Codes.LEAVE_GAME);
-            Stream.Response(Stream.Recieve(), Codes.LEAVE_GAME);
-            WindowManager.OpenWindow(WindowTypes.MAIN);
+            if (Stream.Response(Stream.Send(Codes.LEAVE_GAME), Codes.LEAVE_GAME))
+            {
+                WindowManager.OpenWindow(WindowTypes.MAIN);
+            }
         }
     }
 }

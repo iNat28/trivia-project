@@ -16,6 +16,7 @@ using System.Net.Sockets;
 using System.Net;
 using System.IO;
 using Newtonsoft.Json.Linq;
+using System.ComponentModel;
 
 namespace client
 {
@@ -27,10 +28,17 @@ namespace client
         public LoginWindow()
         {
             InitializeComponent();
-            base.ErrorOutput = this.errorOutput;
         }
 
-        protected override void OnClosed(EventArgs e)
+        public override void OnShow(params object[] param)
+        {
+            base.ErrorOutput = this.errorOutput;
+
+            this.usernameInput.Text = "";
+            this.passwordInput.Password = "";
+        }
+
+        protected override void OnHide(object sender, CancelEventArgs e)
         {
             WindowManager.Close();
         }
@@ -44,9 +52,7 @@ namespace client
                 ["password"] = passwordInput.Password
             };
 
-            Stream.Send(login, Codes.LOGIN);
-
-            Response response = Stream.Recieve();
+            Response response = Stream.Send(login, Codes.LOGIN);
 
             if(Stream.Response(response, Codes.LOGIN))
             {

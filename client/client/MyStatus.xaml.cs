@@ -23,14 +23,13 @@ namespace client
         public MyStatusWindow()
         {
             InitializeComponent();
-            base.ErrorOutput = errorOutput;
         }
 
         public override void OnShow(params object[] param)
         {
-            Stream.Send(new JObject(), Codes.USER_STATS);
+            base.ErrorOutput = this.errorOutput;
 
-            Response response = Stream.Recieve();
+            Response response = Stream.Send(Codes.USER_STATS);
             if (Stream.Response(response, Codes.USER_STATS))
             {
                 JObject userStats = (JObject)response.jObject[Keys.userStats];

@@ -21,6 +21,7 @@ void s_handleNewClient(Communicator& communicator, SOCKET socket, IRequestHandle
 	RequestInfo requestInfo;
 	std::unique_ptr<char[]> msgBuffer;
 	char* msgBufferPtr = nullptr;
+	Buffer buffer;
 
 	try {
 		while (true)
@@ -32,17 +33,25 @@ void s_handleNewClient(Communicator& communicator, SOCKET socket, IRequestHandle
 			//Converts the message length into an int
 			memcpy_s(&msgLen, sizeof(int), msgLenBuffer, MSG_LEN_SIZE);
 
-			//Creates the buffer to recieve from the socket
-			msgBuffer = std::make_unique<char[]>(size_t(msgLen) + MSG_LEN_SIZE + 1);
-			msgBufferPtr = msgBuffer.get();
-			Communicator::s_getFromSocket(socket, msgBufferPtr + MSG_LEN_SIZE, msgLen);
-			memcpy_s(msgBufferPtr, MSG_LEN_SIZE, msgLenBuffer, MSG_LEN_SIZE);
+			if (msgLen > 0)
+			{
+				//Creates the buffer to recieve from the socket
+				msgBuffer = std::make_unique<char[]>(size_t(msgLen) + MSG_LEN_SIZE + 1);
+				msgBufferPtr = msgBuffer.get();
+				Communicator::s_getFromSocket(socket, msgBufferPtr + MSG_LEN_SIZE, msgLen);
+				memcpy_s(msgBufferPtr, MSG_LEN_SIZE, msgLenBuffer, MSG_LEN_SIZE);
+				buffer = Buffer(msgBufferPtr, msgBufferPtr + msgLen);
+			}
+			else
+			{
+				buffer = Buffer();
+			}
 
 			//Puts the buffers into a RequestInfo
 			requestInfo = RequestInfo(
 				static_cast<Codes>(msgCodeBuffer[0]),
 				std::time(0), //The current time
-				Buffer(msgBufferPtr, msgBufferPtr + msgLen)
+				buffer
 			);
 
 			//Handles the request, and gets the request result

@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -40,14 +41,14 @@ namespace client
         public ResultsWindow()
         {            
             InitializeComponent();
-            base.ErrorOutput = this.ErrorOutput;
         }
 
         public override void OnShow(params object[] param)
         {
-            Stream.Send(new JObject(), Codes.GET_GAME_RESULTS);
+            base.ErrorOutput = this.ErrorBox;
+            playerStats.Items.Clear();
 
-            Response response = Stream.Recieve();
+            Response response = Stream.Send(Codes.GET_GAME_RESULTS);
 
             if (Stream.Response(response, Codes.GET_GAME_RESULTS))
             {
@@ -61,10 +62,11 @@ namespace client
             }
         }
 
-        protected override void OnClosed(EventArgs e)
+        protected override void OnHide(object sender, CancelEventArgs e)
         {
-            if (LogoutWindow.toClose)
+            if (!WindowManager.exit)
             {
+                base.OnHide(sender, e);
                 WindowManager.OpenWindow(WindowTypes.MAIN);
             }
         }

@@ -12,10 +12,16 @@ using System.IO;
 
 namespace client
 {
-    public struct Response
+    public class Response
     {
         public JObject jObject;
         public Codes code;
+
+        public Response(JObject jObject, Codes code)
+        {
+            this.jObject = jObject;
+            this.code = code;
+        }
     }
 
     public static class Stream
@@ -51,7 +57,7 @@ namespace client
             tcpClient = null;
             client = null;
 
-            User.PrintError("Error connecting to back end");
+            WindowManager.PrintError("Error connecting to back end");
         }
 
         public static void Signout()
@@ -61,18 +67,17 @@ namespace client
                 ["username"] = User.username
             };
             Send(jObject, Codes.LOGOUT);
-            Recieve();
         }
 
-        public static void Send(JObject jObject, Codes code)
+        public static Response Send(JObject jObject, Codes code)
         {
+            MemoryStream memoryStream = new MemoryStream();
+            BsonDataWriter bsonWriter = new BsonDataWriter(memoryStream);
+            jObject.WriteTo(bsonWriter);
+            byte[] buffer = new byte[] { Convert.ToByte(code) };
+
             try
             {
-                MemoryStream memoryStream = new MemoryStream();
-                BsonDataWriter bsonWriter = new BsonDataWriter(memoryStream);
-                jObject.WriteTo(bsonWriter);
-
-                byte[] buffer = new byte[] { Convert.ToByte(code) };
                 Client.Write(buffer, 0, buffer.Length);
                 Client.Write(memoryStream.ToArray(), 0, (int)memoryStream.Length);
                 Client.Flush();
@@ -80,39 +85,61 @@ namespace client
             catch
             {
                 Stream.Close();
+                return null;
             }
+
+            return Recieve();
         }
 
-        public static Response Recieve()
+        public static Response Send(Codes code)
         {
-            Response response = new Response();
+            byte[] buffer = new byte[5];
+            buffer[0] = Convert.ToByte(code);
+
             try
             {
-                int bufferSize;
-                byte[] bufferBson;
-                byte[] bufferRead = new byte[MSG_CODE_SIZE + MSG_LEN_SIZE];
-
-                Client.Read(bufferRead, 0, bufferRead.Length);
-            
-                //Converts the read buffer to the message code and size
-                //If buffer code size is changed, then this needs to be changed
-                response.code = (Codes)bufferRead[0]; 
-                bufferSize = BitConverter.ToInt32(bufferRead, MSG_CODE_SIZE);
-
-                if (bufferSize > 0)
-                {
-                    bufferBson = new byte[bufferSize + MSG_LEN_SIZE];
-                    //Copies the Bson length to the bson buffer
-                    Array.Copy(bufferRead, MSG_CODE_SIZE, bufferBson, 0, MSG_LEN_SIZE);
-
-                    Client.Read(bufferBson, MSG_LEN_SIZE, bufferBson.Length - MSG_LEN_SIZE);
-
-                    response.jObject = (JObject)JToken.ReadFrom(new BsonDataReader(new MemoryStream(bufferBson)));
-                }
+                Client.Write(buffer, 0, buffer.Length);
             }
             catch
             {
                 Stream.Close();
+                return null;
+            }
+
+            return Recieve();
+        }
+
+        private static Response Recieve()
+        {
+            int bufferSize;
+            byte[] bufferBson;
+            byte[] bufferRead = new byte[MSG_CODE_SIZE + MSG_LEN_SIZE];
+
+            try
+            {
+                Client.Read(bufferRead, 0, bufferRead.Length);
+            }
+            catch
+            {
+                Stream.Close();
+                return null;
+            }
+
+            //Converts the read buffer to the message code and size
+            Response response = new Response(null, (Codes)bufferRead[0]);
+
+            //If buffer code size is changed, then this needs to be changed
+            bufferSize = BitConverter.ToInt32(bufferRead, MSG_CODE_SIZE);
+
+            if (bufferSize > 0)
+            {
+                bufferBson = new byte[bufferSize + MSG_LEN_SIZE];
+                //Copies the Bson length to the bson buffer
+                Array.Copy(bufferRead, MSG_CODE_SIZE, bufferBson, 0, MSG_LEN_SIZE);
+
+                Client.Read(bufferBson, MSG_LEN_SIZE, bufferBson.Length - MSG_LEN_SIZE);
+
+                response.jObject = (JObject)JToken.ReadFrom(new BsonDataReader(new MemoryStream(bufferBson)));
             }
 
             return response;
@@ -126,7 +153,7 @@ namespace client
             }
             catch (Exception e)
             {
-                User.PrintError(e);
+                WindowManager.PrintError(e);
             }
 
             return false;
@@ -151,6 +178,11 @@ namespace client
         private static bool ResponseWithoutTryCatch(Response response, Codes code)
         {
             string error;
+
+            if(response == null)
+            {
+                return false;
+            }
 
             if (response.code == code)
             {

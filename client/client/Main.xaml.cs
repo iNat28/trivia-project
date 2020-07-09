@@ -23,12 +23,12 @@ namespace client
         public MainWindow()
         {
             InitializeComponent();
-            
-            base.ErrorOutput = this.errorOutput;
         }
 
         public override void OnShow(params object[] param)
         {
+            base.ErrorOutput = this.errorOutput;
+
             UsernameHeader.Text = "Hello " + User.username;
         }
 

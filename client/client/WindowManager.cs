@@ -33,39 +33,56 @@ namespace client
             { WindowTypes.MY_STATUS, new MyStatusWindow() },
             { WindowTypes.HIGH_SCORE, new HighScoreWindow() },
             { WindowTypes.CREATE_ROOM, new CreateRoomWindow() },
+            { WindowTypes.JOIN_ROOM, new JoinRoomWindow() },
             { WindowTypes.ROOM, new RoomWindow() },
             { WindowTypes.QUESTION, new QuestionWindow() },
             { WindowTypes.RESULT, new ResultsWindow() }
         };
 
         public delegate void OpenWindowFunc();
-        public static bool closeWindow = false;
+        public static bool exit = false;
 
         private static CustomWindow currentWindow;
 
         public static void OpenWindow(WindowTypes windowToOpen, params object[] param)
         {
-            //LogoutWindow.toClose = false;
-            currentWindow.OnHide();
-            currentWindow.Hide();
-            //LogoutWindow.toClose = true;
-
+            CustomWindow oldWindow = currentWindow;
             currentWindow = windows[windowToOpen];
             currentWindow.OnShow(param);
+            currentWindow.ErrorOutput.Text = "";
 
             currentWindow.Show();
+            oldWindow.Hide();
         }
 
         public static void Start()
         {
             currentWindow = windows[WindowTypes.LOGIN];
+            currentWindow.OnShow();
             currentWindow.Show();
         }
 
         public static void Close()
         {
-            WindowManager.closeWindow = true;
+            WindowManager.exit = true;
             System.Windows.Application.Current.Shutdown();
+        }
+
+        public static void PrintError(string error)
+        {
+            if (currentWindow.ErrorOutput == null)
+            {
+                Console.WriteLine(error);
+            }
+            else
+            {
+                currentWindow.ErrorOutput.Text = error;
+            }
+        }
+
+        public static void PrintError(Exception e)
+        {
+            PrintError(e.Message);
         }
     }
 }

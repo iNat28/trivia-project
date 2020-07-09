@@ -19,27 +19,5 @@ namespace client
     class User
     {
         public static string username;
-        public static TextBlock errorOutput;
-        public static Mutex mutex = new Mutex();
-
-        public static void PrintError(string error)
-        {
-            //In case there are multiple errors to be printed
-            mutex.WaitOne();
-            if (errorOutput == null)
-            {
-                Console.WriteLine(error);
-            }
-            else
-            {
-                errorOutput.Text = error;
-            }
-            mutex.ReleaseMutex();
-        }
-
-        public static void PrintError(Exception e)
-        {
-            User.PrintError(e.Message);
-        }
     }
 }

@@ -29,16 +29,27 @@ namespace client
         {
             InitializeComponent();
 
-            base.ErrorOutput = this.errorOutput;
+            this.NumQuestionsSlider.Value = 1;
+            this.MaxPlayersSlider.Value = 1;
+            this.AnswerTimeSlider.Value = 1;
         }
-        
+
+        public override void OnShow(params object[] param)
+        {
+            base.ErrorOutput = this.errorOutput;
+
+            this.RoomName.Text = "";
+            this.NumQuestionsSlider.Value = 1;
+            this.MaxPlayersSlider.Value = 1;
+            this.AnswerTimeSlider.Value = 1;
+        }
+
         private void CreateRoomButton_Click(object sender, RoutedEventArgs e)
         {
-            if(this.RoomName.Text == "")
+            if (this.RoomName.Text == "")
             {
                 this.errorOutput.Text = "Room name field is empty!";
-            }                     
-            
+            }
             else
             {
                 this.numQuestions = (int)this.NumQuestionsSlider.Value;
@@ -54,13 +65,11 @@ namespace client
                     [Keys.username] = User.username
                 };
 
-                Stream.Send(jObject, Codes.CREATE_ROOM);
-
-                Response response = Stream.Recieve();
+                Response response = Stream.Send(jObject, Codes.CREATE_ROOM);
 
                 if (Stream.Response(response, Codes.CREATE_ROOM))
                 {
-                    WindowManager.OpenWindow(WindowTypes.ROOM, new RoomData(0, this.RoomName.Text, this.numMaxPlayers, this.numQuestions, this.answerTime, RoomWindow.Status.OPEN));
+                    WindowManager.OpenWindow(WindowTypes.ROOM, true, new RoomData(0, this.RoomName.Text, this.numMaxPlayers, this.numQuestions, this.answerTime, RoomWindow.Status.OPEN));
                 }
             }           
         }
@@ -72,8 +81,7 @@ namespace client
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            int temp;
-            if (int.TryParse(this.QuestionsSliderTextBox.Text, out temp) && Convert.ToInt32(this.QuestionsSliderTextBox.Text) <= this.NumQuestionsSlider.Maximum && Convert.ToInt32(this.QuestionsSliderTextBox.Text) > 0)
+            if (int.TryParse(this.QuestionsSliderTextBox.Text, out _) && Convert.ToInt32(this.QuestionsSliderTextBox.Text) <= this.NumQuestionsSlider.Maximum && Convert.ToInt32(this.QuestionsSliderTextBox.Text) > 0)
                 this.NumQuestionsSlider.Value = Convert.ToDouble(this.QuestionsSliderTextBox.Text);
         }
 
@@ -95,12 +103,11 @@ namespace client
 
         private void AnswerTimeTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            int temp;
             if (this.AnswerTimeTextBox == null)
             {
                 this.errorOutput.Text = "text box problem";
             }
-            else if (int.TryParse(this.AnswerTimeTextBox.Text, out temp) && Convert.ToDouble(this.AnswerTimeTextBox.Text) <= this.AnswerTimeSlider.Maximum && Convert.ToDouble(this.AnswerTimeTextBox.Text) > 0)
+            else if (int.TryParse(this.AnswerTimeTextBox.Text, out _) && Convert.ToDouble(this.AnswerTimeTextBox.Text) <= this.AnswerTimeSlider.Maximum && Convert.ToDouble(this.AnswerTimeTextBox.Text) > 0)
                 this.AnswerTimeSlider.Value = Convert.ToDouble(this.AnswerTimeTextBox.Text);                      
         }
 
@@ -114,12 +121,11 @@ namespace client
 
         private void MaxPlayersTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            int temp;
             if (this.MaxPlayersTextBox == null)
             {
                 this.errorOutput.Text = "text box problem";
             }
-            else if (int.TryParse(this.MaxPlayersTextBox.Text, out temp) && Convert.ToDouble(this.MaxPlayersTextBox.Text) <= this.MaxPlayersSlider.Maximum && Convert.ToDouble(this.MaxPlayersTextBox.Text) > 0)
+            else if (int.TryParse(this.MaxPlayersTextBox.Text, out _) && Convert.ToDouble(this.MaxPlayersTextBox.Text) <= this.MaxPlayersSlider.Maximum && Convert.ToDouble(this.MaxPlayersTextBox.Text) > 0)
                 this.MaxPlayersSlider.Value = Convert.ToDouble(this.MaxPlayersTextBox.Text);
         }
     }

@@ -84,7 +84,6 @@ namespace client
             InitializeComponent();
             this.sendingMutex = new Mutex();
             this.rooms = new List<RoomData>();
-            User.errorOutput = this.ErrorBox;
 
             backgroundWorker = new BackgroundWorker
             {
@@ -98,6 +97,7 @@ namespace client
 
         public override void OnShow(params object[] param)
         {
+            base.ErrorOutput = this.ErrorOutput;
             this.rooms.Clear();
             backgroundWorker.RunWorkerAsync();
         }
@@ -123,9 +123,7 @@ namespace client
             {
                 [Keys.roomId] = selectedRoom.id
             };
-            Stream.Send(jObject, Codes.JOIN_ROOM);
-
-            Response response = Stream.Recieve();
+            Response response = Stream.Send(jObject, Codes.JOIN_ROOM);
 
             if (Stream.Response(response, Codes.JOIN_ROOM) && this.RoomsList.SelectedItem != null)
             {
@@ -161,9 +159,7 @@ namespace client
 
                 sendingMutex.WaitOne();
 
-                Stream.Send(new JObject(), Codes.GET_ROOM);
-
-                Response response = Stream.Recieve();
+                Response response = Stream.Send(Codes.GET_ROOM);
 
                 if (Stream.ResponseForThread(response, Codes.GET_ROOM, out string error))
                 {
@@ -200,6 +196,11 @@ namespace client
                 }
                 else
                 {
+                    if (error == "")
+                    {
+                        e.Cancel = true;
+                        break;
+                    }
                     backgroundWorker.ReportProgress(3, error);
                 }
 

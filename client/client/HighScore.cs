@@ -22,16 +22,14 @@ namespace client
     {
         public HighScoreWindow()
         {
-            base.ErrorOutput = this.errorOutput;
-
             InitializeComponent();
         }
 
         public override void OnShow(params object[] param)
         {
-            Stream.Send(new JObject(), Codes.HIGH_SCORES);
+            base.ErrorOutput = this.errorOutput;
 
-            Response response = Stream.Recieve();
+            Response response = Stream.Send(Codes.HIGH_SCORES);
             if (Stream.Response(response, Codes.HIGH_SCORES))
             {
                 JArray jArray = (JArray)response.jObject[Keys.highScores];
