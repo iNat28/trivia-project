@@ -17,6 +17,6 @@
             </DataGrid.Columns>
         </DataGrid>
         <Button x:Name="ExitButton" Content="Exit" HorizontalAlignment="Left" Margin="300,330,0,0" VerticalAlignment="Top" Width="161" Height="43" Click="ExitButton_Click"/>
-        <TextBlock x:Name="ErrorBox" HorizontalAlignment="Left" Margin="55,339,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="54" Width="196"/>
+        <TextBlock x:Name="ErrorOutput" HorizontalAlignment="Left" Margin="55,339,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="54" Width="196"/>
     </Grid>
 </local:CustomWindow>

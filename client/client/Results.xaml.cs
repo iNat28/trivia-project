@@ -45,7 +45,7 @@ namespace client
 
         public override void OnShow(params object[] param)
         {
-            base.ErrorOutput = this.ErrorBox;
+            base.ErrorOutput = this.ErrorOutput;
             playerStats.Items.Clear();
 
             Response response = Stream.Send(Codes.GET_GAME_RESULTS);

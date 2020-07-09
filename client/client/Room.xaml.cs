@@ -57,7 +57,7 @@ namespace client
             this.isAdmin = (bool)param[0];
             RoomData roomData = (RoomData)param[1];
 
-            base.ErrorOutput = this.errorOutput;
+            base.ErrorOutput = this.ErrorOutput;
 
             this.roomStatus = Status.OPEN;
             sendingMutex?.Close();
@@ -222,7 +222,7 @@ namespace client
                     this.NamesList.Items.Remove(param);
                     break;
                 case 3:
-                    this.errorOutput.Text = param;
+                    this.ErrorOutput.Text = param;
                     break;
             }
         }             

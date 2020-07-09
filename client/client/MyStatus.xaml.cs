@@ -27,17 +27,17 @@ namespace client
 
         public override void OnShow(params object[] param)
         {
-            base.ErrorOutput = this.errorOutput;
+            base.ErrorOutput = this.ErrorOutput;
 
             Response response = Stream.Send(Codes.USER_STATS);
             if (Stream.Response(response, Codes.USER_STATS))
             {
                 JObject userStats = (JObject)response.jObject[Keys.userStats];
-                this.numPointsOutput.Text = "Number of Points - " + (int)userStats[Keys.numPoints];
-                this.numOfGamesOutput.Text = "Number of Games - " + (int)userStats[Keys.numTotalGames];
-                this.numOfRightAnswersOutput.Text = "Number of Right Answers - " + (int)userStats[Keys.numCorrectAnswers];
-                this.numOfWrongAnswersOutput.Text = "Number of Wrong Answers - " + (int)userStats[Keys.numWrongAnswers];
-                this.avgTimeForAnswersOutput.Text = "Average answer time - " + ((double)userStats[Keys.averageAnswerTime]).ToString("0.00");
+                this.numPointsOutput.Text = "Number of Points: " + (int)userStats[Keys.numPoints];
+                this.numOfGamesOutput.Text = "Number of Games: " + (int)userStats[Keys.numTotalGames];
+                this.numOfRightAnswersOutput.Text = "Number of Correct Answers: " + (int)userStats[Keys.numCorrectAnswers];
+                this.numOfWrongAnswersOutput.Text = "Number of Wrong Answers: " + (int)userStats[Keys.numWrongAnswers];
+                this.avgTimeForAnswersOutput.Text = "Average answer time: " + ((double)userStats[Keys.averageAnswerTime]).ToString("0.00");
 
                 response.jObject.ToString();
             }
