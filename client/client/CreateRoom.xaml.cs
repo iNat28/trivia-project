@@ -127,5 +127,10 @@ namespace client
             else if (int.TryParse(this.MaxPlayersTextBox.Text, out _) && Convert.ToDouble(this.MaxPlayersTextBox.Text) <= this.MaxPlayersSlider.Maximum && Convert.ToDouble(this.MaxPlayersTextBox.Text) > 0)
                 this.MaxPlayersSlider.Value = Convert.ToDouble(this.MaxPlayersTextBox.Text);
         }
+
+        private void RoomName_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
     }
 }

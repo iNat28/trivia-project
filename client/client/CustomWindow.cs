@@ -9,11 +9,11 @@ using System.Windows.Controls;
 
 namespace client
 {
-    public abstract class CustomWindow : Window
+    public class CustomWindow : Window
     {
         public TextBlock ErrorBox;
-
-        public abstract void OnShow(params object[] param);
+        public CustomWindow() { }
+        public virtual void OnShow(params object[] param) { }
 
         protected virtual void OnHide(object sender, CancelEventArgs e)
         {

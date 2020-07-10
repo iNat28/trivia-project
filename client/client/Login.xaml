@@ -4,18 +4,31 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:client"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         Closing="OnHide"
+        x:Name="LoginWindowWPF"
+        WindowStartupLocation="CenterScreen"                
+        HorizontalAlignment="Stretch"
+        VerticalAlignment="Stretch"
+        Background="#FF410A66"
+        TextElement.FontWeight="Medium"
+        TextElement.FontSize="14"
+        FontFamily="{materialDesign:MaterialDesignFont}"
         Title="Login" Height="450" Width="800">
-    <Grid>
-        <TextBox x:Name="usernameInput" HorizontalAlignment="Left" Margin="353,56,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <PasswordBox x:Name="passwordInput" HorizontalAlignment="Left" Margin="353,93,0,0" VerticalAlignment="Top" Width="120"/>
-        <Button x:Name="loginButton" Content="Login" HorizontalAlignment="Left" Margin="349,160,0,0" VerticalAlignment="Top" Width="105" Click="LoginButton_Click" Height="37"/>
-        <Button x:Name="signUpButton" Content="Sign Up" HorizontalAlignment="Left" Margin="349,222,0,0" VerticalAlignment="Top" Width="105" Click="SignUpButton_Click"/>
-        <Button x:Name="exitButton" Content="Exit" HorizontalAlignment="Left" Margin="349,326,0,0" VerticalAlignment="Top" Width="105" Click="ExitButton_Click"/>
-        <TextBlock FontWeight="DemiBold" HorizontalAlignment="Left" Margin="270,56,0,0" TextWrapping="Wrap" Text="Username:" VerticalAlignment="Top" Width="67"/>
-        <TextBlock FontWeight="DemiBold" HorizontalAlignment="Left" Margin="270,93,0,0" TextWrapping="Wrap" Text="Password:" VerticalAlignment="Top" Width="67"/>
-        <TextBlock x:Name="ErrorOutput" HorizontalAlignment="Left" Margin="519,132,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="221" Height="200"/>
 
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="WhiteSmoke" Margin="10,20,9.6,20" CornerRadius="5" Height="388">
+                <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="25" Height="367">
+                    <TextBox x:Name="usernameInput" materialDesign:HintAssist.Hint="Username" materialDesign:HintAssist.Foreground="BlueViolet" materialDesign:TextFieldAssist.UnderlineBrush="BlueViolet" Style="{StaticResource MaterialDesignFloatingHintTextBox}" HorizontalAlignment="Stretch" Margin="20,50,0,20" TextWrapping="Wrap" VerticalAlignment="Stretch" Width="151"/>
+                    <PasswordBox x:Name="passwordInput" materialDesign:HintAssist.Hint="Password" materialDesign:HintAssist.Foreground="BlueViolet" materialDesign:TextFieldAssist.UnderlineBrush="BlueViolet" Style="{StaticResource MaterialDesignFloatingHintPasswordBox}" HorizontalAlignment="Stretch" Margin="20,10,0,0" VerticalAlignment="Stretch" Width="151"/>
+                    <Button x:Name="loginButton" Content="Login" HorizontalAlignment="Stretch" Margin="20,20,0,0" VerticalAlignment="Stretch" Width="105" Click="LoginButton_Click" Height="37"/>
+                    <Button x:Name="signUpButton" Content="Sign Up" HorizontalAlignment="Stretch" Margin="20,20,0,0" VerticalAlignment="Stretch" Width="105" Height="37" Click="SignUpButton_Click"/>
+                    <Button x:Name="exitButton" Content="Exit" HorizontalAlignment="Stretch" Margin="20,20,0,0" VerticalAlignment="Stretch" Width="105" Click="ExitButton_Click"/>
+                    <TextBlock x:Name="ErrorOutput" HorizontalAlignment="Stretch" Margin="490,-180,0,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Width="221" Height="200"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
     </Grid>
 </local:CustomWindow>

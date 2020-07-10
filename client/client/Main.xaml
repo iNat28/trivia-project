@@ -3,17 +3,30 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:local="clr-namespace:client"
         mc:Ignorable="d"
         Closing="OnHide"
-        Title="Main Menu" Height="467.85" Width="989.75">
-    <Grid>
-        <TextBlock x:Name="UsernameHeader" FontSize="40" FontWeight="bold" FontFamily="cambria" HorizontalAlignment="Center" Height="55" Margin="408,36,395.2,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="180"/>
-        <Button x:Name="CreateRoomButton" Content="Create Room" HorizontalAlignment="Left" Margin="432,138,0,0" VerticalAlignment="Top" Width="115" Height="32" Click="CreateRoomButton_Click"/>
-        <Button x:Name="JoinRoomButton" Content="Join Room" HorizontalAlignment="Left" Margin="432,198,0,0" VerticalAlignment="Top" Width="115" Height="32" Click="JoinRoomButton_Click"/>
-        <Button x:Name="StatisticsButton" Content="Statistics" HorizontalAlignment="Left" Margin="432,261,0,0" VerticalAlignment="Top" Width="115" Height="32" Click="StatisticsButton_Click"/>
-        <Button x:Name="SignoutButton" Content="Sign Out" HorizontalAlignment="Left" Margin="432,357,0,0" VerticalAlignment="Top" Width="115" Height="32" Click="SignoutButton_Click"/>
-        <TextBlock x:Name="ErrorOutput" HorizontalAlignment="Left" Margin="108,122,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="209" Width="237"/>
-
+        WindowStartupLocation="CenterScreen"                
+        HorizontalAlignment="Stretch"
+        VerticalAlignment="Stretch"
+        Background="#FF410A66"
+        TextElement.FontWeight="Medium"
+        TextElement.FontSize="14"
+        FontFamily="{materialDesign:MaterialDesignFont}"            
+        Title="Main Menu" Height="450" Width="800">
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="WhiteSmoke" Margin="10,20,9.6,20" CornerRadius="5" Height="388">
+                <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="25" Height="367">
+                    <TextBlock x:Name="UsernameHeader" FontSize="40" FontWeight="bold" FontFamily="cambria" HorizontalAlignment="Stretch" Height="55" Margin="260,19,284.8,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Width="180"/>
+                    <Button x:Name="CreateRoomButton" Content="Create Room" HorizontalAlignment="Stretch" Margin="-20,20,0,0" VerticalAlignment="Stretch" Width="180" Height="48" Click="CreateRoomButton_Click"/>
+                    <Button x:Name="JoinRoomButton" Content="Join Room" HorizontalAlignment="Stretch" Margin="-20,20,0,0" VerticalAlignment="Stretch" Width="180" Height="48" Click="JoinRoomButton_Click"/>
+                    <Button x:Name="StatisticsButton" Content="Statistics" HorizontalAlignment="Stretch" Margin="-20,20,0,0" VerticalAlignment="Stretch" Width="180" Height="48" Click="StatisticsButton_Click"/>
+                    <Button x:Name="SignoutButton" Content="Sign Out" HorizontalAlignment="Stretch" Margin="-20,25,0,0" VerticalAlignment="Stretch" Width="115" Height="32" Click="SignoutButton_Click"/>
+                    <TextBlock x:Name="ErrorOutput" HorizontalAlignment="Stretch" Margin="-480,-200,0,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Height="209" Width="237"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
     </Grid>
 </local:LogoutWindow>
