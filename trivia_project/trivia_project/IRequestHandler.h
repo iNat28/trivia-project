@@ -5,33 +5,33 @@
 #include "JsonResponsePacketSerializer.h"
 
 class IRequestHandler;
-typedef std::shared_ptr<IRequestHandler> IRequestHandlerPtr;
 
 struct RequestInfo
 {
-	RequestInfo(Codes RequestId, time_t receivalTime, Buffer buffer);
+	RequestInfo(Codes RequestId, time_t receivalTime, Buffer buffer, sptr<IRequestHandler> currentHandler);
 	RequestInfo();
 
 	Codes requestId;
 	time_t receivalTime;
 	Buffer buffer;
+	sptr<IRequestHandler> currentHandler;
 };
 
 struct RequestResult
 {
-	RequestResult(Buffer response, IRequestHandler& newHandler);
+	RequestResult(Buffer response, sptr<IRequestHandler> newHandler);
 
 	Buffer response;
-	IRequestHandler& newHandler;
+	sptr<IRequestHandler> newHandler;
 };
 
 class IRequestHandler
 {
 public:
-	virtual RequestResult handleRequest(const RequestInfo& requestInfo) = 0;
+	virtual RequestResult handleRequest(RequestInfo& requestInfo) = 0;
 protected:
-	template<typename Handler, typename Func>
-	RequestResult handleAllRequests(const RequestInfo& requestInfo, Handler& handler, map<Codes, Func> requestMap)
+	template<class Handler, class Func>
+	RequestResult handleAllRequests(RequestInfo& requestInfo, Handler& handler, umap<Codes, Func> requestMap)
 	{
 		Func requestFunc = nullptr;
 
@@ -46,7 +46,7 @@ protected:
 		{
 			return RequestResult(
 				JsonResponsePacketSerializer::serializeResponse(ErrorResponse(e.what())),
-				handler
+				requestInfo.currentHandler
 			);
 		}
 	}

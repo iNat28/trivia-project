@@ -3,25 +3,20 @@
 
 //TODO: Make sure things are const
 
-MenuRequestHandler::MenuRequestHandler(RequestHandlerFactory& handlerFactory) :
-	m_handlerFactory(handlerFactory)
+MenuRequestHandler::MenuRequestHandler(RequestHandlerFactory& handlerFactory, LoggedUser& user) :
+	LoggedUserRequestHandler(user), m_handlerFactory(handlerFactory)
 {
 }
 
-RequestResult MenuRequestHandler::handleRequest(const RequestInfo& requestInfo)
+RequestResult MenuRequestHandler::handleRequest(RequestInfo& requestInfo)
 {
 	return this->handleAllRequests(requestInfo, *this, this->m_requests);
 }
 
-void MenuRequestHandler::reset(LoggedUser user)
-{
-	this->m_user = user;
-}
-
-RequestResult MenuRequestHandler::_signout(const RequestInfo& requestInfo)
+RequestResult MenuRequestHandler::_signout(RequestInfo& requestInfo)
 {
 	//Throws an Exception if the login doesn't work
-	this->m_handlerFactory.getLoginManager().logout(this->m_user.username);
+	this->m_handlerFactory.getLoginManager().logout(this->m_user);
 
 	return RequestResult(
 		JsonResponsePacketSerializer::serializeResponse(
@@ -31,17 +26,17 @@ RequestResult MenuRequestHandler::_signout(const RequestInfo& requestInfo)
 	);
 }
 
-RequestResult MenuRequestHandler::_getRooms(const RequestInfo& requestInfo)
+RequestResult MenuRequestHandler::_getRooms(RequestInfo& requestInfo)
 {
 	return RequestResult(
 		JsonResponsePacketSerializer::serializeResponse(
 			GetRoomResponse(this->m_handlerFactory.getRoomManager().getRooms())
 		),
-		*this
+		requestInfo.currentHandler
 	);
 }
 
-RequestResult MenuRequestHandler::_getPlayersInRoom(const RequestInfo& requestInfo)
+RequestResult MenuRequestHandler::_getPlayersInRoom(RequestInfo& requestInfo)
 {
 	GetPlayersInRoomRequest::RoomIdRequest getPlayersInRoomRequest = JsonRequestPacketDeserializer::deserializeRoomIdRequest(requestInfo.buffer);
 
@@ -49,31 +44,31 @@ RequestResult MenuRequestHandler::_getPlayersInRoom(const RequestInfo& requestIn
 			JsonResponsePacketSerializer::serializeResponse(
 				GetPlayersInRoomResponse(this->m_handlerFactory.getRoomManager().getUsersInRoom(getPlayersInRoomRequest.roomId))
 		),
-		*this
+		requestInfo.currentHandler
 	);
 }
 
-RequestResult MenuRequestHandler::_getUserStats(const RequestInfo& requestInfo)
+RequestResult MenuRequestHandler::_getUserStats(RequestInfo& requestInfo)
 {
 	return RequestResult(
 		JsonResponsePacketSerializer::serializeResponse(
-			GetUserStatsResponse(this->m_handlerFactory.getStatisticsManager().getUserStats(this->m_user.username))
+			GetUserStatsResponse(this->m_handlerFactory.getStatisticsManager().getUserStats(this->m_user))
 		),
-		*this
+		requestInfo.currentHandler
 	);
 }
 
-RequestResult MenuRequestHandler::_getHighScores(const RequestInfo& requestInfo)
+RequestResult MenuRequestHandler::_getHighScores(RequestInfo& requestInfo)
 {
 	return RequestResult(
 		JsonResponsePacketSerializer::serializeResponse(
 			GetHighScoresResponse(this->m_handlerFactory.getStatisticsManager().getHighScores())
 		),
-		*this
+		requestInfo.currentHandler
 	);
 }
 
-RequestResult MenuRequestHandler::_joinRoom(const RequestInfo& requestInfo)
+RequestResult MenuRequestHandler::_joinRoom(RequestInfo& requestInfo)
 {
 	JoinRoomRequest::RoomIdRequest joinRoomRequest = JsonRequestPacketDeserializer::deserializeRoomIdRequest(requestInfo.buffer);
 
@@ -90,24 +85,24 @@ RequestResult MenuRequestHandler::_joinRoom(const RequestInfo& requestInfo)
 	);
 }
 
-RequestResult MenuRequestHandler::_createRoom(const RequestInfo& requestInfo)
+RequestResult MenuRequestHandler::_createRoom(RequestInfo& requestInfo)
 {
 	CreateRoomRequest createRoomRequest = JsonRequestPacketDeserializer::deserializeCreateRoomRequest(requestInfo.buffer);
 
 	this->m_handlerFactory.getRoomManager().createRoom(createRoomRequest.room);
+	
+	Room& room = this->m_handlerFactory.getRoomManager().getRoom(createRoomRequest.room.getId());
+	room.addUser(this->m_user);
 
 	return RequestResult(
 		JsonResponsePacketSerializer::serializeResponse(
 			CreateRoomResponse()
 		),
-		this->m_handlerFactory.createRoomAdminRequestHandler(
-			this->m_user,
-			this->m_handlerFactory.getRoomManager().getRoom(createRoomRequest.room.getId())
-		)
+		this->m_handlerFactory.createRoomAdminRequestHandler(this->m_user, room)
 	);
 }
 
-const map<Codes, MenuRequestHandler::requests_func_t> MenuRequestHandler::m_requests = {
+const umap<Codes, MenuRequestHandler::requests_func_t> MenuRequestHandler::m_requests = {
 	{ Codes::LOGOUT, &MenuRequestHandler::_signout },
 	{ Codes::GET_ROOM, &MenuRequestHandler::_getRooms },
 	{ Codes::GET_PLAYERS_IN_ROOM, &MenuRequestHandler::_getPlayersInRoom },

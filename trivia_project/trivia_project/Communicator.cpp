@@ -12,7 +12,7 @@ Communicator::Communicator(IDatabase& database) : m_handlerFactory(database), m_
 
 //Thread for handling new clients
 //Input: A communicator object, the client socket, the handler to start with
-void s_handleNewClient(Communicator& communicator, SOCKET socket, IRequestHandler* handler)
+void s_handleNewClient(Communicator& communicator, SOCKET socket, sptr<IRequestHandler> handler)
 {
 	//Recieves from the buffer
 	char msgCodeBuffer[MSG_CODE_SIZE + 1] = "";
@@ -51,12 +51,16 @@ void s_handleNewClient(Communicator& communicator, SOCKET socket, IRequestHandle
 			requestInfo = RequestInfo(
 				static_cast<Codes>(msgCodeBuffer[0]),
 				std::time(0), //The current time
-				buffer
+				buffer,
+				handler
 			);
 
 			//Handles the request, and gets the request result
 			RequestResult requestResult = handler->handleRequest(requestInfo);
-			handler = &requestResult.newHandler;
+			if (handler != requestResult.newHandler)
+			{
+				handler = requestResult.newHandler;
+			}
 
 			//Sends the request result response
 			Communicator::s_sendToSocket(socket, requestResult.response.data(), (int)requestResult.response.size());
@@ -76,7 +80,7 @@ void Communicator::startHandleRequests()
 {
 	SOCKET clientSocket = 0;
 	std::thread client;
-	;
+	sptr<IRequestHandler> handler;
 
 	this->_bindAndListen();
 
@@ -91,14 +95,14 @@ void Communicator::startHandleRequests()
 		}
 
 		//Gets the login handler
-		IRequestHandler& handler = this->m_handlerFactory.createLoginRequestHandler();
+		handler = this->m_handlerFactory.createLoginRequestHandler();
 
 		//Puts the client into a thread
-		client = std::thread(s_handleNewClient, std::ref(*this), clientSocket, &handler);
+		client = std::thread(s_handleNewClient, std::ref(*this), clientSocket, handler);
 		client.detach();
 
 		//Adds the client's socket to the clients
-		this->m_clients[clientSocket] = &handler;
+		this->m_clients[clientSocket] = handler;
 	}
 }
 

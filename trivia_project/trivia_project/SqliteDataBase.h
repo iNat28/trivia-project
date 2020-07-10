@@ -34,8 +34,8 @@ public:
 
 	//statistics
 	virtual int getHighestRoomId() const override;
-	virtual void addGameStats(LoggedUser username, PlayerResults playerResults) override;
-	virtual UserStats getUserStats(string username) const override;
+	virtual void addGameStats(LoggedUser& user, PlayerResults playerResults) override;
+	virtual UserStats getUserStats(LoggedUser& user) const override;
 	virtual HighScores getHighScores() const override;
 	
 	virtual Questions getQuestions(unsigned int questionsCount) const override;
@@ -47,7 +47,7 @@ private:
 	const char* dbFileName;
 	static const unsigned int HIGH_SCORE_NUMS = 3;
 
-	static std::unordered_map<string, string> m_usersList;
+	static umap<string, string> m_usersList;
 	static std::vector<UserStats> m_usersStats;
 
 	//variable for multiple users

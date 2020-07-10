@@ -41,10 +41,10 @@ class Game
 public:
 	Game(Room& room, Questions questions);
 
-	const Question& getQuestion(LoggedUser user) const;
-	unsigned int submitAnswer(LoggedUser user, int answerIndex, double answerTime);
-	void removePlayer(LoggedUser user);
-	vector<UserResults> getGameResults(LoggedUser user);
+	const Question& getQuestion(LoggedUser& user) const;
+	unsigned int submitAnswer(LoggedUser& user, int answerIndex, double answerTime);
+	void removePlayer(LoggedUser& user);
+	vector<UserResults> getGameResults(LoggedUser& user);
 	vector<UserResults> getGameResults();
 	
 	Room& getRoom();
@@ -56,7 +56,7 @@ public:
 	Game& operator=(const Game& other);
 private:
 	Questions m_questions;
-	map<LoggedUser, GameData> m_players;
+	std::unordered_map<string, GameData> m_players;
 	Room& m_room;
 };
 

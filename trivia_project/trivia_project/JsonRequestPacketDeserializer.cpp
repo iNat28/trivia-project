@@ -44,16 +44,16 @@ CreateRoomRequest JsonRequestPacketDeserializer::deserializeCreateRoomRequest(co
 {
 	json jsonFromBson = json::from_bson(buffer);
 
-	return CreateRoomRequest(Room(
-		RoomData(
+	return CreateRoomRequest(
+		Room(RoomData(
 			0,
 			jsonFromBson[Keys::roomName],
-			{ LoggedUser(jsonFromBson[Keys::username]) },
+			{ },
 			jsonFromBson[Keys::maxPlayers],
 			jsonFromBson[Keys::questionsCount],
 			jsonFromBson[Keys::timePerQuestion]
-		)
-	));
+		))
+	);
 }
 
 SubmitAnswerRequest JsonRequestPacketDeserializer::deserializeSubmitAnswerRequest(const Buffer& buffer)

@@ -6,38 +6,29 @@ RequestHandlerFactory::RequestHandlerFactory(IDatabase& database) :
 {
 }
 
-LoginRequestHandler& RequestHandlerFactory::createLoginRequestHandler()
+sptr<LoginRequestHandler> RequestHandlerFactory::createLoginRequestHandler()
 {
-	static LoginRequestHandler loginRequestHandler(*this);
-	return loginRequestHandler;
+	return make_shared<LoginRequestHandler>(*this);
 }
 
-MenuRequestHandler& RequestHandlerFactory::createMenuRequestHandler(LoggedUser user)
+sptr<MenuRequestHandler> RequestHandlerFactory::createMenuRequestHandler(LoggedUser& user)
 {
-	static MenuRequestHandler menuRequestHandler(*this);
-	menuRequestHandler.reset(user);
-	return menuRequestHandler;
+	return make_shared<MenuRequestHandler>(*this, user);
 }
 
-RoomAdminRequestHandler& RequestHandlerFactory::createRoomAdminRequestHandler(LoggedUser user, Room& room)
+sptr<RoomAdminRequestHandler> RequestHandlerFactory::createRoomAdminRequestHandler(LoggedUser& user, Room& room)
 {
-	static RoomAdminRequestHandler roomAdminRequestHandler(*this);
-	roomAdminRequestHandler.reset(user, room);
-	return roomAdminRequestHandler;
+	return make_shared<RoomAdminRequestHandler>(*this, user, room);
 }
 
-RoomMemberRequestHandler& RequestHandlerFactory::createRoomMemberRequestHandler(LoggedUser user, Room& room)
+sptr<RoomMemberRequestHandler> RequestHandlerFactory::createRoomMemberRequestHandler(LoggedUser& user, Room& room)
 {
-	static RoomMemberRequestHandler roomMemberRequestHandler(*this);
-	roomMemberRequestHandler.reset(user, room);
-	return roomMemberRequestHandler;
+	return make_shared<RoomMemberRequestHandler>(*this, user, room);
 }
 
-GameRequestHandler& RequestHandlerFactory::createGameRequestHandler(LoggedUser user, Game& game)
+sptr<GameRequestHandler> RequestHandlerFactory::createGameRequestHandler(LoggedUser& user, Game& game)
 {
-	static GameRequestHandler gameRequestHandler(*this);
-	gameRequestHandler.reset(user, game);
-	return gameRequestHandler;
+	return make_shared<GameRequestHandler>(*this, user, game);
 }
 
 LoginManager& RequestHandlerFactory::getLoginManager()

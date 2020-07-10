@@ -64,9 +64,14 @@ namespace client
             sendingMutex = new Mutex();
 
             if (isAdmin)
+            {
                 this.LeaveRoomButton.Visibility = Visibility.Hidden;
+                this.CloseRoomButton.Visibility = Visibility.Visible;
+                this.StartGameButton.Visibility = Visibility.Visible;
+            }
             else
             {
+                this.LeaveRoomButton.Visibility = Visibility.Visible;
                 this.CloseRoomButton.Visibility = Visibility.Hidden;
                 this.StartGameButton.Visibility = Visibility.Hidden;
             }

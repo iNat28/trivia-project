@@ -6,12 +6,12 @@ LoginRequestHandler::LoginRequestHandler(RequestHandlerFactory& handlerFactory) 
 {
 }
 
-RequestResult LoginRequestHandler::handleRequest(const RequestInfo& requestInfo)
+RequestResult LoginRequestHandler::handleRequest(RequestInfo& requestInfo)
 {
 	return this->handleAllRequests(requestInfo, *this, this->m_requests);
 }
 
-RequestResult LoginRequestHandler::_login(const RequestInfo& requestInfo)
+RequestResult LoginRequestHandler::_login(RequestInfo& requestInfo)
 {
 	LoginRequest loginRequest = JsonRequestPacketDeserializer::deserializeLoginRequest(requestInfo.buffer);
 	
@@ -22,11 +22,11 @@ RequestResult LoginRequestHandler::_login(const RequestInfo& requestInfo)
 		JsonResponsePacketSerializer::serializeResponse(
 			LoginResponse()
 		),
-		this->m_handlerFactory.createMenuRequestHandler(loginRequest.username)
+		this->m_handlerFactory.createMenuRequestHandler(this->m_handlerFactory.getLoginManager().getUser(loginRequest.username))
 	);
 }
 
-RequestResult LoginRequestHandler::_signup(const RequestInfo& requestInfo)
+RequestResult LoginRequestHandler::_signup(RequestInfo& requestInfo)
 {
 	SignupRequest signupRequest = JsonRequestPacketDeserializer::deserializeSignupRequest(requestInfo.buffer);
 
@@ -37,11 +37,11 @@ RequestResult LoginRequestHandler::_signup(const RequestInfo& requestInfo)
 		JsonResponsePacketSerializer::serializeResponse(
 			SignupResponse()
 		),
-		this->m_handlerFactory.createMenuRequestHandler(signupRequest.username)
+		this->m_handlerFactory.createMenuRequestHandler(this->m_handlerFactory.getLoginManager().getUser(signupRequest.username))
 	);
 }
 
-const map<Codes, LoginRequestHandler::requests_func_t> LoginRequestHandler::m_requests = {
+const umap<Codes, LoginRequestHandler::requests_func_t> LoginRequestHandler::m_requests = {
 	{ Codes::LOGIN, &LoginRequestHandler::_login },
 	{ Codes::SIGNUP, &LoginRequestHandler::_signup }
 };

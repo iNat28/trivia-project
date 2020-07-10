@@ -53,24 +53,24 @@ void from_json(const json& j, Question& question)
 Game::Game(Room& room, Questions questions) :
 	m_room(room), m_questions(questions)
 {
-	for (const auto& player : m_room.getAllUsers())
+	for (const auto player : this->m_room.getAllUsers())
 	{
-		this->m_players[player];
+		this->m_players[player.username];
 	}
 }
 
-const Question& Game::getQuestion(LoggedUser user) const
+const Question& Game::getQuestion(LoggedUser& user) const
 {
 	if (this->m_questions.empty())
 	{
 		throw Exception("Couldn't get question - no questions left!");
 	}
-	return this->m_questions[this->m_players.at(user).currentQuestionIndex];
+	return this->m_questions[this->m_players.at(user.username).currentQuestionIndex];
 }
 
-unsigned int Game::submitAnswer(LoggedUser user, int answerIndex, double answerTime)
+unsigned int Game::submitAnswer(LoggedUser& user, int answerIndex, double answerTime)
 {
-	GameData& gameData = this->m_players[user];
+	GameData& gameData = this->m_players[user.username];
 	const Question& question = this->getQuestion(user);
 
 	gameData.playerResults.averageAnswerTime =
@@ -90,15 +90,15 @@ unsigned int Game::submitAnswer(LoggedUser user, int answerIndex, double answerT
 	return question.correctAnswerIndex;
 }
 
-void Game::removePlayer(LoggedUser user)
+void Game::removePlayer(LoggedUser& user)
 {
-	this->m_players[user].gotResults = true;
+	this->m_players[user.username].gotResults = true;
 }
 
 //Makes sure to check that the game isn't over
-vector<UserResults> Game::getGameResults(LoggedUser user)
+vector<UserResults> Game::getGameResults(LoggedUser& user)
 {
-	if (this->m_players.at(user).currentQuestionIndex < this->m_questions.size())
+	if (this->m_players.at(user.username).currentQuestionIndex < this->m_questions.size())
 	{
 		throw Exception("The game isn't over!");
 	}
@@ -111,7 +111,7 @@ vector<UserResults> Game::getGameResults()
 	vector<UserResults> playersResults;
 
 	//Converts the map so the value will be PlayerResults and not GameData
-	for (const auto& player : this->m_players)
+	for (const auto player : this->m_players)
 	{
 		playersResults.push_back(UserResults(player.first, player.second.playerResults));
 	}

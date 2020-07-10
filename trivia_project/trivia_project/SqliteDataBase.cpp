@@ -1,8 +1,8 @@
 #include "pch.h"
 #include "SqliteDataBase.h"
 
-std::unordered_map<string, string> SqliteDataBase::m_usersList;
-std::vector<UserStats> SqliteDataBase::m_usersStats;
+umap<string, string> SqliteDataBase::m_usersList;
+vector<UserStats> SqliteDataBase::m_usersStats;
 bool SqliteDataBase::moreData = false;
 int SqliteDataBase::highestRoomId = 1;
 std::mutex mtx;
@@ -290,10 +290,10 @@ int SqliteDataBase::getHighestRoomId() const
 	return this->highestRoomId++;
 }
 
-void SqliteDataBase::addGameStats(LoggedUser user, PlayerResults playerResults)
+void SqliteDataBase::addGameStats(LoggedUser& user, PlayerResults playerResults)
 {
 	sstream buffer;
-	UserStats otherUserStats = SqliteDataBase::getUserStats(user.username);
+	UserStats otherUserStats = SqliteDataBase::getUserStats(user);
 	
 	otherUserStats.playerResults.setAverageAnswerTime(playerResults);
 	otherUserStats.playerResults.numPoints += playerResults.numPoints;
@@ -312,12 +312,12 @@ void SqliteDataBase::addGameStats(LoggedUser user, PlayerResults playerResults)
 	send_query(buffer.str().c_str());
 }
 
-UserStats SqliteDataBase::getUserStats(string username) const
+UserStats SqliteDataBase::getUserStats(LoggedUser& user) const
 {
 	SqliteDataBase::moreData = false;
 	sstream buffer;
 
-	buffer << "select * from statistics where username = '" << username << "';";
+	buffer << "select * from statistics where username = '" << user.username << "';";
 	send_query(buffer.str().c_str(), statistics_callback);
 	
 	return m_usersStats[0];

@@ -42,11 +42,11 @@ void LoginManager::login(string username, string password)
 	this->m_loggedUsers.push_back(username);
 }
 
-void LoginManager::logout(string username)
+void LoginManager::logout(LoggedUser& user)
 {
 	for (auto loggedUser = this->m_loggedUsers.begin(); loggedUser != this->m_loggedUsers.end(); )
 	{
-		if (loggedUser->username == username)
+		if (*loggedUser == user)
 		{
 			loggedUser = this->m_loggedUsers.erase(loggedUser);
 		}
@@ -55,5 +55,17 @@ void LoginManager::logout(string username)
 			++loggedUser;
 		}
 	}
+}
+
+LoggedUser& LoginManager::getUser(string username)
+{
+	for (auto& user : this->m_loggedUsers)
+	{
+		if (user.username == username)
+		{
+			return user;
+		}
+	}
+	throw Exception("User not found!");
 }
 

@@ -6,9 +6,9 @@ StatisticsManager::StatisticsManager(IDatabase& database) :
 {
 }
 
-UserStats StatisticsManager::getUserStats(string username)
+UserStats StatisticsManager::getUserStats(LoggedUser& user)
 {
-	return this->m_database.getUserStats(username);
+	return this->m_database.getUserStats(user);
 }
 
 HighScores StatisticsManager::getHighScores()
