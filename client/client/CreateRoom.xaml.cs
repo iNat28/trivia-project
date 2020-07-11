@@ -61,8 +61,7 @@ namespace client
                     [Keys.roomName] = this.RoomName.Text,
                     [Keys.maxPlayers] = this.numMaxPlayers,
                     [Keys.questionsCount] = this.numQuestions,
-                    [Keys.timePerQuestion] = this.answerTime,
-                    [Keys.username] = User.username
+                    [Keys.timePerQuestion] = this.answerTime
                 };
 
                 Response response = Stream.Send(jObject, Codes.CREATE_ROOM);

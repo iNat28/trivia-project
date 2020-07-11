@@ -8,7 +8,7 @@ class StatisticsManager
 public:
 	StatisticsManager(IDatabase& database);
 
-	UserStats getUserStats(string username);
+	UserStats getUserStats(LoggedUser& user);
 	HighScores getHighScores();
 private:
 	IDatabase& m_database;

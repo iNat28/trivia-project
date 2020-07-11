@@ -14,12 +14,12 @@ class LoginRequestHandler : public IRequestHandler
 public:
 	LoginRequestHandler(RequestHandlerFactory& handlerFactory);
 
-	virtual RequestResult handleRequest(const RequestInfo& requestInfo) override;
+	virtual RequestResult handleRequest(RequestInfo& requestInfo) override;
 private:
 	RequestHandlerFactory& m_handlerFactory;
-	using requests_func_t = RequestResult (LoginRequestHandler::*)(const RequestInfo&);
-	static const map<Codes, LoginRequestHandler::requests_func_t> m_requests;
+	using requests_func_t = RequestResult (LoginRequestHandler::*)(RequestInfo&);
+	static const umap<Codes, LoginRequestHandler::requests_func_t> m_requests;
 	
-	RequestResult _login(const RequestInfo& requestInfo);
-	RequestResult _signup(const RequestInfo& requestInfo);
+	RequestResult _login(RequestInfo& requestInfo);
+	RequestResult _signup(RequestInfo& requestInfo);
 };

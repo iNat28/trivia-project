@@ -21,12 +21,12 @@ public:
 
 	void startHandleRequests();
 private:
-	std::unordered_map<SOCKET, IRequestHandler*> m_clients;
+	umap<SOCKET, sptr<IRequestHandler>> m_clients;
 	RequestHandlerFactory m_handlerFactory;
 	SOCKET m_serverSocket;
 
 	void _bindAndListen();
-	friend void s_handleNewClient(Communicator& communicator, SOCKET socket, IRequestHandler* handler);
+	friend void s_handleNewClient(Communicator& communicator, SOCKET socket, sptr<IRequestHandler> handler);
 	static void s_getFromSocket(SOCKET socket, char* buffer, int length);
 	static void s_sendToSocket(SOCKET socket, char* buffer, int length);
 };

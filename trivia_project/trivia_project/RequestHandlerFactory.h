@@ -25,11 +25,11 @@ class RequestHandlerFactory
 public:
 	RequestHandlerFactory(IDatabase& database);
 
-	LoginRequestHandler& createLoginRequestHandler();
-	MenuRequestHandler& createMenuRequestHandler(LoggedUser user);
-	RoomAdminRequestHandler& createRoomAdminRequestHandler(LoggedUser user, Room& room);
-	RoomMemberRequestHandler& createRoomMemberRequestHandler(LoggedUser user, Room& room);
-	GameRequestHandler& createGameRequestHandler(LoggedUser user, Game& game);
+	sptr<LoginRequestHandler> createLoginRequestHandler();
+	sptr<MenuRequestHandler> createMenuRequestHandler(LoggedUser& user);
+	sptr<RoomAdminRequestHandler> createRoomAdminRequestHandler(LoggedUser& user, Room& room);
+	sptr<RoomMemberRequestHandler> createRoomMemberRequestHandler(LoggedUser& user, Room& room);
+	sptr<GameRequestHandler> createGameRequestHandler(LoggedUser& user, Game& game);
 	
 	LoginManager& getLoginManager();
 	RoomManager& getRoomManager();

@@ -10,16 +10,6 @@ LoggedUser::LoggedUser()
 {
 }
 
-bool LoggedUser::operator<(const LoggedUser& other) const
-{
-	return this->username < other.username;
-}
-
-bool LoggedUser::operator>(const LoggedUser& other) const
-{
-	return this->username > other.username;
-}
-
 bool LoggedUser::operator==(const LoggedUser& other) const
 {
 	return this->username == other.username;

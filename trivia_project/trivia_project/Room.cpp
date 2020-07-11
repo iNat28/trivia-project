@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Room.h"
 
-RoomData::RoomData(unsigned int id, string name, vector<LoggedUser> players, unsigned int maxPlayers, unsigned int questionsCount, unsigned int timePerQuestion) : 
+RoomData::RoomData(unsigned int id, string name, vector<LoggedUser> players, unsigned int maxPlayers, unsigned int questionsCount, unsigned int timePerQuestion) :
 	id(id), name(name), players(players), maxPlayers(maxPlayers), questionsCount(questionsCount), timePerQuestion(timePerQuestion), roomStatus(RoomStatus::OPEN)
 {
 }
@@ -49,7 +49,7 @@ Room::Room()
 {
 }
 
-void Room::addUser(LoggedUser user)
+void Room::addUser(LoggedUser& user)
 {
 	if (this->m_roomdata.players.size() >= this->m_roomdata.maxPlayers)
 	{
@@ -66,11 +66,11 @@ void Room::addUser(LoggedUser user)
 	this->m_roomdata.players.push_back(user);
 }
 
-void Room::removeUser(LoggedUser user)
+void Room::removeUser(LoggedUser& user)
 {
 	for (auto it = this->m_roomdata.players.begin(); it != this->m_roomdata.players.end(); it++)
 	{
-		if (it->username == user.username)
+		if (*it == user)
 		{
 			this->m_roomdata.players.erase(it);
 			return;

@@ -25,9 +25,16 @@
 
 using std::string;
 using std::vector;
-using std::map;
+
+template<class K, class V>
+using umap = std::unordered_map<K, V>;
 using std::cout;
 using std::cin;
 using std::endl;
 using sstream = std::stringstream;
+
+template<class T>
+using sptr = std::shared_ptr<T>;
+
+using std::make_shared;
 using json = nlohmann::json;

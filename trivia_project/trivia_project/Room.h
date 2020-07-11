@@ -35,8 +35,8 @@ public:
 	Room(RoomData roomData);
 	Room();
 
-	void addUser(LoggedUser user);
-	void removeUser(LoggedUser user);
+	void addUser(LoggedUser& user);
+	void removeUser(LoggedUser& user);
 
 	unsigned int getQuestionsCount() const;
 	vector<LoggedUser> getAllUsers() const;

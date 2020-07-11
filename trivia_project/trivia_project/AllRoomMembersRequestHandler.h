@@ -4,13 +4,11 @@
 class AllRoomMembersRequestHandler :
 	public LoggedUserRequestHandler
 {
-public:
-	void reset(LoggedUser user, Room& room);
 protected:
-	AllRoomMembersRequestHandler();
+	AllRoomMembersRequestHandler(LoggedUser& user, Room& room);
 
-	Room* m_room;
+	Room& m_room;
 
-	Buffer _getRoomStateNoHandler(const RequestInfo& requestInfo);
+	Buffer _getRoomStateNoHandler(RequestInfo& requestInfo);
 };
 
