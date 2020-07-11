@@ -19,21 +19,21 @@
         <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="WhiteSmoke" Margin="10,20,9.6,20" CornerRadius="5" Height="388">
                 <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="25" Height="367">
-                    <TextBox x:Name="RoomName" materialDesign:HintAssist.Hint="Room Name" materialDesign:HintAssist.Foreground="BlueViolet" materialDesign:TextFieldAssist.UnderlineBrush="BlueViolet" Style="{StaticResource MaterialDesignFloatingHintTextBox}" HorizontalAlignment="Left" Height="45" Margin="200,20,0, 0" TextWrapping="Wrap" VerticalAlignment="Top" Width="118"/>
-                    <TextBlock x:Name="NumQuestionsHeader" HorizontalAlignment="Left" Margin="200,20,0,0" TextWrapping="Wrap" Text="Number of Questions:" VerticalAlignment="Top" Height="34" Width="89"/>
-                    <TextBlock x:Name="AnswerTimeHeader" HorizontalAlignment="Left" Margin="200,20,0,0" TextWrapping="Wrap" Text="Time Per Question:" VerticalAlignment="Top" Height="36" Width="89"/>
-                    <TextBlock x:Name="MaxPlayersHeader" HorizontalAlignment="Left" Margin="200,20,0,0" TextWrapping="Wrap" Text="Max Players:" VerticalAlignment="Top" Width="98"/>
+                    <TextBox x:Name="RoomName" materialDesign:HintAssist.Hint="Room Name" materialDesign:HintAssist.Foreground="BlueViolet" materialDesign:TextFieldAssist.UnderlineBrush="BlueViolet" Style="{StaticResource MaterialDesignFloatingHintTextBox}" HorizontalAlignment="Stretch" Height="45" Margin="50,20,0, 0" TextWrapping="Wrap" VerticalAlignment="Stretch" Width="118"/>
+                    <TextBlock x:Name="NumQuestionsHeader" HorizontalAlignment="Stretch" Margin="-250,20,0,0" TextWrapping="Wrap" Text="Number of Questions:" VerticalAlignment="Stretch" Height="34" Width="89"/>
+                    <TextBlock x:Name="AnswerTimeHeader" HorizontalAlignment="Stretch" Margin="-250,20,0,0" TextWrapping="Wrap" Text="Time Per Question:" VerticalAlignment="Stretch" Height="36" Width="89"/>
+                    <TextBlock x:Name="MaxPlayersHeader" HorizontalAlignment="Stretch" Margin="-250,20,0,0" TextWrapping="Wrap" Text="Max Players:" VerticalAlignment="Stretch" Width="98"/>
                                         
-                    <Slider x:Name="NumQuestionsSlider" Minimum="1" Maximum="10" TickPlacement="BottomRight" TickFrequency="1" IsSnapToTickEnabled="True" HorizontalAlignment="Left" Margin="350,-120,0,0" VerticalAlignment="Top" Width="202" ValueChanged="NumQuestionsSlider_ValueChanged" Height="27"/>
-                    <TextBox x:Name="QuestionsSliderTextBox" HorizontalAlignment="Left" Height="27" Margin="573,-135,0,0" TextWrapping="Wrap" Text="1" VerticalAlignment="Top" Width="48" TextChanged="TextBox_TextChanged" />
-                    <Slider x:Name="AnswerTimeSlider" Minimum="1" Maximum="60" TickPlacement="BottomRight" TickFrequency="1" IsSnapToTickEnabled="True" HorizontalAlignment="Left" Margin="350,-70,0,0" VerticalAlignment="Top" Width="202" ValueChanged="AnswerTimeSlider_ValueChanged" Height="23"/>
-                    <TextBox x:Name="AnswerTimeTextBox" HorizontalAlignment="Left" Height="23" Margin="573,-85,0,0" TextWrapping="Wrap" Text="1" VerticalAlignment="Top" Width="48" TextChanged="AnswerTimeTextBox_TextChanged"/>
-                    <Slider x:Name="MaxPlayersSlider" Minimum="1" Maximum="5" TickPlacement="BottomRight" TickFrequency="1" IsSnapToTickEnabled="True" HorizontalAlignment="Left" Margin="350,-20,0,0" VerticalAlignment="Top" Width="202" ValueChanged="MaxPlayersSlider_ValueChanged"/>
-                    <TextBox x:Name="MaxPlayersTextBox" HorizontalAlignment="Left" Height="24" Margin="573,-38,0,0" TextWrapping="Wrap" Text="1" VerticalAlignment="Top" Width="48" TextChanged="MaxPlayersTextBox_TextChanged"/>
+                    <Slider x:Name="NumQuestionsSlider" Minimum="1" Maximum="10" TickPlacement="BottomRight" TickFrequency="1" IsSnapToTickEnabled="True" HorizontalAlignment="Stretch" Margin="180,-225,0,0" VerticalAlignment="Stretch" Width="202" ValueChanged="NumQuestionsSlider_ValueChanged" Height="27"/>
+                    <TextBox x:Name="QuestionsSliderTextBox" HorizontalAlignment="Stretch" Height="27" Margin="470,-260,0,0" TextWrapping="Wrap" Text="1" VerticalAlignment="Stretch" Width="48" TextChanged="TextBox_TextChanged" />
+                    <Slider x:Name="AnswerTimeSlider" Minimum="1" Maximum="60" TickPlacement="BottomRight" TickFrequency="1" IsSnapToTickEnabled="True" HorizontalAlignment="Stretch" Margin="180,-120,0,0" VerticalAlignment="Stretch" Width="202" ValueChanged="AnswerTimeSlider_ValueChanged" Height="23"/>
+                    <TextBox x:Name="AnswerTimeTextBox" HorizontalAlignment="Left" Height="23" Margin="573,-150,0,0" TextWrapping="Wrap" Text="1" VerticalAlignment="Stretch" Width="48" TextChanged="AnswerTimeTextBox_TextChanged"/>
+                    <Slider x:Name="MaxPlayersSlider" Minimum="1" Maximum="5" TickPlacement="BottomRight" TickFrequency="1" IsSnapToTickEnabled="True" HorizontalAlignment="Stretch" Margin="180,-20,0,0" VerticalAlignment="Top" Width="202" ValueChanged="MaxPlayersSlider_ValueChanged"/>
+                    <TextBox x:Name="MaxPlayersTextBox" HorizontalAlignment="Stretch" Height="24" Margin="470,-50,0,0" TextWrapping="Wrap" Text="1" VerticalAlignment="Stretch" Width="48" TextChanged="MaxPlayersTextBox_TextChanged"/>
 
-                    <Button x:Name="CreateRoomButton" Content="Create Room" HorizontalAlignment="Left" Margin="300,35,0,0" VerticalAlignment="Top" Width="161" Height="46" Click="CreateRoomButton_Click"/>
-                    <Button x:Name="BackButton" Content="Back" HorizontalAlignment="Left" Margin="336,15,0,0" VerticalAlignment="Top" Width="89" Height="27" Click="BackButton_Click"/>
-                    <TextBlock x:Name="ErrorOutput" HorizontalAlignment="Left" Margin="32,59,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="318" Width="180"/>
+                    <Button x:Name="CreateRoomButton" Content="Create Room" HorizontalAlignment="Stretch" Margin="30,35,0,0" VerticalAlignment="Stretch" Width="161" Height="46" Click="CreateRoomButton_Click"/>
+                    <Button x:Name="BackButton" Content="Back" HorizontalAlignment="Stretch" Margin="35,15,0,0" VerticalAlignment="Stretch" Width="89" Height="27" Click="BackButton_Click"/>
+                    <TextBlock x:Name="ErrorOutput" HorizontalAlignment="Stretch" Margin="-550,-300,0,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Height="318" Width="180"/>
                     
                 </StackPanel>
             </Border>

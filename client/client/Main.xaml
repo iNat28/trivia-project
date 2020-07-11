@@ -19,7 +19,7 @@
         <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="WhiteSmoke" Margin="10,20,9.6,20" CornerRadius="5" Height="388">
                 <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="25" Height="367">
-                    <TextBlock x:Name="UsernameHeader" FontSize="40" FontWeight="bold" FontFamily="cambria" HorizontalAlignment="Stretch" Height="55" Margin="260,19,284.8,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Width="180"/>
+                    <TextBlock x:Name="UsernameHeader" FontSize="40" FontWeight="bold" FontFamily="cambria" HorizontalAlignment="Stretch" Height="55" Margin="260,19,69.8,0" TextWrapping="Wrap" VerticalAlignment="Stretch"/>
                     <Button x:Name="CreateRoomButton" Content="Create Room" HorizontalAlignment="Stretch" Margin="-20,20,0,0" VerticalAlignment="Stretch" Width="180" Height="48" Click="CreateRoomButton_Click"/>
                     <Button x:Name="JoinRoomButton" Content="Join Room" HorizontalAlignment="Stretch" Margin="-20,20,0,0" VerticalAlignment="Stretch" Width="180" Height="48" Click="JoinRoomButton_Click"/>
                     <Button x:Name="StatisticsButton" Content="Statistics" HorizontalAlignment="Stretch" Margin="-20,20,0,0" VerticalAlignment="Stretch" Width="180" Height="48" Click="StatisticsButton_Click"/>
