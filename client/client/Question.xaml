@@ -3,32 +3,45 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"            
         xmlns:local="clr-namespace:client"
         mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"                
+        HorizontalAlignment="Stretch"
+        VerticalAlignment="Stretch"
+        Background="#FF410A66"
+        TextElement.FontWeight="Medium"
+        TextElement.FontSize="14"
+        FontFamily="{materialDesign:MaterialDesignFont}"            
         Title="Game" Height="450" Width="800">
-    <Grid>
-        <TextBlock x:Name="QuestionHeader" HorizontalAlignment="Left" Margin="183,44,0,0" TextWrapping="Wrap" Text="Question:" VerticalAlignment="Top" Height="24" Width="91"/>
-        <TextBlock x:Name="QuestionText" HorizontalAlignment="Left" Margin="298,19,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="49" Width="445"/>
-        <TextBlock x:Name="NumAnswersLeftHeader" HorizontalAlignment="Left" Margin="521,88,0,0" TextWrapping="Wrap" Text="Answers Left:" VerticalAlignment="Top" Height="35" Width="96"/>
-        <TextBlock x:Name="NumCorrectAnswersHeader" HorizontalAlignment="Left" Margin="521,137,0,0" TextWrapping="Wrap" Text="Correct Answers:" VerticalAlignment="Top" Height="35" Width="96"/>
-        <TextBlock x:Name="CorrectAnswers" HorizontalAlignment="Left" Margin="631,137,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="35" Width="112"/>
-        <TextBlock x:Name="AnswersLeft" HorizontalAlignment="Left" Margin="631,88,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="35" Width="112"/>
-        <TextBlock x:Name="TimeLeftHeader" HorizontalAlignment="Left" Margin="521,235,0,0" TextWrapping="Wrap" Text="Time Left:" VerticalAlignment="Top" Height="35" Width="96"/>
-        <TextBlock x:Name="TimeLeft" HorizontalAlignment="Left" Margin="631,235,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="35" Width="112"/>
-        <Button x:Name="Answer1" Content="" HorizontalAlignment="Left" Margin="250,88,0,0" VerticalAlignment="Top" Width="214" Height="35" Click="Answer1_Click"/>
-        <Button x:Name="Answer2" Content="" HorizontalAlignment="Left" Margin="250,137,0,0" VerticalAlignment="Top" Width="214" Height="35" Click="Answer2_Click"/>
-        <Button x:Name="Answer3" Content="" HorizontalAlignment="Left" Margin="250,185,0,0" VerticalAlignment="Top" Width="214" Height="35" Click="Answer3_Click"/>
-        <Button x:Name="Answer4" Content="" HorizontalAlignment="Left" Margin="250,235,0,0" VerticalAlignment="Top" Width="214" Height="35" Click="Answer4_Click"/>
-        <Button x:Name="BackButton" Content="Leave Game" HorizontalAlignment="Left" Margin="250,329,0,0" VerticalAlignment="Top" Width="214" Height="41" Click="BackButton_Click"/>
-        <TextBlock x:Name="DifficultyHeader" HorizontalAlignment="Left" Margin="46,88,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="27" Width="99"><Run Text="Difficulty:"/></TextBlock>
-        <TextBlock x:Name="CategoryHeader" HorizontalAlignment="Left" Margin="46,120,0,0" TextWrapping="Wrap" Text="Category:" VerticalAlignment="Top" Width="66" Height="27"/>
-        <TextBlock x:Name="Category" HorizontalAlignment="Left" Margin="117,120,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="34" Width="113"><Run Text=""/></TextBlock>
-        <TextBlock x:Name="Difficulty" HorizontalAlignment="Left" Margin="150,88,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="27" Width="77"><Run Text=""/></TextBlock>
-        <TextBlock x:Name="ErrorOutput" HorizontalAlignment="Left" Margin="46,213,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="157" Width="181"/>
-        <TextBlock HorizontalAlignment="Left" Margin="521,172,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="96" Text="Selected Answer:"/>
-        <TextBlock HorizontalAlignment="Left" Margin="521,193,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="119" Text="Time took for answer:"/>
-        <TextBlock x:Name="SelectedAnswerOutput" HorizontalAlignment="Left" Margin="645,172,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="137"/>
-        <TextBlock x:Name="TimeTookForAnswerOutput" HorizontalAlignment="Left" Margin="645,193,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="137"/>
-
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="WhiteSmoke" Margin="10,20,9.6,20" CornerRadius="5" Height="388">
+                <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="25" Height="367">
+                    <TextBlock x:Name="QuestionHeader" HorizontalAlignment="Stretch" Margin="-300,44,0,0" TextWrapping="Wrap" Text="Question:" VerticalAlignment="Stretch" Height="24" Width="91"/>
+                    <TextBlock x:Name="QuestionText" HorizontalAlignment="Stretch" Margin="220,-25,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Stretch" Height="49" Width="445"/>
+                    <TextBlock x:Name="NumAnswersLeftHeader" HorizontalAlignment="Stretch" Margin="524,0,104.8,0" TextWrapping="Wrap" Text="Answers Left:" VerticalAlignment="Stretch" Height="35" Width="96"/>
+                    <TextBlock x:Name="AnswersLeft" HorizontalAlignment="Stretch" Margin="646,-35,5.8,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Height="35"/>
+                    <TextBlock x:Name="NumCorrectAnswersHeader" HorizontalAlignment="Stretch" Margin="524,0,86.8,0" TextWrapping="Wrap" Text="Correct Answers:" VerticalAlignment="Stretch" Height="35" Width="114"/>
+                    <TextBlock x:Name="CorrectAnswers" HorizontalAlignment="Stretch" Margin="646,-50,5.8,0" TextWrapping="Wrap"  VerticalAlignment="Stretch" Height="19"/>
+                    <TextBlock x:Name="TimeLeftHeader" HorizontalAlignment="Stretch" Margin="525,0,85.8,0" TextWrapping="Wrap" Text="Time Left:" VerticalAlignment="Stretch" Height="36" Width="114"/>
+                    <TextBlock x:Name="TimeLeft" HorizontalAlignment="Stretch" Margin="647,-45,13.8,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Height="23"/>
+                    <Button x:Name="Answer1" Content="" HorizontalAlignment="Stretch" Margin="250,-160,244.8,0" VerticalAlignment="Stretch" Height="35" Click="Answer1_Click"/>
+                    <Button x:Name="Answer2" Content="" HorizontalAlignment="Stretch" Margin="251,-60,244.8,0" VerticalAlignment="Stretch" Height="35" Click="Answer2_Click"/>
+                    <Button x:Name="Answer3" Content="" HorizontalAlignment="Stretch" Margin="251,0,244.8,0" VerticalAlignment="Stretch" Height="36" Click="Answer3_Click"/>
+                    <Button x:Name="Answer4" Content="" HorizontalAlignment="Stretch" Margin="251,15,244.8,0" VerticalAlignment="Stretch" Height="35" Click="Answer4_Click"/>
+                    <Button x:Name="BackButton" Content="Leave Game" HorizontalAlignment="Stretch" Margin="560,10,43.8,0" VerticalAlignment="Stretch" Height="41" Click="BackButton_Click"/>
+                    <TextBlock x:Name="DifficultyHeader" HorizontalAlignment="Stretch" Margin="-600,-500,0,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Height="27" Width="99"><Run Text="Difficulty:"/></TextBlock>
+                    <TextBlock x:Name="Difficulty" HorizontalAlignment="Stretch" Margin="99,-510,548.8,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Height="18" Width="77"><Run Text=""/></TextBlock>
+                    <TextBlock x:Name="CategoryHeader" HorizontalAlignment="Stretch" Margin="-630,-420,0,0" TextWrapping="Wrap" Text="Category:" VerticalAlignment="Stretch" Width="66" Height="27"/>
+                    <TextBlock x:Name="Category" HorizontalAlignment="Stretch" Margin="-420,-410,0,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Height="34" Width="113"><Run Text=""/></TextBlock>
+                    <TextBlock x:Name="ErrorOutput" HorizontalAlignment="Stretch" Margin="-250,-100,248.8,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Height="86" Width="181"/>
+                    <TextBlock HorizontalAlignment="Stretch" Margin="15,-350,595.8,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Width="114" Text="Selected Answer:" Height="30"/>
+                    <TextBlock x:Name="SelectedAnswerOutput" HorizontalAlignment="Stretch" Margin="132,-335,473.8,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Height="45"/>
+                    <TextBlock HorizontalAlignment="Stretch" Margin="17,-260,597.8,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Text="Time took for answer:" Height="39"/>
+                    <TextBlock x:Name="TimeTookForAnswerOutput" HorizontalAlignment="Stretch" Margin="113,-255,542.8,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Height="22"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
     </Grid>
 </local:CustomWindow>
