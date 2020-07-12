@@ -86,7 +86,7 @@ namespace client
             this.timeLeft = answerTime;
             this.timerTemp = this.timeLeft;
             this.AnswersLeft.Text = numQuestionsLeft.ToString();
-            this.TimeLeft.Text = answerTime.ToString();
+            this.TimeLeft.Text = Utils.GetSecondsString(answerTime);
             this.selectedAnswerIndex = -1;
             this.answersAreDisplayed = false;
             this.showResults = true;
@@ -223,6 +223,7 @@ namespace client
         private void UpdateNewQuestion(JObject question)
         {                    
             this.QuestionText.Text = question[Keys.question].ToString();
+            //TODO: Change to text
             this.Difficulty.Text = question[Keys.difficulty].ToString();
             this.Category.Text = question[Keys.category].ToString();
 
@@ -288,7 +289,7 @@ namespace client
                 selectedButton.Background = Brushes.LightBlue;
                 
                 this.SelectedAnswerOutput.Text = (string)selectedButton.Content;
-                this.TimeTookForAnswerOutput.Text = this.currentTime.ToString("0.00");
+                this.TimeTookForAnswerOutput.Text = Utils.GetSecondsString(this.currentTime);
             }
         }
 
@@ -318,7 +319,7 @@ namespace client
                 }
                 else
                 {
-                    this.TimeTookForAnswerOutput.Text = this.currentTime.ToString();
+                    this.TimeTookForAnswerOutput.Text = Utils.GetSecondsString(this.currentTime);
                 }
                 
                 Button correctButton = this.GetAnswerButtonFromIndex(correctAnswerIndex);
@@ -338,7 +339,7 @@ namespace client
 
             this.CorrectAnswers.Text = this.numCorrectAnswers.ToString();
             this.AnswersLeft.Text = numQuestionsLeft.ToString();
-            this.TimeLeft.Text = this.timeLeft.ToString();
+            this.TimeLeft.Text = Utils.GetSecondsString(this.timeLeft);
             this.SelectedAnswerOutput.Text = "";
             this.TimeTookForAnswerOutput.Text = "";
             this.selectedAnswerIndex = -1;

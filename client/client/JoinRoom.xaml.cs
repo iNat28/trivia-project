@@ -64,21 +64,22 @@ namespace client
         public override string ToString()
         {
             string roomStatus = "";
+
             switch(this.roomStatus)
             {
                 case RoomWindow.Status.GAME_STARTED:
                     roomStatus = "| The room's game has started";
                     break;
             }
+
             return
                 "Room: " + this.name + " | " + 
                 this.currentPlayerCount + '/' + this.maxPlayers + " players in room | " +
                 this.questionsCount + " questions | " +
-                this.timePerQuestion + " seconds per question"
+                Utils.GetSecondsString(this.timePerQuestion) + " per question"
                 + roomStatus;
         }
     };
-
 
     /// <summary>
     /// Interaction logic for JoinRoom.xaml
@@ -89,9 +90,7 @@ namespace client
         private readonly BackgroundWorker backgroundWorker;
         private Mutex sendingMutex;
         private readonly List<RoomData> rooms;
-        
-        //TODO: Need to show the rooms and all of it's room state, and if it's game started, or if it is maxed out for players
-        
+
         public JoinRoomWindow()
         {
             InitializeComponent();

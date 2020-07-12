@@ -95,6 +95,11 @@ void Game::removePlayer(LoggedUser& user)
 	this->m_players[user.username].gotResults = true;
 }
 
+bool Game::comparePlayerPoints(UserResults userResults1, UserResults userResults2)
+{
+	return (userResults1.playerResults.numPoints > userResults2.playerResults.numPoints);
+}
+
 //Makes sure to check that the game isn't over
 vector<UserResults> Game::getGameResults(LoggedUser& user)
 {
@@ -116,14 +121,9 @@ vector<UserResults> Game::getGameResults()
 		playersResults.push_back(UserResults(player.first, player.second.playerResults));
 	}
 
-	std::sort(playersResults.begin(), playersResults.end(), comaprePlayerPoints);
+	std::sort(playersResults.begin(), playersResults.end(), comparePlayerPoints);
 
 	return playersResults;
-}
-
-bool comaprePlayerPoints(UserResults i1, UserResults i2)
-{
-	return (i1.playerResults.numPoints > i2.playerResults.numPoints);
 }
 
 Room& Game::getRoom()

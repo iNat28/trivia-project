@@ -77,7 +77,7 @@ namespace client
             //TODO: add a thread here that updates this data when we add the functionality of changing these stats in the room window
             this.RoomName.Text = roomData.name;
             this.MaxPlayers.Text = roomData.maxPlayers.ToString();
-            this.TimePerQuestion.Text = roomData.timePerQuestion.ToString();
+            this.TimePerQuestion.Text = Utils.GetSecondsString(roomData.timePerQuestion);
             this.NumQuestions.Text = roomData.questionsCount.ToString();
             this.NamesList.Items.Clear();
 

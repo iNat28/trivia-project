@@ -9,7 +9,27 @@ namespace client
 {
     public static class Utils
     {
-        
+        public static string GetSecondsString(int time)
+        {
+            return CheckFor1(time, time.ToString());
+        }
+
+        public static string GetSecondsString(double time)
+        {
+            return CheckFor1((int)time, time.ToString("0.00"));
+        }
+
+        private static string CheckFor1(int time, string ret)
+        {
+            ret += " second";
+            
+            if (time == 1)
+            {
+                return ret;
+            }
+
+            return ret + 's';
+        }
     }
 
     public enum Codes

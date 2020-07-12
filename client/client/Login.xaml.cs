@@ -73,5 +73,10 @@ namespace client
         {
             WindowManager.Close();
         }
+
+        protected override Border GetBorder()
+        {
+            return this.Border;
+        }
     }
 }
