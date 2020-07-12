@@ -18,7 +18,7 @@ namespace client
 {
     public abstract class LogoutWindow : CustomWindow
     {
-        protected override void OnHide(object sender, CancelEventArgs e)
+        protected override void OnClosing(CancelEventArgs e)
         {
             if (!WindowManager.exit)
             {

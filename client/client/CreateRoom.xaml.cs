@@ -36,8 +36,6 @@ namespace client
 
         public override void OnShow(params object[] param)
         {
-            base.ErrorBox = this.ErrorOutput;
-
             this.RoomName.Text = "";
             this.NumQuestionsSlider.Value = 1;
             this.MaxPlayersSlider.Value = 1;
@@ -131,6 +129,11 @@ namespace client
         private void RoomName_TextChanged(object sender, TextChangedEventArgs e)
         {
 
+        }
+
+        public override TextBlock GetErrorOutput()
+        {
+            return this.ErrorOutput;
         }
     }
 }

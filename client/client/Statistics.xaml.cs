@@ -27,7 +27,11 @@ namespace client
 
         public override void OnShow(params object[] param)
         {
-            base.ErrorBox = null;
+        }
+
+        public override TextBlock GetErrorOutput()
+        {
+            return this.ErrorOutput;
         }
 
         private void MyStatusButton_Click(object sender, RoutedEventArgs e)

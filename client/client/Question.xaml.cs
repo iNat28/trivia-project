@@ -76,7 +76,6 @@ namespace client
             int numQuestions = (int)param[0];
             int answerTime = (int)param[1];
 
-            base.ErrorBox = this.ErrorOutput;
             this.mutex?.Close();
             this.mutex = new Mutex();
 
@@ -98,6 +97,11 @@ namespace client
             this.stopwatch.Restart();
             this.ResetAnswerColors();
             this.thread.RunWorkerAsync();
+        }
+
+        public override TextBlock GetErrorOutput()
+        {
+            return this.ErrorOutput;
         }
 
         private void WorkForThread(object sender, DoWorkEventArgs e)
@@ -365,11 +369,11 @@ namespace client
             this.LeaveGame();
         }
 
-        protected override void OnHide(object sender, CancelEventArgs e)
+        protected override void OnClosing(CancelEventArgs e)
         {
             if (!WindowManager.exit)
             {
-                base.OnHide(sender, e);
+                base.OnClosing(e);
                 LeaveGame();
             }
         }

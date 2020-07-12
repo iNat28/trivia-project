@@ -11,11 +11,20 @@ namespace client
 {
     public class CustomWindow : Window
     {
-        public TextBlock ErrorBox;
-        public CustomWindow() { }
-        public virtual void OnShow(params object[] param) { }
+        public CustomWindow()
+        {
+        }
 
-        protected virtual void OnHide(object sender, CancelEventArgs e)
+        public virtual void OnShow(params object[] param)
+        {
+        }
+
+        public virtual TextBlock GetErrorOutput()
+        {
+            return null;
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
         {
             if (e != null)
             {

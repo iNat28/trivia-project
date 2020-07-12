@@ -22,15 +22,17 @@ namespace client
         public int id;
         public string name;
         public int maxPlayers;
+        public int currentPlayerCount;
         public int questionsCount;
         public int timePerQuestion;
         public RoomWindow.Status roomStatus;
 
-        public RoomData(int id, string name, int maxPlayers, int questionsCount, int timePerQuestion, RoomWindow.Status roomStatus)
+        public RoomData(int id, string name, int maxPlayers, int questionsCount, int timePerQuestion, RoomWindow.Status roomStatus, int currentPlayerCount = 1)
         {
             this.id = id;
             this.name = name;
             this.maxPlayers = maxPlayers;
+            this.currentPlayerCount = currentPlayerCount;
             this.questionsCount = questionsCount;
             this.timePerQuestion = timePerQuestion;
             this.roomStatus = roomStatus;
@@ -61,8 +63,19 @@ namespace client
 
         public override string ToString()
         {
-            return this.name + " | Max players: " + this.maxPlayers + " | Number of questions: " + this.questionsCount + " | Time per questions: " + this.timePerQuestion + 
-                " | Room status: " + this.roomStatus;
+            string roomStatus = "";
+            switch(this.roomStatus)
+            {
+                case RoomWindow.Status.GAME_STARTED:
+                    roomStatus = "| The room's game has started";
+                    break;
+            }
+            return
+                "Room: " + this.name + " | " + 
+                this.currentPlayerCount + '/' + this.maxPlayers + " players in room | " +
+                this.questionsCount + " questions | " +
+                this.timePerQuestion + " seconds per question"
+                + roomStatus;
         }
     };
 
@@ -96,12 +109,16 @@ namespace client
 
         public override void OnShow(params object[] param)
         {
-            base.ErrorBox = this.ErrorOutput;
             this.rooms.Clear();
             this.RoomsList.Items.Clear();
             this.sendingMutex?.Close();
             this.sendingMutex = new Mutex();
             backgroundWorker.RunWorkerAsync();
+        }
+
+        public override TextBlock GetErrorOutput()
+        {
+            return this.ErrorOutput;
         }
 
         private void JoinRoomButton_Click(object sender, RoutedEventArgs e)
@@ -166,12 +183,13 @@ namespace client
                     foreach (JObject jObject in jArray)
                     {
                         RoomData room = new RoomData(
-                            (int)jObject[Keys.id],
+                            (int)jObject[Keys.roomId],
                             (string)jObject[Keys.roomName],
                             (int)jObject[Keys.maxPlayers],
                             (int)jObject[Keys.questionsCount],
                             (int)jObject[Keys.timePerQuestion],
-                            (RoomWindow.Status)(int)jObject[Keys.roomStatus]
+                            (RoomWindow.Status)(int)jObject[Keys.roomStatus],
+                            (int)jObject[Keys.currentPlayerCount]
                         );
                         if (!this.rooms.Contains(room))
                         {

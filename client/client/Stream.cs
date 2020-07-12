@@ -155,7 +155,7 @@ namespace client
             {
                 if (e.Message != "exit")
                 {
-                    WindowManager.PrintError(e);
+                    WindowManager.PrintError(e.Message);
                 }
             }
 

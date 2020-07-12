@@ -57,8 +57,6 @@ namespace client
             this.isAdmin = (bool)param[0];
             RoomData roomData = (RoomData)param[1];
 
-            base.ErrorBox = this.ErrorOutput;
-
             this.roomStatus = Status.OPEN;
             sendingMutex?.Close();
             sendingMutex = new Mutex();
@@ -86,11 +84,16 @@ namespace client
             backgroundWorker.RunWorkerAsync();
         }
 
-        protected override void OnHide(object sender, CancelEventArgs e)
+        public override TextBlock GetErrorOutput()
+        {
+            return this.ErrorOutput;
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
         {
             if (!WindowManager.exit)
             {
-                base.OnHide(sender, e);
+                base.OnClosing(e);
                 if (isAdmin)
                 {
                     CloseRoom();
@@ -178,7 +181,7 @@ namespace client
                         break;
                     }
 
-                    JArray jArray = (JArray)usersResponse.jObject[Keys.players];
+                    JArray jArray = (JArray)usersResponse.jObject[Keys.playersInRoom];
 
                     List<string> players = new List<string>();
 

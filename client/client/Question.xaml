@@ -5,7 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:client"
         mc:Ignorable="d"
-        Closing="OnHide"
         Title="Game" Height="450" Width="800">
     <Grid>
         <TextBlock x:Name="QuestionHeader" HorizontalAlignment="Left" Margin="183,44,0,0" TextWrapping="Wrap" Text="Question:" VerticalAlignment="Top" Height="24" Width="91"/>

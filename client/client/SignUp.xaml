@@ -7,7 +7,6 @@
         xmlns:local="clr-namespace:client"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Closing="OnHide"
         Background="#FF410A66"
         TextElement.FontWeight="Medium"
         TextElement.FontSize="14"

@@ -27,9 +27,12 @@ namespace client
 
         public override void OnShow(params object[] param)
         {
-            base.ErrorBox = this.ErrorOutput;
-
             UsernameHeader.Text = "Hello " + User.username;
+        }
+
+        public override TextBlock GetErrorOutput()
+        {
+            return this.ErrorOutput;
         }
 
         private void SignoutButton_Click(object sender, RoutedEventArgs e)

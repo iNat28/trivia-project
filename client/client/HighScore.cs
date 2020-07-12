@@ -27,8 +27,6 @@ namespace client
 
         public override void OnShow(params object[] param)
         {
-            base.ErrorBox = this.ErrorOutput;
-
             Response response = Stream.Send(Codes.HIGH_SCORES);
             if (Stream.Response(response, Codes.HIGH_SCORES))
             {
@@ -38,6 +36,11 @@ namespace client
                     this.highScores.Items.Add((string)jObject[Keys.username] + " - " + (int)jObject[Keys.numPoints]);
                 }
             }
+        }
+
+        public override TextBlock GetErrorOutput()
+        {
+            return this.ErrorOutput;
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)

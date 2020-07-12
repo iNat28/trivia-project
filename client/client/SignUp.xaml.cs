@@ -28,14 +28,17 @@ namespace client
 
         public override void OnShow(params object[] param)
         {
-            base.ErrorBox = this.ErrorOutput;
-
             this.usernameInput.Text = "";
             this.passwordInput.Password = "";
             this.emailInput.Text = "";
         }
 
-        protected override void OnHide(object sender, CancelEventArgs e)
+        public override TextBlock GetErrorOutput()
+        {
+            return this.ErrorOutput;
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
         {
             WindowManager.Close();
         }

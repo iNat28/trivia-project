@@ -5,7 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:client"
         mc:Ignorable="d"
-        Closing="OnHide"
         Title="High Scores" Height="450" Width="800">
     <Grid>
         <TextBlock x:Name="HighScoresHeader" FontSize="16" FontWeight="DemiBold" HorizontalAlignment="Center" Margin="236,30,424.6,0" TextWrapping="Wrap" Text=" High Scores:" VerticalAlignment="Top" Height="38" Width="133"/>

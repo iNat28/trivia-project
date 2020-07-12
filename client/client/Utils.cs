@@ -53,28 +53,45 @@ namespace client
     
     public static class Keys
     {
+        /* Login */
         public const string username = "username";
         public const string password = "password";
         public const string email = "email";
 
-        public const string roomId = "roomId";
+
+        /* Rooms */
+
+        //Requests
         public const string roomName = "roomName";
         public const string questionCount = "questionCount";
-        public const string answerTimeout = "answerTimeout";
+        public const string maxPlayers = "maxPlayers";
+        public const string timePerQuestion = "timePerQuestion";
+        public const string questionsCount = "questionsCount";
 
-        public const string userStats = "userStats";
-
-        public const string answerIndex = "answerIndex";
-        public const string playersResults = "playersResults";
-
-        public const string status = "status";
-        public const string message = "message";
-
+        //Responses
         public const string rooms = "rooms";
         public const string playersInRoom = "playersInRoom";
-        public const string roomData = "roomData";
-        public const string roomState = "roomState";
+        public const string roomId = "roomId";
+        public const string currentPlayerCount = "currentPlayerCount";
+        public const string roomStatus = "roomStatus";
 
+
+        /* Game */
+
+        //Requests
+        public const string answerIndex = "answerIndex";
+        public const string answerTime = "answerTime";
+
+        //Responses
+        public const string category = "category";
+        public const string difficulty = "difficulty";
+        public const string question = "question";
+        public const string answers = "answers";
+        public const string correctAnswerIndex = "correctAnswerIndex";
+        public const string playersResults = "playersResults";
+
+
+        /* Statistics */
         public const string numPoints = "numPoints";
         public const string numTotalGames = "numTotalGames";
         public const string numCorrectAnswers = "numCorrectAnswers";
@@ -82,20 +99,7 @@ namespace client
         public const string averageAnswerTime = "averageAnswerTime";
         public const string highScores = "highScores";
 
-        public const string id = "id";
-        public const string name = "name";
-        public const string maxPlayers = "maxPlayers";
-        public const string timePerQuestion = "timePerQuestion";
-        public const string players = "players";
-        public const string questionsCount = "questionsCount";
-        public const string roomStatus = "roomStatus";
-
-        public const string category = "category";
-        public const string difficulty = "difficulty";
-        public const string question = "question";
-        public const string answers = "answers";
-        public const string correctAnswerIndex = "correctAnswerIndex";
-
-        public const string answerTime = "answerTime";
+        /* Error Response */
+        public const string message = "message";
     }
 }

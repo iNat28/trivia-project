@@ -45,7 +45,6 @@ namespace client
 
         public override void OnShow(params object[] param)
         {
-            base.ErrorBox = this.ErrorOutput;
             playerStats.Items.Clear();
 
             Response response = Stream.Send(Codes.GET_GAME_RESULTS);
@@ -53,7 +52,6 @@ namespace client
             if (Stream.Response(response, Codes.GET_GAME_RESULTS))
             {
                 JArray results = (JArray)response.jObject[Keys.playersResults];
-
                 foreach (var result in results)
                 {
                     MyResults playerResult = new MyResults((string)result[Keys.username], (int)result[Keys.numCorrectAnswers], (double)result[Keys.averageAnswerTime], (int)result[Keys.numPoints]);
@@ -62,11 +60,16 @@ namespace client
             }
         }
 
-        protected override void OnHide(object sender, CancelEventArgs e)
+        public override TextBlock GetErrorOutput()
+        {
+            return this.ErrorOutput;
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
         {
             if (!WindowManager.exit)
             {
-                base.OnHide(sender, e);
+                base.OnClosing(e);
                 WindowManager.OpenWindow(WindowTypes.MAIN);
             }
         }

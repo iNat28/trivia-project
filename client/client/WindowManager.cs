@@ -48,12 +48,8 @@ namespace client
             CustomWindow oldWindow = currentWindow;
             
             currentWindow = windows[windowToOpen];
+            currentWindow.GetErrorOutput().Text = "";
             currentWindow.OnShow(param);
-            
-            if (currentWindow.ErrorBox != null)
-            {
-                currentWindow.ErrorBox.Text = "";
-            }
 
             oldWindow.Hide();
             currentWindow.Show();
@@ -74,19 +70,7 @@ namespace client
 
         public static void PrintError(string error)
         {
-            if (currentWindow.ErrorBox == null)
-            {
-                Console.WriteLine(error);
-            }
-            else
-            {
-                currentWindow.ErrorBox.Text = error;
-            }
-        }
-
-        public static void PrintError(Exception e)
-        {
-            PrintError(e.Message);
+            currentWindow.GetErrorOutput().Text = error;
         }
     }
 }

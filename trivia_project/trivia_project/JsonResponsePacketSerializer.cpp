@@ -37,7 +37,7 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const GetPlayersInRoomRes
 Buffer JsonResponsePacketSerializer::serializeResponse(const GetUserStatsResponse& getUserStatsResponse)
 {
 	json jsonToSerialize;
-	jsonToSerialize[Keys::userStats] = getUserStatsResponse.userStats;
+	jsonToSerialize = getUserStatsResponse.userStats;
 
 	return JsonResponsePacketSerializer::serializeJson(jsonToSerialize, getUserStatsResponse);
 }
@@ -54,7 +54,7 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const GetRoomStateRespons
 {
 	json jsonToSerialize;
 	jsonToSerialize[Keys::roomStatus] = getRoomStateResponse.roomStatus;
-	jsonToSerialize[Keys::players] = getRoomStateResponse.players;
+	jsonToSerialize[Keys::playersInRoom] = getRoomStateResponse.players;
 
 	return JsonResponsePacketSerializer::serializeJson(jsonToSerialize, getRoomStateResponse);
 }

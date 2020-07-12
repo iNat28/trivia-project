@@ -6,7 +6,6 @@
         xmlns:local="clr-namespace:client"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Closing="OnHide"
         x:Name="LoginWindowWPF"
         WindowStartupLocation="CenterScreen"                
         HorizontalAlignment="Stretch"

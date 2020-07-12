@@ -13,9 +13,9 @@ RoomData::RoomData() :
 
 void to_json(json& j, const RoomData& roomData)
 {
-	j[Keys::id] = roomData.id;
+	j[Keys::roomId] = roomData.id;
 	j[Keys::roomName] = roomData.name;
-	j[Keys::players] = roomData.players;
+	j[Keys::currentPlayerCount] = roomData.players.size();
 	j[Keys::maxPlayers] = roomData.maxPlayers;
 	j[Keys::timePerQuestion] = roomData.timePerQuestion;
 	j[Keys::questionsCount] = roomData.questionsCount;
