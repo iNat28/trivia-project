@@ -254,7 +254,7 @@ namespace client
 
         private void ShowQuestionWindow()
         {
-            WindowManager.OpenWindow(WindowTypes.QUESTION, Convert.ToInt32(this.NumQuestions.Text), Convert.ToInt32(this.TimePerQuestion.Text));
+            WindowManager.OpenWindow(WindowTypes.QUESTION, Convert.ToInt32(this.NumQuestions.Text), Utils.GetIntFromSeconds(this.TimePerQuestion.Text));
         }
     }
 }

@@ -108,7 +108,8 @@ namespace client
         {
             this.mutex.WaitOne();
             Thread.Sleep(1000);
-            
+
+            this.timerTemp = this.timeLeft;
             while (true)
             {
                 if (this.thread.CancellationPending)
@@ -129,7 +130,7 @@ namespace client
                     break;
                 }
 
-                if (timerTemp == 0)
+                if (this.timerTemp == 0)
                 {
                     //Makes sure the user can't press the buttons
                     this.answersAreDisplayed = true;
@@ -193,9 +194,8 @@ namespace client
 
         private void ChangeTimeBox()
         {
-            this.timerTemp = Convert.ToInt32(this.TimeLeft.Text);
             this.timerTemp--;
-            this.TimeLeft.Text = this.timerTemp.ToString();
+            this.TimeLeft.Text = Utils.GetSecondsString(this.timerTemp);
         }
 
         private void GetQuestion()
@@ -344,6 +344,7 @@ namespace client
             this.TimeTookForAnswerOutput.Text = "";
             this.selectedAnswerIndex = -1;
             this.currentTime = this.timeLeft;
+            this.timerTemp = this.timeLeft;
 
             this.GetQuestion();
         }
