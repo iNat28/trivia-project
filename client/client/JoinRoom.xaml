@@ -3,14 +3,27 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"            
         xmlns:local="clr-namespace:client"
         mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"                
+        HorizontalAlignment="Stretch"
+        VerticalAlignment="Stretch"
+        Background="#FF410A66"
+        TextElement.FontWeight="Medium"
+        TextElement.FontSize="14"
+        FontFamily="{materialDesign:MaterialDesignFont}"            
         Title="Join Room" Height="450" Width="800">
-    <Grid>
-        <Button x:Name="JoinRoomButton" Content="Join Room" HorizontalAlignment="Left" Margin="314,260,0,0" VerticalAlignment="Top" Width="168" Height="54" Click="JoinRoomButton_Click"/>
-        <Button x:Name="BackButton" Content="Back" HorizontalAlignment="Left" Margin="341,347,0,0" VerticalAlignment="Top" Width="115" Height="36" Click="BackButton_Click"/>
-        <ListBox x:Name="RoomsList" HorizontalAlignment="Left" Height="149" Margin="116,58,0,0" VerticalAlignment="Top" Width="559" SelectionChanged="RoomsList_SelectionChanged"/>
-        <TextBlock x:Name="ErrorOutput" HorizontalAlignment="Left" Margin="546,219,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="164" Width="203"/>
-
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="WhiteSmoke" Margin="10,20,9.6,20" CornerRadius="5" Height="388">
+                <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="25" Height="367">
+                    <Button x:Name="JoinRoomButton" Content="Join Room" HorizontalAlignment="Stretch" Margin="0,230,0,0" VerticalAlignment="Stretch" Width="168" Height="54" Click="JoinRoomButton_Click"/>
+                    <Button x:Name="BackButton" Content="Back" HorizontalAlignment="Stretch" Margin="0,15,0,0" VerticalAlignment="Stretch" Width="115" Height="36" Click="BackButton_Click"/>
+                    <ListBox x:Name="RoomsList" HorizontalAlignment="Stretch" Height="150" Margin="123,-450,121.8,0" VerticalAlignment="Stretch" SelectionChanged="RoomsList_SelectionChanged"/>
+                    <TextBlock x:Name="ErrorOutput" HorizontalAlignment="Stretch" Margin="-450,-150,0,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Height="164" Width="203"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
     </Grid>
 </local:LogoutWindow>

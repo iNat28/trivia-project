@@ -22,7 +22,7 @@
                     <Button x:Name="CreateRoomButton" Content="Create Room" HorizontalAlignment="Stretch" Margin="-20,20,0,0" VerticalAlignment="Stretch" Width="180" Height="48" Click="CreateRoomButton_Click"/>
                     <Button x:Name="JoinRoomButton" Content="Join Room" HorizontalAlignment="Stretch" Margin="-20,20,0,0" VerticalAlignment="Stretch" Width="180" Height="48" Click="JoinRoomButton_Click"/>
                     <Button x:Name="StatisticsButton" Content="Statistics" HorizontalAlignment="Stretch" Margin="-20,20,0,0" VerticalAlignment="Stretch" Width="180" Height="48" Click="StatisticsButton_Click"/>
-                    <Button x:Name="SignoutButton" Content="Sign Out" HorizontalAlignment="Stretch" Margin="-20,25,0,0" VerticalAlignment="Stretch" Width="115" Height="32" Click="SignoutButton_Click"/>
+                    <Button x:Name="SignoutButton" Content="Sign Out" HorizontalAlignment="Stretch" Margin="295,20,314.8,0" VerticalAlignment="Stretch" Width="115" Height="32" Click="SignoutButton_Click"/>
                     <TextBlock x:Name="ErrorOutput" HorizontalAlignment="Stretch" Margin="-480,-200,0,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Height="209" Width="237"/>
                 </StackPanel>
             </Border>
