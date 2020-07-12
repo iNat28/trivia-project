@@ -25,7 +25,7 @@
 
                     <TextBlock x:Name="RoomName" HorizontalAlignment="Stretch" Margin="150,-230,455.8,0" TextWrapping="Wrap" Text="" VerticalAlignment="Stretch" Height="22"/>
                     <TextBlock x:Name="NumQuestions" HorizontalAlignment="Stretch" Margin="196,-160,472.8,0" TextWrapping="Wrap" Text="" VerticalAlignment="Stretch" Height="27"/>
-                    <TextBlock x:Name="TimePerQuestion" HorizontalAlignment="Stretch" Margin="196,-95,472.8,0" TextWrapping="Wrap" Text="" VerticalAlignment="Stretch" Height="27"/>
+                    <TextBlock x:Name="TimePerQuestion" HorizontalAlignment="Stretch" Margin="196,-95,430,0" TextWrapping="Wrap" Text="" VerticalAlignment="Stretch" Height="27"/>
                     <TextBlock x:Name="MaxPlayers" HorizontalAlignment="Stretch" Margin="146,-35,527.8,0" TextWrapping="Wrap" Text="" VerticalAlignment="Stretch" Height="29"/>
 
                     <TextBlock x:Name="PlayersListHeader" FontSize="20" HorizontalAlignment="Stretch" Margin="150,-80,0,0" TextWrapping="Wrap" Text="Current Participants:" VerticalAlignment="Stretch" Height="28" Width="187"/>

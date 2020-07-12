@@ -19,7 +19,7 @@
             <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="WhiteSmoke" Margin="10,20,9.6,20" CornerRadius="5" Height="388">
                 <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="25" Height="367">
                     <Button x:Name="BackButton" Content="Back" HorizontalAlignment="Stretch" Margin="0,300,0,0" VerticalAlignment="Stretch" Width="75" Click="BackButton_Click"/>
-                    <TextBlock x:Name="MyPerformancesHeader" FontWeight="Bold" FontSize="30" Text="My Performances:" HorizontalAlignment="Stretch" Margin="0,-620,198.8,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Width="327" Height="40"/>
+                    <TextBlock x:Name="MyPerformancesHeader" FontWeight="Bold" FontSize="30" Text="My Stats:" HorizontalAlignment="Stretch" Margin="0,-620,198.8,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Width="327" Height="40"/>
                     <TextBlock x:Name="numPointsOutput" HorizontalAlignment="Stretch" Margin="168,-520,176.8,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Height="40"/>
                     <TextBlock x:Name="numOfGamesOutput" HorizontalAlignment="Stretch" Margin="168,-420,176.8,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Height="40"/>
                     <TextBlock x:Name="numOfRightAnswersOutput" HorizontalAlignment="Stretch" Margin="168,-320,176.8,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Height="40"/>
