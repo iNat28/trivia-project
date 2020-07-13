@@ -18,7 +18,6 @@ namespace client
     /// <summary>
     /// Interaction logic for CreateRoom.xaml
     /// </summary>
-    //TODO: when the user chooses stats for the game, make them tickers
     public partial class CreateRoomWindow : LogoutWindow
     {       
         private int numMaxPlayers;

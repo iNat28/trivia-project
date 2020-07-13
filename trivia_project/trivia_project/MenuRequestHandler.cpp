@@ -1,8 +1,6 @@
 #include "pch.h"
 #include "MenuRequestHandler.h"
 
-//TODO: Make sure things are const
-
 MenuRequestHandler::MenuRequestHandler(RequestHandlerFactory& handlerFactory, LoggedUser& user) :
 	LoggedUserRequestHandler(user), m_handlerFactory(handlerFactory)
 {

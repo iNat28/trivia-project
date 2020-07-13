@@ -226,9 +226,8 @@ namespace client
         private void UpdateNewQuestion(JObject question)
         {
             this.QuestionText.Text = question[Keys.question].ToString();
-            //TODO: Change to text
             this.LeftTextBlock.Text =
-                "Difficulty: " + (string)question[Keys.difficulty] +
+                "Difficulty: " + this.GetDifficulty((int)question[Keys.difficulty]) +
                 "\nCategory:\n" + (string)question[Keys.category];
 
             JArray jArray = (JArray)question[Keys.answers];
@@ -252,6 +251,19 @@ namespace client
             }
 
             this.UpdateTimeLeft(this.timePerQuestion);
+        }
+
+        private string GetDifficulty(int difficulty)
+        {
+            switch(difficulty)
+            {
+                case 1:
+                    return "Easy";
+                case 3:
+                    return "Hard";
+                default:
+                    return "Medium";
+            }
         }
 
         private void GameCompleted(object sender, RunWorkerCompletedEventArgs e)

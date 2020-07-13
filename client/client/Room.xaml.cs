@@ -91,7 +91,6 @@ namespace client
             this.questionsCount = roomData.questionsCount;
             this.timePerQuestion = roomData.timePerQuestion;
 
-            //TODO: Change the max players to be curr/max players
             this.RoomDetails.Text =
                 "Room name: " + roomData.name + '\n' +
                 Utils.GetProperString(roomData.questionsCount, "question") + 
