@@ -95,6 +95,7 @@ namespace client
         {
             InitializeComponent();
             this.rooms = new List<RoomData>();
+            this.sendingMutex = new Mutex();
 
             backgroundWorker = new BackgroundWorker
             {
@@ -115,9 +116,10 @@ namespace client
         {
             this.rooms.Clear();
             this.RoomsList.Items.Clear();
-            this.sendingMutex?.Close();
-            this.sendingMutex = new Mutex();
-            backgroundWorker.RunWorkerAsync();
+            this.sendingMutex.WaitOne();
+
+            this.backgroundWorker.RunWorkerAsync();
+            this.sendingMutex.ReleaseMutex();
         }
 
         public override TextBlock GetErrorOutput()

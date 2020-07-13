@@ -21,7 +21,7 @@
         <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <Border x:Name="Border" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="WhiteSmoke" Margin="10,10,10,0" CornerRadius="5" Height="400">
                 <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="25" Height="350">
-                    <TextBlock TextAlignment="Center" x:Name="QuestionText" Style="{DynamicResource MaterialDesignHeadline3TextBlock}" FontSize="20" HorizontalAlignment="Stretch" Margin="60,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Height="49"/>
+                    <TextBlock TextAlignment="Center" x:Name="QuestionText" FontSize="20" HorizontalAlignment="Stretch" Margin="60,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Height="49"/>
                     <TextBlock x:Name="RightTextBlock" Width="150" HorizontalAlignment="Right" Margin="0,20,0,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Height="70"/>
                     <TextBlock x:Name="LeftTextBlock" HorizontalAlignment="Left" Margin="0,-70,0,0" TextWrapping="Wrap" Height="105" Width="150"/>
                     <TextBlock x:Name="TimeLeft" Width="150" HorizontalAlignment="Right" Margin="0,-35,0,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Height="40"/>

@@ -43,6 +43,10 @@ Room::Room(RoomData roomData) :
 	{
 		throw Exception("Minimum amount of questions is 1!");
 	}
+	else if (roomData.name.empty())
+	{
+		throw Exception("Room name cannot be empty");
+	}
 }
 
 Room::Room()
