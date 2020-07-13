@@ -1,41 +1,27 @@
 #include "pch.h"
 #include "GameRequestHandler.h"
 
-GameRequestHandler::GameRequestHandler(RequestHandlerFactory& handlerFactory, LoggedUser user, Game& game) : 
+GameRequestHandler::GameRequestHandler(RequestHandlerFactory& handlerFactory, LoggedUser& user, Game& game) :
 	LoggedUserRequestHandler(user), m_handlerFactory(handlerFactory), m_game(game)
 {
 }
 
-RequestResult GameRequestHandler::handleRequest(const RequestInfo& requestInfo) const
+RequestResult GameRequestHandler::handleRequest(RequestInfo& requestInfo)
 {
-	GameRequestHandler::requests_func_t handler = nullptr;
-
-	//If at any point the requests don't work, an exception will be thrown, 
-	//and it will be put into an error response
-	try {
-		handler = m_requests.at(requestInfo.requestId);
-		return (this->*handler)(requestInfo);
-	}
-	catch (const std::exception & e)
-	{
-		return RequestResult(
-			JsonResponsePacketSerializer::serializeResponse(ErrorResponse(e.what())),
-			this->m_handlerFactory.createGameRequestHandler(this->m_user, this->m_game)
-		);
-	}
+	return this->handleAllRequests(requestInfo, *this, this->m_requests);
 }
 
-RequestResult GameRequestHandler::_getQuestion(const RequestInfo& requestInfo) const
+RequestResult GameRequestHandler::_getQuestion(RequestInfo& requestInfo)
 {
 	return RequestResult(
 		JsonResponsePacketSerializer::serializeResponse(
 			GetQuestionResponse(this->m_game.getQuestion(this->m_user))
 		),
-		this->m_handlerFactory.createGameRequestHandler(this->m_user, this->m_game)
+		requestInfo.currentHandler
 	);
 }
 
-RequestResult GameRequestHandler::_submitAnswer(const RequestInfo& requestInfo) const
+RequestResult GameRequestHandler::_submitAnswer(RequestInfo& requestInfo)
 {
 	SubmitAnswerRequest submitAnswerRequest = JsonRequestPacketDeserializer::deserializeSubmitAnswerRequest(requestInfo.buffer);
 
@@ -43,14 +29,14 @@ RequestResult GameRequestHandler::_submitAnswer(const RequestInfo& requestInfo) 
 		JsonResponsePacketSerializer::serializeResponse(
 			SubmitAnswerResponse(this->m_game.submitAnswer(this->m_user, submitAnswerRequest.answerIndex, submitAnswerRequest.answerTime))
 		),
-		this->m_handlerFactory.createGameRequestHandler(this->m_user, this->m_game)
+		requestInfo.currentHandler
 	);
 }
 
-RequestResult GameRequestHandler::_getGameResults(const RequestInfo& requestInfo) const
+RequestResult GameRequestHandler::_getGameResults(RequestInfo& requestInfo)
 {
 	GetGameResultsResponse getGameResultsResponse(this->m_game.getGameResults(this->m_user));
-
+	
 	this->_deleteGameIfEmpty();
 
 	return RequestResult(
@@ -59,10 +45,8 @@ RequestResult GameRequestHandler::_getGameResults(const RequestInfo& requestInfo
 	);
 }
 
-RequestResult GameRequestHandler::_leaveGame(const RequestInfo& requestInfo) const
+RequestResult GameRequestHandler::_leaveGame(RequestInfo& requestInfo)
 {
-	this->m_game.removePlayer(this->m_user);
-
 	this->_deleteGameIfEmpty();
 
 	return RequestResult(
@@ -73,8 +57,10 @@ RequestResult GameRequestHandler::_leaveGame(const RequestInfo& requestInfo) con
 	);
 }
 
-void GameRequestHandler::_deleteGameIfEmpty() const
+void GameRequestHandler::_deleteGameIfEmpty()
 {
+	this->m_game.removePlayer(this->m_user);
+
 	if (this->m_game.allPlayersGotResults())
 	{
 		this->m_handlerFactory.getRoomManager().closeRoom(this->m_game.getRoom());
@@ -82,7 +68,7 @@ void GameRequestHandler::_deleteGameIfEmpty() const
 	}
 }
 
-const map<Codes, GameRequestHandler::requests_func_t> GameRequestHandler::m_requests = {
+const umap<Codes, GameRequestHandler::requests_func_t> GameRequestHandler::m_requests = {
 	{ Codes::GET_QUESTION, &GameRequestHandler::_getQuestion },
 	{ Codes::SUBMIT_ANSWER, &GameRequestHandler::_submitAnswer },
 	{ Codes::GET_GAME_RESULTS, &GameRequestHandler::_getGameResults },

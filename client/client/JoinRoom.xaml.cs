@@ -22,15 +22,17 @@ namespace client
         public int id;
         public string name;
         public int maxPlayers;
+        public int currentPlayerCount;
         public int questionsCount;
         public int timePerQuestion;
-        public Room.Status roomStatus;
+        public RoomStatus roomStatus;
 
-        public RoomData(int id, string name, int maxPlayers, int questionsCount, int timePerQuestion, Room.Status roomStatus)
+        public RoomData(int id, string name, int maxPlayers, int questionsCount, int timePerQuestion, RoomStatus roomStatus, int currentPlayerCount = 1)
         {
             this.id = id;
             this.name = name;
             this.maxPlayers = maxPlayers;
+            this.currentPlayerCount = currentPlayerCount;
             this.questionsCount = questionsCount;
             this.timePerQuestion = timePerQuestion;
             this.roomStatus = roomStatus;
@@ -42,6 +44,7 @@ namespace client
                    id == data.id &&
                    name == data.name &&
                    maxPlayers == data.maxPlayers &&
+                   currentPlayerCount == data.currentPlayerCount &&
                    questionsCount == data.questionsCount &&
                    timePerQuestion == data.timePerQuestion &&
                    roomStatus == data.roomStatus;
@@ -49,10 +52,11 @@ namespace client
 
         public override int GetHashCode()
         {
-            var hashCode = -1434586793;
+            var hashCode = 1280019825;
             hashCode = hashCode * -1521134295 + id.GetHashCode();
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(name);
             hashCode = hashCode * -1521134295 + maxPlayers.GetHashCode();
+            hashCode = hashCode * -1521134295 + currentPlayerCount.GetHashCode();
             hashCode = hashCode * -1521134295 + questionsCount.GetHashCode();
             hashCode = hashCode * -1521134295 + timePerQuestion.GetHashCode();
             hashCode = hashCode * -1521134295 + roomStatus.GetHashCode();
@@ -61,31 +65,44 @@ namespace client
 
         public override string ToString()
         {
-            return this.name + " | Max players: " + this.maxPlayers + " | Number of questions: " + this.questionsCount + " | Time per questions: " + this.timePerQuestion + 
-                " | Room status: " + this.roomStatus;
+            string roomStatus = "";
+
+            if(this.roomStatus == RoomStatus.GAME_STARTED)
+            {
+                roomStatus = " | Game in session";
+            }
+
+            return
+                "Room: " + this.name + " | " + 
+                this.currentPlayerCount + '/' + this.maxPlayers + " players | " +
+                Utils.GetProperString(this.questionsCount, "question") + " | " +
+                Utils.GetProperString(this.timePerQuestion, "second") + " per question"
+                + roomStatus;
         }
     };
-
 
     /// <summary>
     /// Interaction logic for JoinRoom.xaml
     /// </summary>
-    public partial class JoinRoom : LogoutWindow
+    public partial class JoinRoomWindow : LogoutWindow
     {
         private RoomData selectedRoom;
         private readonly BackgroundWorker backgroundWorker;
         private readonly Mutex sendingMutex;
         private readonly List<RoomData> rooms;
-        
-        //TODO: Need to show the rooms and all of it's room state, and if it's game started, or if it is maxed out for players
-        
-        public JoinRoom()
+
+        private enum ThreadCodes
+        {
+            ADD_ROOM,
+            REMOVE_ROOM,
+            PRINT_ERROR
+        }
+
+        public JoinRoomWindow()
         {
             InitializeComponent();
-            this.sendingMutex = new Mutex();
             this.rooms = new List<RoomData>();
-            User.errorOutput = this.ErrorBox;
-            User.currentWindow = this;
+            this.sendingMutex = new Mutex();
 
             backgroundWorker = new BackgroundWorker
             {
@@ -95,14 +112,27 @@ namespace client
 
             backgroundWorker.DoWork += GetRoomsList;
             backgroundWorker.ProgressChanged += ChangeWPF;
-            backgroundWorker.RunWorkerAsync();
+            backgroundWorker.RunWorkerCompleted += WorkerFinished;
         }
 
-        protected override void OnClosed(EventArgs e)
+        protected override Border GetBorder()
         {
-            backgroundWorker.CancelAsync();
+            return this.Border;
+        }
 
-            base.OnClosed(e);
+        public override void OnShow(params object[] param)
+        {
+            this.rooms.Clear();
+            this.RoomsList.Items.Clear();
+            this.sendingMutex.WaitOne();
+
+            this.backgroundWorker.RunWorkerAsync();
+            this.sendingMutex.ReleaseMutex();
+        }
+
+        public override TextBlock GetErrorOutput()
+        {
+            return this.ErrorOutput;
         }
 
         private void JoinRoomButton_Click(object sender, RoutedEventArgs e)
@@ -111,7 +141,7 @@ namespace client
 
             if(this.RoomsList.SelectedItem == null)
             {
-                this.ErrorBox.Text = "Room not selected!";
+                this.ErrorOutput.Text = "Room not selected!";
                 return;
             }
 
@@ -119,14 +149,13 @@ namespace client
             {
                 [Keys.roomId] = selectedRoom.id
             };
-            Stream.Send(jObject, Codes.JOIN_ROOM);
-
-            Response response = Stream.Recieve();
+            Response response = Stream.Send(jObject, Codes.JOIN_ROOM);
 
             if (Stream.Response(response, Codes.JOIN_ROOM) && this.RoomsList.SelectedItem != null)
             {
                 backgroundWorker.CancelAsync();
-                Utils.OpenWindow(this, new Room(false, this.selectedRoom));
+                
+                WindowManager.OpenWindow(WindowTypes.ROOM, false, this.selectedRoom);
             }
             sendingMutex.ReleaseMutex();
         }
@@ -134,7 +163,7 @@ namespace client
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
             backgroundWorker.CancelAsync();
-            Utils.OpenWindow(this, new MainWindow());
+            WindowManager.OpenWindow(WindowTypes.MAIN);
         }
 
         private void RoomsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -157,9 +186,7 @@ namespace client
 
                 sendingMutex.WaitOne();
 
-                Stream.Send(new JObject(), Codes.GET_ROOM);
-
-                Response response = Stream.Recieve();
+                Response response = Stream.Send(Codes.GET_ROOM, false);
 
                 if (Stream.ResponseForThread(response, Codes.GET_ROOM, out string error))
                 {
@@ -170,17 +197,18 @@ namespace client
                     foreach (JObject jObject in jArray)
                     {
                         RoomData room = new RoomData(
-                            (int)jObject[Keys.id],
+                            (int)jObject[Keys.roomId],
                             (string)jObject[Keys.roomName],
                             (int)jObject[Keys.maxPlayers],
                             (int)jObject[Keys.questionsCount],
                             (int)jObject[Keys.timePerQuestion],
-                            (Room.Status)(int)jObject[Keys.roomStatus]
+                            (RoomStatus)(int)jObject[Keys.roomStatus],
+                            (int)jObject[Keys.currentPlayerCount]
                         );
                         if (!this.rooms.Contains(room))
                         {
                             this.rooms.Add(room);
-                            backgroundWorker.ReportProgress(1, room.ToString());
+                            backgroundWorker.ReportProgress((int)ThreadCodes.ADD_ROOM, room.ToString());
                         }
                         newRooms.Add(room);
                     }
@@ -189,14 +217,19 @@ namespace client
                     {
                         if (!newRooms.Contains(this.rooms[i]))
                         {
-                            backgroundWorker.ReportProgress(2, this.rooms[i].ToString());
+                            backgroundWorker.ReportProgress((int)ThreadCodes.REMOVE_ROOM, this.rooms[i].ToString());
                             this.rooms.RemoveAt(i);
                         }
                     }
                 }
                 else
                 {
-                    backgroundWorker.ReportProgress(3, error);
+                    if (Stream.backendClosed)
+                    {
+                        e.Cancel = true;
+                        break;
+                    }
+                    backgroundWorker.ReportProgress((int)ThreadCodes.PRINT_ERROR, error);
                 }
 
                 sendingMutex.ReleaseMutex();
@@ -207,17 +240,27 @@ namespace client
         private void ChangeWPF(object sender, ProgressChangedEventArgs e)
         {
             string param = (string)e.UserState;
-            switch (e.ProgressPercentage)
+            
+            switch ((ThreadCodes)e.ProgressPercentage)
             {
-                case 1:
+                case ThreadCodes.ADD_ROOM:
                     this.RoomsList.Items.Add(param);
                     break;
-                case 2:
+                case ThreadCodes.REMOVE_ROOM:
                     this.RoomsList.Items.Remove(param);
                     break;
-                case 3:
-                    this.ErrorBox.Text = param;
+                case ThreadCodes.PRINT_ERROR:
+                    this.ErrorOutput.Text = param;
                     break;
+            }
+        }
+
+        private void WorkerFinished(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (Stream.backendClosed)
+            {
+                Stream.Close();
+                return;
             }
         }
     }

@@ -17,49 +17,38 @@ using System.Windows.Shapes;
 
 namespace client
 {
+    public enum RoomStatus
+    {
+        OPEN,
+        CLOSED,
+        GAME_STARTED
+    };
+
     /// <summary>
     /// Interaction logic for Room.xaml
     /// </summary>
-    public partial class Room : Window
+    public partial class RoomWindow : CustomWindow
     {
-        //private readonly int roomId;
-        //private static bool updateUserList;
-        private readonly bool isAdmin;
+        private bool isAdmin;
         private readonly BackgroundWorker backgroundWorker;
-        private readonly Mutex sendingMutex;
-        private Status roomStatus = Status.OPEN;                     
+        private int questionsCount;
+        private int timePerQuestion;
+        private Mutex sendingMutex;
+        private RoomStatus roomStatus;
+        
+        private enum ThreadCodes
+        {
+            ADD_PLAYER,
+            REMOVE_PLAYER,
+            PRINT_ERROR
+        }
 
-        public enum Status
-        { 
-            OPEN,
-	        CLOSED,
-	        GAME_STARTED
-        };
-
-        public Room(bool isAdmin, RoomData roomData)
+        public RoomWindow()
         {
             InitializeComponent();
 
-            User.errorOutput = this.errorOutput;
-            User.currentWindow = this;
+            this.roomStatus = RoomStatus.OPEN;
 
-            sendingMutex = new Mutex();
-            this.isAdmin = isAdmin;
-
-            if (isAdmin)
-                this.LeaveRoomButton.Visibility = Visibility.Hidden;
-            else
-            {
-                this.CloseRoomButton.Visibility = Visibility.Hidden;
-                this.StartGameButton.Visibility = Visibility.Hidden;
-            }
-            
-            //TODO: add a thread here that updates this data when we add the functionality of changing these stats in the room window
-            this.RoomName.Text = roomData.name;
-            this.MaxPlayers.Text = roomData.maxPlayers.ToString();
-            this.TimePerQuestion.Text = roomData.timePerQuestion.ToString();
-            this.NumQuestions.Text = roomData.questionsCount.ToString();
-            
             //adding users
             backgroundWorker = new BackgroundWorker
             {
@@ -70,13 +59,58 @@ namespace client
             backgroundWorker.DoWork += GetUsersList;
             backgroundWorker.ProgressChanged += ChangeWPF;
             backgroundWorker.RunWorkerCompleted += GetUsersCompleted;
-            backgroundWorker.RunWorkerAsync();            
         }
-        
-        protected override void OnClosed(EventArgs e)
+
+        protected override Border GetBorder()
         {
-            if (LogoutWindow.toClose)
+            return this.Border;
+        }
+
+        public override void OnShow(params object[] param)
+        {
+            this.isAdmin = (bool)param[0];
+            RoomData roomData = (RoomData)param[1];
+
+            this.roomStatus = RoomStatus.OPEN;
+            sendingMutex?.Close();
+            sendingMutex = new Mutex();
+
+            if (isAdmin)
             {
+                this.LeaveRoomButton.Visibility = Visibility.Hidden;
+                this.CloseRoomButton.Visibility = Visibility.Visible;
+                this.StartGameButton.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                this.LeaveRoomButton.Visibility = Visibility.Visible;
+                this.CloseRoomButton.Visibility = Visibility.Hidden;
+                this.StartGameButton.Visibility = Visibility.Hidden;
+            }
+
+            this.questionsCount = roomData.questionsCount;
+            this.timePerQuestion = roomData.timePerQuestion;
+
+            this.RoomDetails.Text =
+                "Room name: " + roomData.name + '\n' +
+                Utils.GetProperString(roomData.questionsCount, "question") + 
+                "\nMax players: " + roomData.maxPlayers + '\n' +
+                Utils.GetProperString(roomData.timePerQuestion, "second") + " per question\n";
+            this.NamesList.Items.Clear();
+
+            backgroundWorker.RunWorkerAsync();
+        }
+
+        public override TextBlock GetErrorOutput()
+        {
+            return this.ErrorOutput;
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            if (!WindowManager.exit)
+            {
+                base.OnClosing(e);
                 if (isAdmin)
                 {
                     CloseRoom();
@@ -90,31 +124,27 @@ namespace client
 
         private void CloseRoom()
         {
-            backgroundWorker.CancelAsync();
-
             sendingMutex.WaitOne();
-            Stream.Send(new JObject(), Codes.CLOSE_ROOM);
-
-            Response response = Stream.Recieve();
+            Response response = Stream.Send(Codes.CLOSE_ROOM);
 
             if (Stream.Response(response, Codes.CLOSE_ROOM))
             {
-                Utils.OpenWindow(this, new MainWindow());
+                backgroundWorker.CancelAsync();
+
+                WindowManager.OpenWindow(WindowTypes.MAIN);
             }
         }
 
         private void LeaveRoom()
         {
-            backgroundWorker.CancelAsync();
-
             sendingMutex.WaitOne();
-            Stream.Send(new JObject(), Codes.LEAVE_ROOM);
-
-            Response response = Stream.Recieve();
+            Response response = Stream.Send(Codes.LEAVE_ROOM);
 
             if (Stream.Response(response, Codes.LEAVE_ROOM))
             {
-                Utils.OpenWindow(this, new MainWindow());
+                backgroundWorker.CancelAsync();
+
+                WindowManager.OpenWindow(WindowTypes.MAIN);
             }
         }
 
@@ -124,16 +154,14 @@ namespace client
 
         private void StartGameButton_Click(object sender, RoutedEventArgs e)
         {
-            backgroundWorker.CancelAsync();
-
             sendingMutex.WaitOne();
-            Stream.Send(new JObject(), Codes.START_GAME);
-
-            Response response = Stream.Recieve();
+            Response response = Stream.Send(Codes.START_GAME);
 
             if (Stream.Response(response, Codes.START_GAME))
             {
-                Utils.OpenWindow(this, this.CreateQuestionWindow());
+                backgroundWorker.CancelAsync();
+
+                this.ShowQuestionWindow();
             }
         }
 
@@ -158,23 +186,19 @@ namespace client
                 }
 
                 sendingMutex.WaitOne();
-                Stream.Send(new JObject(), Codes.GET_ROOM_STATE);
-
-                Response usersResponse = Stream.Recieve();
-
-                backgroundWorker.ReportProgress(0, "");
+                Response usersResponse = Stream.Send(Codes.GET_ROOM_STATE, false);
 
                 if (Stream.ResponseForThread(usersResponse, Codes.GET_ROOM_STATE, out string error))
                 {
-                    this.roomStatus = (Status)(int)usersResponse.jObject[Keys.roomStatus];
+                    this.roomStatus = (RoomStatus)(int)usersResponse.jObject[Keys.roomStatus];
                     
-                    if (this.roomStatus != Status.OPEN)
+                    if (this.roomStatus != RoomStatus.OPEN)
                     {
                         e.Cancel = true;
                         break;
                     }
 
-                    JArray jArray = (JArray)usersResponse.jObject[Keys.players];
+                    JArray jArray = (JArray)usersResponse.jObject[Keys.playersInRoom];
 
                     List<string> players = new List<string>();
 
@@ -183,7 +207,7 @@ namespace client
                         string player = (string)jObject[Keys.username];
                         if(!this.NamesList.Items.Contains(player))
                         {
-                            backgroundWorker.ReportProgress(1, player);
+                            backgroundWorker.ReportProgress((int)ThreadCodes.ADD_PLAYER, player);
                         }
                         players.Add(player);
                     }
@@ -192,13 +216,18 @@ namespace client
                     {
                         if (!players.Contains(this.NamesList.Items[i]))
                         {
-                            backgroundWorker.ReportProgress(2, this.NamesList.Items[i].ToString());
+                            backgroundWorker.ReportProgress((int)ThreadCodes.REMOVE_PLAYER, this.NamesList.Items[i].ToString());
                         }
                     }
                 }
                 else
                 {
-                    backgroundWorker.ReportProgress(3, error);
+                    if (Stream.backendClosed)
+                    {
+                        e.Cancel = true;
+                        break;
+                    }
+                    backgroundWorker.ReportProgress((int)ThreadCodes.PRINT_ERROR, error);
                 }
 
                 sendingMutex.ReleaseMutex();
@@ -209,42 +238,47 @@ namespace client
         private void ChangeWPF(object sender, ProgressChangedEventArgs e)
         {
             string param = (string)e.UserState;
-            switch (e.ProgressPercentage)
+            switch ((ThreadCodes)e.ProgressPercentage)
             {
-                case 1:
+                case ThreadCodes.ADD_PLAYER:
                     this.NamesList.Items.Add(param);
                     break;
-                case 2:
+                case ThreadCodes.REMOVE_PLAYER:
                     this.NamesList.Items.Remove(param);
                     break;
-                case 3:
-                    this.errorOutput.Text = param;
+                case ThreadCodes.PRINT_ERROR:
+                    this.ErrorOutput.Text = param;
                     break;
             }
         }             
 
         private void GetUsersCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            Window newWindow = null;
-            
-            switch(roomStatus)
+            if(Stream.backendClosed)
             {
-                case Status.OPEN:
-                    return;
-                case Status.CLOSED:
-                    newWindow = new MainWindow();
-                    break;
-                case Status.GAME_STARTED:
-                    newWindow = this.CreateQuestionWindow();
-                    break;
+                Stream.Close();
+                return;
             }
 
-            Utils.OpenWindow(this, newWindow);
+            switch(roomStatus)
+            {
+                case RoomStatus.OPEN:
+                    return;
+                case RoomStatus.CLOSED:
+                    WindowManager.OpenWindow(WindowTypes.MAIN);
+                    WindowManager.PrintError("Room closed");
+                    break;
+                case RoomStatus.GAME_STARTED:
+                    this.ShowQuestionWindow();
+                    break;
+                default:
+                    throw new IndexOutOfRangeException();
+            }
         }
 
-        private Question CreateQuestionWindow()
+        private void ShowQuestionWindow()
         {
-            return new Question(Convert.ToInt32(this.NumQuestions.Text), Convert.ToInt32(this.TimePerQuestion.Text));
+            WindowManager.OpenWindow(WindowTypes.QUESTION, this.questionsCount, this.timePerQuestion);
         }
     }
 }

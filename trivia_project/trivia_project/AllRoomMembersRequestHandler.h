@@ -5,9 +5,10 @@ class AllRoomMembersRequestHandler :
 	public LoggedUserRequestHandler
 {
 protected:
-	AllRoomMembersRequestHandler(LoggedUser user, Room& room);
+	AllRoomMembersRequestHandler(LoggedUser& user, Room& room);
+
 	Room& m_room;
-	
-	RequestResult _getRoomStateNoHandler(const RequestInfo& requestInfo) const;
+
+	Buffer _getRoomStateNoHandler(RequestInfo& requestInfo);
 };
 

@@ -12,10 +12,16 @@ using System.IO;
 
 namespace client
 {
-    public struct Response
+    public class Response
     {
         public JObject jObject;
         public Codes code;
+
+        public Response(JObject jObject, Codes code)
+        {
+            this.jObject = jObject;
+            this.code = code;
+        }
     }
 
     public static class Stream
@@ -28,6 +34,7 @@ namespace client
         private const string IP_ADDRESS = "127.0.0.1";
         private const int PORT = 40200;
 
+        public static bool backendClosed = false;
         public static NetworkStream Client
         {
             get
@@ -45,16 +52,14 @@ namespace client
 
         public static void Close()
         {
-            Utils.OpenWindow(User.currentWindow, new LoginWindow(), CloseClient);
-        }
+            WindowManager.OpenWindow(WindowTypes.LOGIN);
 
-        private static void CloseClient()
-        {
             client?.Close();
             tcpClient = null;
             client = null;
 
-            User.PrintError("Error connecting to back end");
+            WindowManager.PrintError("Error connecting to back end");
+            backendClosed = false;
         }
 
         public static void Signout()
@@ -64,58 +69,87 @@ namespace client
                 ["username"] = User.username
             };
             Send(jObject, Codes.LOGOUT);
-            Recieve();
         }
 
-        public static void Send(JObject jObject, Codes code)
+        public static Response Send(JObject jObject, Codes code, bool closeStream = true)
         {
+            MemoryStream memoryStream = new MemoryStream();
+            BsonDataWriter bsonWriter = new BsonDataWriter(memoryStream);
+            jObject.WriteTo(bsonWriter);
+            byte[] buffer = new byte[] { Convert.ToByte(code) };
+
             try
             {
-                MemoryStream memoryStream = new MemoryStream();
-                BsonDataWriter bsonWriter = new BsonDataWriter(memoryStream);
-                jObject.WriteTo(bsonWriter);
-
-                byte[] buffer = new byte[] { Convert.ToByte(code) };
                 Client.Write(buffer, 0, buffer.Length);
                 Client.Write(memoryStream.ToArray(), 0, (int)memoryStream.Length);
                 Client.Flush();
             }
             catch
             {
-                Stream.Close();
+                backendClosed = true;
+                if (closeStream)
+                {
+                    Stream.Close();
+                }
+                return null;
             }
+
+            return Recieve();
         }
 
-        public static Response Recieve()
+        public static Response Send(Codes code, bool closeStream = true)
         {
-            Response response = new Response();
+            byte[] buffer = new byte[5];
+            buffer[0] = Convert.ToByte(code);
+
             try
             {
-                int bufferSize;
-                byte[] bufferBson;
-                byte[] bufferRead = new byte[MSG_CODE_SIZE + MSG_LEN_SIZE];
-
-                Client.Read(bufferRead, 0, bufferRead.Length);
-            
-                //Converts the read buffer to the message code and size
-                //If buffer code size is changed, then this needs to be changed
-                response.code = (Codes)bufferRead[0]; 
-                bufferSize = BitConverter.ToInt32(bufferRead, MSG_CODE_SIZE);
-
-                if (bufferSize > 0)
+                Client.Write(buffer, 0, buffer.Length);
+            }
+            catch
+            {
+                backendClosed = true;
+                if (closeStream)
                 {
-                    bufferBson = new byte[bufferSize + MSG_LEN_SIZE];
-                    //Copies the Bson length to the bson buffer
-                    Array.Copy(bufferRead, MSG_CODE_SIZE, bufferBson, 0, MSG_LEN_SIZE);
-
-                    Client.Read(bufferBson, MSG_LEN_SIZE, bufferBson.Length - MSG_LEN_SIZE);
-
-                    response.jObject = (JObject)JToken.ReadFrom(new BsonDataReader(new MemoryStream(bufferBson)));
+                    Stream.Close();
                 }
+                return null;
+            }
+
+            return Recieve();
+        }
+
+        private static Response Recieve()
+        {
+            int bufferSize;
+            byte[] bufferBson;
+            byte[] bufferRead = new byte[MSG_CODE_SIZE + MSG_LEN_SIZE];
+
+            try
+            {
+                Client.Read(bufferRead, 0, bufferRead.Length);
             }
             catch
             {
                 Stream.Close();
+                return null;
+            }
+
+            //Converts the read buffer to the message code and size
+            Response response = new Response(null, (Codes)bufferRead[0]);
+
+            //If buffer code size is changed, then this needs to be changed
+            bufferSize = BitConverter.ToInt32(bufferRead, MSG_CODE_SIZE);
+
+            if (bufferSize > 0)
+            {
+                bufferBson = new byte[bufferSize + MSG_LEN_SIZE];
+                //Copies the Bson length to the bson buffer
+                Array.Copy(bufferRead, MSG_CODE_SIZE, bufferBson, 0, MSG_LEN_SIZE);
+
+                Client.Read(bufferBson, MSG_LEN_SIZE, bufferBson.Length - MSG_LEN_SIZE);
+
+                response.jObject = (JObject)JToken.ReadFrom(new BsonDataReader(new MemoryStream(bufferBson)));
             }
 
             return response;
@@ -129,7 +163,10 @@ namespace client
             }
             catch (Exception e)
             {
-                User.PrintError(e);
+                if (e.Message != "exit")
+                {
+                    WindowManager.PrintError(e.Message);
+                }
             }
 
             return false;
@@ -155,12 +192,15 @@ namespace client
         {
             string error;
 
-            if (response.code == code)
+            if (response == null)
+            {
+                return false;
+            }
+            else if (response.code == code)
             {
                 return true;
             }
-
-            if (response.code == Codes.ERROR_CODE)
+            else if (response.code == Codes.ERROR_CODE)
             {
                 error = (string)response.jObject["message"];
             }

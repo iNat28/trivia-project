@@ -5,14 +5,22 @@ RoomManager::RoomManager(IDatabase& database) :
 	m_database(database)
 {
 }
-
+/*
+Usage: creates a room.
+Input: Room.
+Output: none.
+*/
 void RoomManager::createRoom(Room& room)
 {
 	room.setId(this->m_database.getHighestRoomId());
 
 	this->m_rooms[room.getId()] = room;
 }
-
+/*
+Usage: closes a room.
+Input: Room.
+Output: none.
+*/
 void RoomManager::closeRoom(Room& room)
 {
 	room.setRoomStatus(RoomStatus::CLOSED);
@@ -25,7 +33,11 @@ void RoomManager::closeRoom(Room& room)
 		}
 	}
 }
-
+/*
+Usage: get a room.
+Input: unsigned int.
+Output: Room.
+*/
 Room& RoomManager::getRoom(unsigned int id)
 {
 	try
@@ -37,12 +49,20 @@ Room& RoomManager::getRoom(unsigned int id)
 		throw Exception("Room ID not found");
 	}
 }
-
+/*
+Usage: gets all of the users in the room.
+Input: unsigned int.
+Output: vector<LoggedUser>.
+*/
 vector<LoggedUser> RoomManager::getUsersInRoom(unsigned int id) const
 {
 	return this->_getRoom(id).getAllUsers();
 }
-
+/*
+Usage: get all of the rooms.
+Input: none.
+Output: vector<Room>.
+*/
 vector<Room> RoomManager::getRooms() const
 {
 	vector<Room> rooms;

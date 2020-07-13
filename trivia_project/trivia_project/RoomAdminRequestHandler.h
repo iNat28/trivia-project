@@ -6,15 +6,15 @@ class RoomAdminRequestHandler :
 	public AllRoomMembersRequestHandler
 {
 public:
-	RoomAdminRequestHandler(RequestHandlerFactory& handlerFactory, LoggedUser user, Room& room);
+	RoomAdminRequestHandler(RequestHandlerFactory& handlerFactory, LoggedUser& user, Room& room);
 
-	virtual RequestResult handleRequest(const RequestInfo& requestInfo) const override;
+	virtual RequestResult handleRequest(RequestInfo& requestInfo) override;
 private:
-	using requests_func_t = RequestResult(RoomAdminRequestHandler::*)(const RequestInfo&) const;
-	static const map<Codes, RoomAdminRequestHandler::requests_func_t> m_requests;
+	using requests_func_t = RequestResult(RoomAdminRequestHandler::*)(RequestInfo&);
+	static const umap<Codes, RoomAdminRequestHandler::requests_func_t> m_requests;
 	RequestHandlerFactory& m_handlerFactory;
 
-	RequestResult _closeRoom(const RequestInfo& requestInfo) const;
-	RequestResult _startGame(const RequestInfo& requestInfo) const;
-	RequestResult _getRoomState(const RequestInfo& requestInfo) const;
+	RequestResult _closeRoom(RequestInfo& requestInfo);
+	RequestResult _startGame(RequestInfo& requestInfo);
+	RequestResult _getRoomState(RequestInfo& requestInfo);
 };

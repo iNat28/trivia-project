@@ -21,19 +21,19 @@ namespace client
     /// <summary>
     /// Interaction logic for Question.xaml
     /// </summary>
-    public partial class Question : Window
+    public partial class QuestionWindow : CustomWindow
     {
         private readonly Stopwatch stopwatch;
         private int numCorrectAnswers;
         private int numQuestionsLeft;
-        private readonly int timeLeft;
+        private int timePerQuestion;
         private int timerTemp;
         private int selectedAnswerIndex;
         private bool answersAreDisplayed;
         private bool showResults;
 
         //mutex
-        private readonly Mutex mutex;
+        private Mutex mutex;
         private double currentTime;
 
         //threads
@@ -46,57 +46,88 @@ namespace client
             GET_NEW_QUESTION
         };
 
-        public Question(int numQuestions, int answerTime)
+        public QuestionWindow()
         {
             InitializeComponent();
 
-            User.errorOutput = this.ErrorOutput;
-            User.currentWindow = this;
-
             this.numCorrectAnswers = 0;
-            this.currentTime = answerTime;
-            this.numQuestionsLeft = numQuestions;
-            this.CorrectAnswers.Text = numCorrectAnswers.ToString();
-            this.timeLeft = answerTime;
-            this.timerTemp = this.timeLeft;
-            this.AnswersLeft.Text = numQuestionsLeft.ToString();
-            this.TimeLeft.Text = answerTime.ToString();
-            this.stopwatch = new Stopwatch();
+            this.numQuestionsLeft = 0;
+            this.timePerQuestion = 0;
+            this.timerTemp = 0;
             this.selectedAnswerIndex = -1;
             this.answersAreDisplayed = false;
             this.showResults = true;
-
-            this.mutex = new Mutex();
 
             this.thread = new BackgroundWorker
             {
                 WorkerReportsProgress = true,
                 WorkerSupportsCancellation = true
             };
-            
-            this.GetQuestion();
-            this.ResetAnswerColors();
+
+            this.stopwatch = new Stopwatch();
 
             this.thread.DoWork += WorkForThread;
             this.thread.ProgressChanged += UpdateThread;
             this.thread.RunWorkerCompleted += GameCompleted;
+        }
+
+        public override void OnShow(params object[] param)
+        {
+            int numQuestions = (int)param[0];
+            int answerTime = (int)param[1];
+
+            this.mutex?.Close();
+            this.mutex = new Mutex();
+
+            this.numCorrectAnswers = 0;
+            this.currentTime = answerTime;
+            this.numQuestionsLeft = numQuestions;
+            this.UpdateRightTextBlock(numQuestions);
+            this.UpdateSelectedAnswer();
+            this.timePerQuestion = answerTime;
+            this.timerTemp = this.timePerQuestion;
+            this.selectedAnswerIndex = -1;
+            this.answersAreDisplayed = false;
+            this.showResults = true;
+
+            this.GetQuestion();
+            this.stopwatch.Restart();
+            this.ResetAnswerColors();
             this.thread.RunWorkerAsync();
+        }
+
+        public override TextBlock GetErrorOutput()
+        {
+            return this.ErrorOutput;
         }
 
         private void WorkForThread(object sender, DoWorkEventArgs e)
         {
             this.mutex.WaitOne();
             Thread.Sleep(1000);
-            this.stopwatch.Start();
+
+            this.timerTemp = this.timePerQuestion;
             while (true)
             {
+                if (this.thread.CancellationPending)
+                {
+                    e.Cancel = true;
+                    break;
+                }
+
                 //Update time
                 this.mutex.ReleaseMutex();
                 this.thread.ReportProgress((int)ThreadCodes.UPDATE_TIME, null);
                 Thread.Sleep(100);
                 this.mutex.WaitOne();
 
-                if (timerTemp == 0)
+                if (this.thread.CancellationPending)
+                {
+                    e.Cancel = true;
+                    break;
+                }
+
+                if (this.timerTemp == 0)
                 {
                     //Makes sure the user can't press the buttons
                     this.answersAreDisplayed = true;
@@ -107,7 +138,13 @@ namespace client
                     Thread.Sleep(100);
                     this.mutex.WaitOne();
 
-                    Thread.Sleep(3000);
+                    Thread.Sleep(500);
+                    if (this.thread.CancellationPending)
+                    {
+                        e.Cancel = true;
+                        break;
+                    }
+                    Thread.Sleep(2000);
 
                     if (this.numQuestionsLeft != 0)
                     {
@@ -122,14 +159,9 @@ namespace client
                     }
                     else
                     {
-                        this.thread.CancelAsync();
+                        e.Cancel = true;
+                        break;
                     }
-                }
-
-                if (this.thread.CancellationPending)
-                {
-                    e.Cancel = true;
-                    break;
                 }
 
                 Thread.Sleep(900);
@@ -141,7 +173,7 @@ namespace client
         private void UpdateThread(object sender, ProgressChangedEventArgs e)
         {
             this.mutex.WaitOne();
-            
+
             switch((ThreadCodes)e.ProgressPercentage)
             {
                 case ThreadCodes.UPDATE_TIME:
@@ -160,35 +192,43 @@ namespace client
 
         private void ChangeTimeBox()
         {
-            this.timerTemp = Convert.ToInt32(this.TimeLeft.Text);
             this.timerTemp--;
-            this.TimeLeft.Text = this.timerTemp.ToString();
+            UpdateTimeLeft(this.timerTemp);
         }
 
         private void GetQuestion()
         {
-            Stream.Send(new JObject(), Codes.GET_QUESTION);
-            Response usersResponse = Stream.Recieve();
+            Response usersResponse = Stream.Send(Codes.GET_QUESTION);
 
             if (Stream.Response(usersResponse, Codes.GET_QUESTION))
             {
                 UpdateNewQuestion(usersResponse.jObject);
             }
+            else
+            {
+                this.thread.CancelAsync();
+            }
+        }
+
+        protected override Border GetBorder()
+        {
+            return this.Border;
         }
 
         private void ResetAnswerColors()
         {            
             for(int i = 0; i < 4; i++)
             {
-                this.GetAnswerButtonFromIndex(i).Background = Brushes.LightGray;
+                this.GetAnswerButtonFromIndex(i).Background = Brushes.CornflowerBlue;
             }
         }
 
         private void UpdateNewQuestion(JObject question)
-        {                    
+        {
             this.QuestionText.Text = question[Keys.question].ToString();
-            this.Difficulty.Text = question[Keys.difficulty].ToString();
-            this.Category.Text = question[Keys.category].ToString();
+            this.LeftTextBlock.Text =
+                "Difficulty: " + this.GetDifficulty((int)question[Keys.difficulty]) +
+                "\nCategory:\n" + (string)question[Keys.category];
 
             JArray jArray = (JArray)question[Keys.answers];
 
@@ -209,14 +249,28 @@ namespace client
                 this.Answer3.Content = jArray[2].ToString();
                 this.Answer4.Content = jArray[3].ToString();
             }
-            this.TimeLeft.Text = this.timeLeft.ToString();
+
+            this.UpdateTimeLeft(this.timePerQuestion);
+        }
+
+        private string GetDifficulty(int difficulty)
+        {
+            switch(difficulty)
+            {
+                case 1:
+                    return "Easy";
+                case 3:
+                    return "Hard";
+                default:
+                    return "Medium";
+            }
         }
 
         private void GameCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             if (this.showResults)
             {
-                Utils.OpenWindow(this, new Results());
+                WindowManager.OpenWindow(WindowTypes.RESULT);
             }
         }
         
@@ -249,10 +303,9 @@ namespace client
                 this.selectedAnswerIndex = index;
                 
                 Button selectedButton = this.GetAnswerButtonFromIndex(index);
-                selectedButton.Background = Brushes.LightBlue;
-                
-                this.SelectedAnswerOutput.Text = (string)selectedButton.Content;
-                this.TimeTookForAnswerOutput.Text = String.Format("{0:.##}", this.currentTime);
+                selectedButton.Background = Brushes.RoyalBlue;
+
+                this.UpdateSelectedAnswer((string)selectedButton.Content, this.currentTime);
             }
         }
 
@@ -263,9 +316,7 @@ namespace client
                 [Keys.answerIndex] = this.selectedAnswerIndex,
                 [Keys.answerTime] = this.currentTime
             };
-            Stream.Send(jObject, Codes.SUBMIT_ANSWER);
-
-            Response response = Stream.Recieve();
+            Response response = Stream.Send(jObject, Codes.SUBMIT_ANSWER);
 
             if (Stream.Response(response, Codes.SUBMIT_ANSWER))
             {
@@ -284,27 +335,55 @@ namespace client
                 }
                 else
                 {
-                    this.TimeTookForAnswerOutput.Text = this.currentTime.ToString();
+                    this.UpdateSelectedAnswer("", this.currentTime);
                 }
                 
                 Button correctButton = this.GetAnswerButtonFromIndex(correctAnswerIndex);
-                correctButton.Background = Brushes.Green;
+                correctButton.Background = Brushes.MediumSeaGreen;
 
                 this.numQuestionsLeft--;
             }
+            else
+            {
+                this.thread.CancelAsync();
+            }
+        }
+
+        private void UpdateRightTextBlock(int answersLeft = 0, int correctAnswers = 0)
+        {
+            this.RightTextBlock.Text =
+                Utils.GetProperString(answersLeft, "Answer") + " Left\n" +
+                Utils.GetProperString(correctAnswers, "Correct Answer");
+        }
+
+        private void UpdateSelectedAnswer(string selectedAnswer = "", double timeTook = -1)
+        {
+            this.SelectedAnswer.Text =
+                "Selected Answer:\n" +
+                selectedAnswer +
+                "\nTime took for answer:\n";
+            
+            if(timeTook >= 0)
+            {
+                this.SelectedAnswer.Text += Utils.GetProperString(timeTook);
+            }
+        }
+
+        private void UpdateTimeLeft(int timeLeft)
+        {
+            this.TimeLeft.Text = Utils.GetProperString(timeLeft, "second") + " left";
         }
 
         private void GetNewQuestion()
         {
             this.ResetAnswerColors();
 
-            this.CorrectAnswers.Text = this.numCorrectAnswers.ToString();
-            this.AnswersLeft.Text = numQuestionsLeft.ToString();
-            this.TimeLeft.Text = this.timeLeft.ToString();
-            this.SelectedAnswerOutput.Text = "";
-            this.TimeTookForAnswerOutput.Text = "";
+            this.UpdateRightTextBlock(this.numQuestionsLeft, this.numCorrectAnswers);
+            this.UpdateTimeLeft(this.timePerQuestion);
+            this.UpdateSelectedAnswer();
             this.selectedAnswerIndex = -1;
-            this.currentTime = this.timeLeft;
+            this.currentTime = this.timePerQuestion;
+            this.timerTemp = this.timePerQuestion;
 
             this.GetQuestion();
         }
@@ -331,10 +410,11 @@ namespace client
             this.LeaveGame();
         }
 
-        protected override void OnClosed(EventArgs e)
+        protected override void OnClosing(CancelEventArgs e)
         {
-            if (LogoutWindow.toClose)
+            if (!WindowManager.exit)
             {
+                base.OnClosing(e);
                 LeaveGame();
             }
         }
@@ -343,11 +423,13 @@ namespace client
         {
             this.stopwatch.Stop();
             this.showResults = false;
-            this.thread.CancelAsync();
 
-            Stream.Send(new JObject(), Codes.LEAVE_GAME);
-            Stream.Response(Stream.Recieve(), Codes.LEAVE_GAME);
-            Utils.OpenWindow(this, new MainWindow());
+            if (Stream.Response(Stream.Send(Codes.LEAVE_GAME), Codes.LEAVE_GAME))
+            {
+                this.thread.CancelAsync();
+
+                WindowManager.OpenWindow(WindowTypes.MAIN);
+            }
         }
     }
 }

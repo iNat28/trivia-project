@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,34 +24,39 @@ namespace client
     {
         public string PlayerName { get; set; }
         public int NumCorrectAnswers { get; set; }
-        public double AverageAnswerTime { get; set; }
+        public string AverageAnswerTime { get; set; }
         public int NumPoints { get; set; }
 
         public MyResults(string playerName, int numCorrectAnswers, double averageAnswerTime, int numPoints)
         {
             this.PlayerName = playerName;
             this.NumCorrectAnswers = numCorrectAnswers;
-            this.AverageAnswerTime = averageAnswerTime;
+            this.AverageAnswerTime = Utils.GetProperString(averageAnswerTime);
             this.NumPoints = numPoints;
         }
     }
 
-    public partial class Results : Window
+    public partial class ResultsWindow : CustomWindow
     {
-        public Results()
+        public ResultsWindow()
         {            
             InitializeComponent();
-            User.errorOutput = this.ErrorOutput;
-            User.currentWindow = this;
+        }
 
-            Stream.Send(new JObject(), Codes.GET_GAME_RESULTS);
+        protected override Border GetBorder()
+        {
+            return this.Border;
+        }
 
-            Response response = Stream.Recieve();
+        public override void OnShow(params object[] param)
+        {
+            playerStats.Items.Clear();
+
+            Response response = Stream.Send(Codes.GET_GAME_RESULTS);
 
             if (Stream.Response(response, Codes.GET_GAME_RESULTS))
             {
                 JArray results = (JArray)response.jObject[Keys.playersResults];
-
                 foreach (var result in results)
                 {
                     MyResults playerResult = new MyResults((string)result[Keys.username], (int)result[Keys.numCorrectAnswers], (double)result[Keys.averageAnswerTime], (int)result[Keys.numPoints]);
@@ -59,17 +65,23 @@ namespace client
             }
         }
 
-        protected override void OnClosed(EventArgs e)
+        public override TextBlock GetErrorOutput()
         {
-            if (LogoutWindow.toClose)
+            return this.ErrorOutput;
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            if (!WindowManager.exit)
             {
-                Utils.OpenWindow(this, new MainWindow());
+                base.OnClosing(e);
+                WindowManager.OpenWindow(WindowTypes.MAIN);
             }
         }
 
         private void ExitButton_Click(object sender, RoutedEventArgs e)
         {
-            Utils.OpenWindow(this, new MainWindow());
+            WindowManager.OpenWindow(WindowTypes.MAIN);
         }
     }
 }

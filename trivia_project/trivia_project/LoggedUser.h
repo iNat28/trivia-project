@@ -9,8 +9,6 @@ struct LoggedUser
 
 	string username;
 
-	bool operator<(const LoggedUser& other) const;
-	bool operator>(const LoggedUser& other) const;
 	bool operator==(const LoggedUser& other) const;
 };
 

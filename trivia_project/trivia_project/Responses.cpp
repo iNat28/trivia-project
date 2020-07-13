@@ -86,7 +86,7 @@ Codes LeaveRoomResponse::getResponseCode() const
 	return Codes::LEAVE_ROOM;
 }
 
-GetRoomStateResponse::GetRoomStateResponse(RoomStatus roomStatus, const vector<LoggedUser>& players) : 
+GetRoomStateResponse::GetRoomStateResponse(RoomStatus roomStatus, const vector<LoggedUser>& players) :
 	roomStatus(roomStatus), players(players)
 {
 }

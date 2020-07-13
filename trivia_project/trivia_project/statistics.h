@@ -18,6 +18,7 @@ struct PlayerResults
 	PlayerResults(unsigned int numCorrectAnswers, unsigned int numWrongAnswers, double averageAnswerTime, unsigned int numPoints);
 	PlayerResults();
 
+
 	unsigned int numCorrectAnswers;
 	unsigned int numWrongAnswers;
 	double averageAnswerTime;

@@ -1,31 +1,17 @@
 #include "pch.h"
 #include "RoomMemberRequestHandler.h"
 
-RoomMemberRequestHandler::RoomMemberRequestHandler(RequestHandlerFactory& handlerFactory, LoggedUser user, Room& room) :
+RoomMemberRequestHandler::RoomMemberRequestHandler(RequestHandlerFactory& handlerFactory, LoggedUser& user, Room& room) :
 	AllRoomMembersRequestHandler(user, room), m_handlerFactory(handlerFactory)
 {
 }
 
-RequestResult RoomMemberRequestHandler::handleRequest(const RequestInfo& requestInfo) const
+RequestResult RoomMemberRequestHandler::handleRequest(RequestInfo& requestInfo)
 {
-	RoomMemberRequestHandler::requests_func_t handler = nullptr;
-
-	//If at any point the requests don't work, an exception will be thrown, 
-	//and it will be put into an error response
-	try {
-		handler = m_requests.at(requestInfo.requestId);
-		return (this->*handler)(requestInfo);
-	}
-	catch (const std::exception & e)
-	{
-		return RequestResult(
-			JsonResponsePacketSerializer::serializeResponse(ErrorResponse(e.what())),
-			this->m_handlerFactory.createRoomMemberRequestHandler(this->m_user, this->m_room)
-		);
-	}
+	return this->handleAllRequests(requestInfo, *this, this->m_requests);
 }
 
-RequestResult RoomMemberRequestHandler::_leaveRoom(const RequestInfo& requestInfo) const
+RequestResult RoomMemberRequestHandler::_leaveRoom(RequestInfo& requestInfo)
 {
 	this->m_room.removeUser(this->m_user);
 
@@ -37,30 +23,36 @@ RequestResult RoomMemberRequestHandler::_leaveRoom(const RequestInfo& requestInf
 	);
 }
 
-RequestResult RoomMemberRequestHandler::_getRoomState(const RequestInfo& requestInfo) const
+RequestResult RoomMemberRequestHandler::_getRoomState(RequestInfo& requestInfo)
 {
-	RequestResult requestResult = this->_getRoomStateNoHandler(requestInfo);
+	Buffer resultBuffer = this->_getRoomStateNoHandler(requestInfo);
 
 	switch (this->m_room.getRoomStatus())
 	{
 	case RoomStatus::OPEN:
-		requestResult.newHandler = this->m_handlerFactory.createRoomMemberRequestHandler(this->m_user, this->m_room);
-		break;
-	case RoomStatus::CLOSED:
-		requestResult.newHandler = this->m_handlerFactory.createMenuRequestHandler(this->m_user);
-		break;
-	case RoomStatus::GAME_STARTED:
-		requestResult.newHandler = this->m_handlerFactory.createGameRequestHandler(
-			this->m_user,
-			this->m_handlerFactory.getGameManager().getGame(this->m_room)
+		return RequestResult(
+			resultBuffer,
+			requestInfo.currentHandler
 		);
-		break;
+	case RoomStatus::CLOSED:
+		return RequestResult(
+			resultBuffer,
+			this->m_handlerFactory.createMenuRequestHandler(this->m_user)
+		);
+	case RoomStatus::GAME_STARTED:
+		return RequestResult(
+			resultBuffer,
+			this->m_handlerFactory.createGameRequestHandler(
+				this->m_user,
+				this->m_handlerFactory.getGameManager().getGame(this->m_room)
+			)
+		);
 	}
 
-	return requestResult;
+	throw Exception("Room status not found!");
 }
 
-const map<Codes, RoomMemberRequestHandler::requests_func_t> RoomMemberRequestHandler::m_requests = {
+const umap<Codes, RoomMemberRequestHandler::requests_func_t> RoomMemberRequestHandler::m_requests = {
 	{ Codes::LEAVE_ROOM, &RoomMemberRequestHandler::_leaveRoom },
 	{ Codes::GET_ROOM_STATE, &RoomMemberRequestHandler::_getRoomState }
 };

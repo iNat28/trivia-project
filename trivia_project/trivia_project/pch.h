@@ -20,13 +20,21 @@
 #include <algorithm>	// std::shuffle
 #include <random>		// std::default_random_engine
 #include <chrono>		// std::chrono::system_clock
+#include <mutex>
 #include "json.hpp"
 
 using std::string;
 using std::vector;
-using std::map;
+
+template<class K, class V>
+using umap = std::unordered_map<K, V>;
 using std::cout;
 using std::cin;
 using std::endl;
 using sstream = std::stringstream;
+
+template<class T>
+using sptr = std::shared_ptr<T>;
+
+using std::make_shared;
 using json = nlohmann::json;

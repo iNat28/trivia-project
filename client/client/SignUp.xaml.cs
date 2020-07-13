@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,19 +19,38 @@ namespace client
     /// <summary>
     /// Interaction logic for SignUp.xaml
     /// </summary>
-    public partial class SignUpWindow : Window
-    {       
+    public partial class SignUpWindow : CustomWindow
+    {
         public SignUpWindow()
         {
             InitializeComponent();
+        }
 
-            User.errorOutput = this.errorOutput;
-            User.currentWindow = this;
+        public override void OnShow(params object[] param)
+        {
+            this.usernameInput.Text = "";
+            this.passwordInput.Password = "";
+            this.emailInput.Text = "";
+        }
+
+        public override TextBlock GetErrorOutput()
+        {
+            return this.ErrorOutput;
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            WindowManager.Close();
+        }
+
+        protected override Border GetBorder()
+        {
+            return this.Border;
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
-            Utils.OpenWindow(this, new LoginWindow());
+            WindowManager.OpenWindow(WindowTypes.LOGIN);
         }
 
         private void SignupButton_Click(object sender, RoutedEventArgs e)
@@ -42,14 +62,12 @@ namespace client
                 ["email"] = emailInput.Text
             };
 
-            Stream.Send(signUp, Codes.SIGNUP);
-
-            Response response = Stream.Recieve();
+            Response response = Stream.Send(signUp, Codes.SIGNUP);
 
             if (Stream.Response(response, Codes.SIGNUP))
             {
                 User.username = (string)signUp["username"];
-                Utils.OpenWindow(this, new MainWindow());
+                WindowManager.OpenWindow(WindowTypes.MAIN);
             }
         }
     }

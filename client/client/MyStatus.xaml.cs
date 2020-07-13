@@ -18,33 +18,41 @@ namespace client
     /// <summary>
     /// Interaction logic for MyStatus.xaml
     /// </summary>
-    public partial class MyStatus : LogoutWindow
+    public partial class MyStatusWindow : LogoutWindow
     {
-        public MyStatus()
+        public MyStatusWindow()
         {
             InitializeComponent();
-            User.errorOutput = errorOutput;
-            User.currentWindow = this;
+        }
 
-            Stream.Send(new JObject(), Codes.USER_STATS);
+        protected override Border GetBorder()
+        {
+            return this.Border;
+        }
 
-            Response response = Stream.Recieve();
+        public override void OnShow(params object[] param)
+        {
+            Response response = Stream.Send(Codes.USER_STATS);
             if (Stream.Response(response, Codes.USER_STATS))
             {
-                JObject userStats = (JObject)response.jObject[Keys.userStats];
-                this.numPointsOutput.Text = "Number of Points - " + (int)userStats[Keys.numPoints];
-                this.numOfGamesOutput.Text = "Number of Games - " + (int)userStats[Keys.numTotalGames];
-                this.numOfRightAnswersOutput.Text = "Number of Right Answers - " + (int)userStats[Keys.numCorrectAnswers];
-                this.numOfWrongAnswersOutput.Text = "Number of Wrong Answers - " + (int)userStats[Keys.numWrongAnswers];
-                this.avgTimeForAnswersOutput.Text = "Average answer time - " + (double)userStats[Keys.averageAnswerTime];
+                this.numPointsOutput.Text = "Number of Points: " + (int)response.jObject[Keys.numPoints];
+                this.numOfGamesOutput.Text = "Number of Games: " + (int)response.jObject[Keys.numTotalGames];
+                this.numOfRightAnswersOutput.Text = "Number of Correct Answers: " + (int)response.jObject[Keys.numCorrectAnswers];
+                this.numOfWrongAnswersOutput.Text = "Number of Wrong Answers: " + (int)response.jObject[Keys.numWrongAnswers];
+                this.avgTimeForAnswersOutput.Text = "Average Answer Time: " + Utils.GetProperString((double)response.jObject[Keys.averageAnswerTime]);
 
                 response.jObject.ToString();
             }
         }
 
+        public override TextBlock GetErrorOutput()
+        {
+            return this.ErrorOutput;
+        }
+
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
-            Utils.OpenWindow(this, new Statistics());
+            WindowManager.OpenWindow(WindowTypes.STATISTICS);
         }
     }
 }

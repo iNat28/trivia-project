@@ -23,30 +23,42 @@ namespace client
         public MainWindow()
         {
             InitializeComponent();
-            UsernameHeader.Text = "Hello " + User.username;
-            User.errorOutput = this.errorOutput;
-            User.currentWindow = this;
+        }
+
+        protected override Border GetBorder()
+        {
+            return this.Border;
+        }
+
+        public override void OnShow(params object[] param)
+        {
+            UsernameHeader.Text = "Welcome " + User.username;
+        }
+
+        public override TextBlock GetErrorOutput()
+        {
+            return this.ErrorOutput;
         }
 
         private void SignoutButton_Click(object sender, RoutedEventArgs e)
         {
             Stream.Signout();
-            Utils.OpenWindow(this, new LoginWindow());
+            WindowManager.OpenWindow(WindowTypes.LOGIN);
         }
 
         private void CreateRoomButton_Click(object sender, RoutedEventArgs e)
         {
-            Utils.OpenWindow(this, new CreateRoom());
+            WindowManager.OpenWindow(WindowTypes.CREATE_ROOM);
         }
 
         private void JoinRoomButton_Click(object sender, RoutedEventArgs e)
         {
-            Utils.OpenWindow(this, new JoinRoom());
+            WindowManager.OpenWindow(WindowTypes.JOIN_ROOM);
         }
 
         private void StatisticsButton_Click(object sender, RoutedEventArgs e)
         {
-            Utils.OpenWindow(this, new Statistics());
+            WindowManager.OpenWindow(WindowTypes.STATISTICS);
         }
     }
 }

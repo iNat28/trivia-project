@@ -2,39 +2,45 @@
 
 struct Keys
 {
-	/* Responses */
-	
-	//Login
+	/* Login */
 	static const char* username;
 	static const char* password;
 	static const char* email;
 	
-	//Rooms
-	static const char* roomId;
+
+	/* Room */
+
+	//Requests
 	static const char* roomName;
 	static const char* questionCount;
-	static const char* answerTimeout;
-	
-	//Statistics
-	static const char* userStats;
-	
-	//Game
-	static const char* answerIndex;
-	static const char* answerTime;
-	static const char* playersResults;
+	static const char* maxPlayers;
+	static const char* timePerQuestion;
+	static const char* questionsCount;
 
-	/* Responses */
-
-	static const char* message;
-	static const char* status;
-
-	//Rooms
+	//Responses
 	static const char* rooms;
 	static const char* playersInRoom;
-	static const char* roomState;
-	static const char* roomData;
+	static const char* roomId;
+	static const char* currentPlayerCount;
+	static const char* roomStatus;
+	
 
-	//Statistics
+	/* Game */
+
+	//Requests
+	static const char* answerIndex;
+	static const char* answerTime;
+
+	//Responses
+	static const char* category;
+	static const char* difficulty;
+	static const char* question;
+	static const char* answers;
+	static const char* correctAnswerIndex;
+	static const char* playersResults;
+
+
+	/* Statistics */
 	static const char* numPoints;
 	static const char* numTotalGames;
 	static const char* numCorrectAnswers;
@@ -42,21 +48,7 @@ struct Keys
 	static const char* averageAnswerTime;
 	static const char* highScores;
 
-	/* Objects */
 
-	//Room
-	static const char* id;
-	static const char* name;
-	static const char* maxPlayers;
-	static const char* timePerQuestion;
-	static const char* roomStatus;
-	static const char* players;
-	static const char* questionsCount;
-
-	//Question
-	static const char* category;
-	static const char* difficulty;
-	static const char* question;
-	static const char* answers;
-	static const char* correctAnswerIndex;
+	/* Error Response */
+	static const char* message;
 };
