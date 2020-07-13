@@ -54,13 +54,13 @@ void LoginManager::login(string username, string password)
 	{
 		if (loggedUser.username == username)
 		{
-			throw Exception("User already logged in");
+			throw Exception("User already logged in!");
 		}
 	}
 
 	if (!this->m_database.doesPasswordMatch(username, password))
 	{
-		throw Exception("User password is incorrect");
+		throw Exception("Password is incorrect!");
 	}
 
 	//Logins in the user

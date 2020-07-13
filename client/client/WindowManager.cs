@@ -58,8 +58,13 @@ namespace client
 
             currentWindow.Top = oldWindow.Top;
             currentWindow.Left = oldWindow.Left;
+            
             oldWindow.Hide();
             currentWindow.Show();
+            
+            currentWindow.Top = oldWindow.Top;
+            currentWindow.Left = oldWindow.Left;
+            
             currentWindow.BeginAnimation(UIElement.OpacityProperty, WindowManager.fadeIn);
         }
 

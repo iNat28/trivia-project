@@ -259,6 +259,7 @@ namespace client
                     return;
                 case Status.CLOSED:
                     WindowManager.OpenWindow(WindowTypes.MAIN);
+                    WindowManager.PrintError("Room closed");
                     break;
                 case Status.GAME_STARTED:
                     this.ShowQuestionWindow();

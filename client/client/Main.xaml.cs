@@ -32,7 +32,7 @@ namespace client
 
         public override void OnShow(params object[] param)
         {
-            UsernameHeader.Text = "Hello " + User.username;
+            UsernameHeader.Text = "Welcome " + User.username;
         }
 
         public override TextBlock GetErrorOutput()
