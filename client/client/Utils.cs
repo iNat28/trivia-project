@@ -25,11 +25,6 @@ namespace client
         {
             return time.ToString("0.00") + " seconds";
         }
-        
-        public static int GetIntFromSeconds(string seconds)
-        {
-            return Convert.ToInt32(seconds.Split(' ')[0]);
-        }
     }
 
     public enum Codes

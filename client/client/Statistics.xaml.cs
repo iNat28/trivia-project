@@ -25,6 +25,11 @@ namespace client
             InitializeComponent();
         }
 
+        protected override Border GetBorder()
+        {
+            return this.Border;
+        }
+
         public override void OnShow(params object[] param)
         {
         }

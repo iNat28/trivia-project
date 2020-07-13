@@ -106,6 +106,11 @@ namespace client
             backgroundWorker.ProgressChanged += ChangeWPF;
         }
 
+        protected override Border GetBorder()
+        {
+            return this.Border;
+        }
+
         public override void OnShow(params object[] param)
         {
             this.rooms.Clear();

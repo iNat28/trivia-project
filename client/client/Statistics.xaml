@@ -12,15 +12,18 @@
         Background="#FF410A66"
         TextElement.FontWeight="Medium"
         TextElement.FontSize="14"
-        FontFamily="{materialDesign:MaterialDesignFont}"            
+        FontFamily="{materialDesign:MaterialDesignFont}"    
+        MinHeight="450" MinWidth="650"
+        MaxHeight="600" MaxWidth="1000"
+        SizeChanged="WindowSizeChanged"        
         Title="Statistics Menu" Height="450" Width="800">
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="WhiteSmoke" Margin="10,20,9.6,20" CornerRadius="5" Height="388">
-                <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="25" Height="367">
-                    <Button x:Name="MyStatusButton" Content="My Status" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="305,80,303.8,0" Height="50" Click="MyStatusButton_Click"/>
-                    <Button x:Name="HighScoresButton" Content="High Scores" HorizontalAlignment="Stretch" Margin="305,20,303.8,0" VerticalAlignment="Stretch" Height="51" Click="HighScoresButton_Click"/>
-                    <Button x:Name="backButton" Content="Back" HorizontalAlignment="Stretch" Margin="305,70,303.8,0" VerticalAlignment="Stretch" Height="52" Click="BackButton_Click"/>
+            <Border x:Name="Border" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="WhiteSmoke" Margin="10,10,10,0" CornerRadius="5" Height="400">
+                <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="25" Height="350">
+                    <Button x:Name="MyStatusButton" Width="120" Content="My Status" HorizontalAlignment="Center" VerticalAlignment="Stretch" Margin="0,80,0,0" Height="50" Click="MyStatusButton_Click"/>
+                    <Button x:Name="HighScoresButton" Width="120" Content="High Scores" HorizontalAlignment="Center" Margin="0,20,0,0" VerticalAlignment="Stretch" Height="50" Click="HighScoresButton_Click"/>
+                    <Button x:Name="backButton" Width="120" Content="Back" HorizontalAlignment="Stretch" Margin="0,70,0,0" VerticalAlignment="Stretch" Height="50" Click="BackButton_Click"/>
                     <TextBlock x:Name="ErrorOutput" HorizontalAlignment="Stretch" Margin="-400,-300,0,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Height="305" Width="200"/>
                 </StackPanel>
             </Border>

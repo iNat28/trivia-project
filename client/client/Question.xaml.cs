@@ -82,16 +82,14 @@ namespace client
             this.numCorrectAnswers = 0;
             this.currentTime = answerTime;
             this.numQuestionsLeft = numQuestions;
-            this.CorrectAnswers.Text = "0";
+            this.UpdateRightTextBlock();
+            this.UpdateSelectedAnswer();
+            this.UpdateTimeLeft(answerTime);
             this.timeLeft = answerTime;
             this.timerTemp = this.timeLeft;
-            this.AnswersLeft.Text = numQuestionsLeft.ToString();
-            this.TimeLeft.Text = Utils.GetSecondsString(answerTime);
             this.selectedAnswerIndex = -1;
             this.answersAreDisplayed = false;
             this.showResults = true;
-            this.SelectedAnswerOutput.Text = "";
-            this.TimeTookForAnswerOutput.Text = "";
 
             this.GetQuestion();
             this.stopwatch.Restart();
@@ -195,7 +193,7 @@ namespace client
         private void ChangeTimeBox()
         {
             this.timerTemp--;
-            this.TimeLeft.Text = Utils.GetSecondsString(this.timerTemp);
+            UpdateTimeLeft(this.timerTemp);
         }
 
         private void GetQuestion()
@@ -212,11 +210,16 @@ namespace client
             }
         }
 
+        protected override Border GetBorder()
+        {
+            return this.Border;
+        }
+
         private void ResetAnswerColors()
         {            
             for(int i = 0; i < 4; i++)
             {
-                this.GetAnswerButtonFromIndex(i).Background = Brushes.LightGray;
+                this.GetAnswerButtonFromIndex(i).Background = Brushes.CornflowerBlue;
             }
         }
 
@@ -224,8 +227,9 @@ namespace client
         {                    
             this.QuestionText.Text = question[Keys.question].ToString();
             //TODO: Change to text
-            this.Difficulty.Text = question[Keys.difficulty].ToString();
-            this.Category.Text = question[Keys.category].ToString();
+            this.LeftTextBlock.Text =
+                "Difficulty: " + (string)question[Keys.difficulty] +
+                "\nCategory:\n" + (string)question[Keys.category];
 
             JArray jArray = (JArray)question[Keys.answers];
 
@@ -286,10 +290,9 @@ namespace client
                 this.selectedAnswerIndex = index;
                 
                 Button selectedButton = this.GetAnswerButtonFromIndex(index);
-                selectedButton.Background = Brushes.LightBlue;
-                
-                this.SelectedAnswerOutput.Text = (string)selectedButton.Content;
-                this.TimeTookForAnswerOutput.Text = Utils.GetSecondsString(this.currentTime);
+                selectedButton.Background = Brushes.RoyalBlue;
+
+                this.UpdateSelectedAnswer((string)selectedButton.Content, this.currentTime);
             }
         }
 
@@ -319,11 +322,11 @@ namespace client
                 }
                 else
                 {
-                    this.TimeTookForAnswerOutput.Text = Utils.GetSecondsString(this.currentTime);
+                    this.UpdateSelectedAnswer("", this.currentTime);
                 }
                 
                 Button correctButton = this.GetAnswerButtonFromIndex(correctAnswerIndex);
-                correctButton.Background = Brushes.Green;
+                correctButton.Background = Brushes.MediumSeaGreen;
 
                 this.numQuestionsLeft--;
             }
@@ -333,15 +336,38 @@ namespace client
             }
         }
 
+        private void UpdateRightTextBlock(int correctAnswers = 0, int answersLeft = 0)
+        {
+            this.RightTextBlock.Text =
+                answersLeft + " Answers Left\n" +
+                correctAnswers + " Correct Answers";
+        }
+
+        private void UpdateSelectedAnswer(string selectedAnswer = "", double timeTook = -1)
+        {
+            this.SelectedAnswer.Text =
+                "Selected Answer:\n" +
+                selectedAnswer +
+                "\nTime took for answer:\n";
+            
+            if(timeTook >= 0)
+            {
+                this.SelectedAnswer.Text += Utils.GetSecondsString(timeTook);
+            }
+        }
+
+        private void UpdateTimeLeft(int timeLeft)
+        {
+            this.TimeLeft.Text = Utils.GetSecondsString(timeLeft) + " left";
+        }
+
         private void GetNewQuestion()
         {
             this.ResetAnswerColors();
 
-            this.CorrectAnswers.Text = this.numCorrectAnswers.ToString();
-            this.AnswersLeft.Text = numQuestionsLeft.ToString();
-            this.TimeLeft.Text = Utils.GetSecondsString(this.timeLeft);
-            this.SelectedAnswerOutput.Text = "";
-            this.TimeTookForAnswerOutput.Text = "";
+            this.UpdateRightTextBlock(this.numCorrectAnswers, this.numQuestionsLeft);
+            this.UpdateTimeLeft(this.timeLeft);
+            this.UpdateSelectedAnswer();
             this.selectedAnswerIndex = -1;
             this.currentTime = this.timeLeft;
             this.timerTemp = this.timeLeft;

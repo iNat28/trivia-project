@@ -25,6 +25,11 @@ namespace client
             InitializeComponent();
         }
 
+        protected override Border GetBorder()
+        {
+            return this.Border;
+        }
+
         public override void OnShow(params object[] param)
         {
             Response response = Stream.Send(Codes.USER_STATS);
@@ -34,7 +39,7 @@ namespace client
                 this.numOfGamesOutput.Text = "Number of Games: " + (int)response.jObject[Keys.numTotalGames];
                 this.numOfRightAnswersOutput.Text = "Number of Correct Answers: " + (int)response.jObject[Keys.numCorrectAnswers];
                 this.numOfWrongAnswersOutput.Text = "Number of Wrong Answers: " + (int)response.jObject[Keys.numWrongAnswers];
-                this.avgTimeForAnswersOutput.Text = "Average answer time: " + ((double)response.jObject[Keys.averageAnswerTime]).ToString("0.00");
+                this.avgTimeForAnswersOutput.Text = "Average Answer Time: " + Utils.GetSecondsString((double)response.jObject[Keys.averageAnswerTime]);
 
                 response.jObject.ToString();
             }

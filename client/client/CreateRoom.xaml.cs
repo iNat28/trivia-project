@@ -28,10 +28,11 @@ namespace client
         public CreateRoomWindow()
         {
             InitializeComponent();
+        }
 
-            this.NumQuestionsSlider.Value = 1;
-            this.MaxPlayersSlider.Value = 1;
-            this.AnswerTimeSlider.Value = 1;
+        protected override Border GetBorder()
+        {
+            return this.Border;
         }
 
         public override void OnShow(params object[] param)
@@ -76,59 +77,74 @@ namespace client
             WindowManager.OpenWindow(WindowTypes.MAIN);
         }
 
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void QuestionsSliderTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (int.TryParse(this.QuestionsSliderTextBox.Text, out _) && Convert.ToInt32(this.QuestionsSliderTextBox.Text) <= this.NumQuestionsSlider.Maximum && Convert.ToInt32(this.QuestionsSliderTextBox.Text) > 0)
-                this.NumQuestionsSlider.Value = Convert.ToDouble(this.QuestionsSliderTextBox.Text);
+            this.UpdateSlider(this.NumQuestionsSlider, this.QuestionsSliderTextBox);
         }
 
         private void NumQuestionsSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (this.QuestionsSliderTextBox != null)
-            {
-                this.QuestionsSliderTextBox.Text = this.NumQuestionsSlider.Value.ToString();
-            }
+            this.UpdateTextBox(this.QuestionsSliderTextBox, this.NumQuestionsSlider);
         }
 
         private void AnswerTimeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (this.AnswerTimeTextBox != null)
-            {
-                this.AnswerTimeTextBox.Text = this.AnswerTimeSlider.Value.ToString();
-            }
+            this.UpdateTextBox(this.AnswerTimeTextBox, this.AnswerTimeSlider);
         }
 
         private void AnswerTimeTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (this.AnswerTimeTextBox == null)
-            {
-                this.ErrorOutput.Text = "text box problem";
-            }
-            else if (int.TryParse(this.AnswerTimeTextBox.Text, out _) && Convert.ToDouble(this.AnswerTimeTextBox.Text) <= this.AnswerTimeSlider.Maximum && Convert.ToDouble(this.AnswerTimeTextBox.Text) > 0)
-                this.AnswerTimeSlider.Value = Convert.ToDouble(this.AnswerTimeTextBox.Text);                      
+            this.UpdateSlider(this.AnswerTimeSlider, this.AnswerTimeTextBox);
         }
 
         private void MaxPlayersSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (this.MaxPlayersTextBox != null)
-            {
-                this.MaxPlayersTextBox.Text = this.MaxPlayersSlider.Value.ToString();
-            }
+            this.UpdateTextBox(this.MaxPlayersTextBox, this.MaxPlayersSlider);
         }
 
         private void MaxPlayersTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (this.MaxPlayersTextBox == null)
-            {
-                this.ErrorOutput.Text = "text box problem";
-            }
-            else if (int.TryParse(this.MaxPlayersTextBox.Text, out _) && Convert.ToDouble(this.MaxPlayersTextBox.Text) <= this.MaxPlayersSlider.Maximum && Convert.ToDouble(this.MaxPlayersTextBox.Text) > 0)
-                this.MaxPlayersSlider.Value = Convert.ToDouble(this.MaxPlayersTextBox.Text);
+            this.UpdateSlider(this.MaxPlayersSlider, this.MaxPlayersTextBox);
         }
 
-        private void RoomName_TextChanged(object sender, TextChangedEventArgs e)
+        private void UpdateSlider(Slider slider, TextBox textBox)
         {
+            double value;
 
+            if(slider == null || textBox == null)
+            {
+                return;
+            }
+
+            if (int.TryParse(textBox.Text, out _))
+            {
+                value = Convert.ToDouble(textBox.Text);
+
+                if (value > slider.Maximum)
+                {
+                    textBox.Text = slider.Maximum.ToString();
+                }
+                else if (value < slider.Minimum)
+                {
+                    textBox.Text = slider.Minimum.ToString();
+                }
+
+                slider.Value = value;
+            }
+            else
+            {
+                textBox.Text = slider.Minimum.ToString();
+            }
+        }
+
+        private void UpdateTextBox(TextBox textBox, Slider slider)
+        {
+            if (slider == null || textBox == null)
+            {
+                return;
+            }
+
+            textBox.Text = slider.Value.ToString();
         }
 
         public override TextBlock GetErrorOutput()
