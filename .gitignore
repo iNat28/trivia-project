@@ -6,7 +6,6 @@
 !/client/client/Properties
 !
 !questions.txt
-!DBFile.sqlite
 !*.h
 !*.cpp
 !*.c
@@ -16,7 +15,6 @@
 !*.Designer.cs
 !*.resx
 !*.sln
-!*.py
 !*.cs
 !*.xaml
 !*.config
