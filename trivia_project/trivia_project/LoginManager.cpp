@@ -5,7 +5,11 @@ LoginManager::LoginManager(IDatabase& database) :
 	m_database(database)
 {
 }
-
+/*
+Usage: signs a player up.
+Input: string, string, string.
+Output: none.
+*/
 void LoginManager::signup(string username, string password, string email)
 {
 	if (this->m_database.doesUserExist(username))
@@ -32,7 +36,11 @@ void LoginManager::signup(string username, string password, string email)
 	this->m_database.addNewUser(username, password, email);
 	this->m_loggedUsers.push_back(username);
 }
-
+/*
+Usage: logs a user in.
+Input: string, string.
+Output: none.
+*/
 void LoginManager::login(string username, string password)
 {
 	if (!this->m_database.doesUserExist(username))
@@ -66,7 +74,11 @@ void LoginManager::login(string username, string password)
 	//Logins in the user
 	this->m_loggedUsers.push_back(username);
 }
-
+/*
+Usage: logs a user out.
+Input: LoggedUser.
+Output: none.
+*/
 void LoginManager::logout(LoggedUser& user)
 {
 	for (auto loggedUser = this->m_loggedUsers.begin(); loggedUser != this->m_loggedUsers.end(); )
@@ -81,7 +93,11 @@ void LoginManager::logout(LoggedUser& user)
 		}
 	}
 }
-
+/*
+Usage: gets a user.
+Input: string.
+Output: LoggedUser.
+*/
 LoggedUser& LoginManager::getUser(string username)
 {
 	for (auto& user : this->m_loggedUsers)
