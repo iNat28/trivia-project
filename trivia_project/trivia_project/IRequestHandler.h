@@ -41,7 +41,23 @@ protected:
 			requestFunc = requestMap.at(requestInfo.requestId);
 			return (handler.*requestFunc)(requestInfo);
 		}
-		//Exception caught
+		//Error with json parsings
+		catch (const json::exception & e)
+		{
+			return RequestResult(
+				JsonResponsePacketSerializer::serializeResponse(ErrorResponse(string("Error with parsing json: ") + e.what())),
+				requestInfo.currentHandler
+			);
+		}
+		//Something was out of range (probably the request map)
+		catch (std::out_of_range)
+		{
+			return RequestResult(
+				JsonResponsePacketSerializer::serializeResponse(ErrorResponse("Unexpected error with handlers")),
+				requestInfo.currentHandler
+			);
+		}
+		//Other exception caught
 		catch (const std::exception & e)
 		{
 			return RequestResult(

@@ -67,7 +67,7 @@ namespace client
 
                 if (Stream.Response(response, Codes.CREATE_ROOM))
                 {
-                    WindowManager.OpenWindow(WindowTypes.ROOM, true, new RoomData(0, this.RoomName.Text, this.numMaxPlayers, this.numQuestions, this.answerTime, RoomWindow.Status.OPEN));
+                    WindowManager.OpenWindow(WindowTypes.ROOM, true, new RoomData(0, this.RoomName.Text, this.numMaxPlayers, this.numQuestions, this.answerTime, RoomStatus.OPEN));
                 }
             }           
         }

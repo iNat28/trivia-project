@@ -17,6 +17,13 @@ using System.Windows.Shapes;
 
 namespace client
 {
+    public enum RoomStatus
+    {
+        OPEN,
+        CLOSED,
+        GAME_STARTED
+    };
+
     /// <summary>
     /// Interaction logic for Room.xaml
     /// </summary>
@@ -27,20 +34,20 @@ namespace client
         private int questionsCount;
         private int timePerQuestion;
         private Mutex sendingMutex;
-        private Status roomStatus;
-
-        public enum Status
-        { 
-            OPEN,
-	        CLOSED,
-	        GAME_STARTED
-        };
+        private RoomStatus roomStatus;
+        
+        private enum ThreadCodes
+        {
+            ADD_PLAYER,
+            REMOVE_PLAYER,
+            PRINT_ERROR
+        }
 
         public RoomWindow()
         {
             InitializeComponent();
 
-            this.roomStatus = Status.OPEN;
+            this.roomStatus = RoomStatus.OPEN;
 
             //adding users
             backgroundWorker = new BackgroundWorker
@@ -64,7 +71,7 @@ namespace client
             this.isAdmin = (bool)param[0];
             RoomData roomData = (RoomData)param[1];
 
-            this.roomStatus = Status.OPEN;
+            this.roomStatus = RoomStatus.OPEN;
             sendingMutex?.Close();
             sendingMutex = new Mutex();
 
@@ -184,9 +191,9 @@ namespace client
 
                 if (Stream.ResponseForThread(usersResponse, Codes.GET_ROOM_STATE, out string error))
                 {
-                    this.roomStatus = (Status)(int)usersResponse.jObject[Keys.roomStatus];
+                    this.roomStatus = (RoomStatus)(int)usersResponse.jObject[Keys.roomStatus];
                     
-                    if (this.roomStatus != Status.OPEN)
+                    if (this.roomStatus != RoomStatus.OPEN)
                     {
                         e.Cancel = true;
                         break;
@@ -201,7 +208,7 @@ namespace client
                         string player = (string)jObject[Keys.username];
                         if(!this.NamesList.Items.Contains(player))
                         {
-                            backgroundWorker.ReportProgress(1, player);
+                            backgroundWorker.ReportProgress((int)ThreadCodes.ADD_PLAYER, player);
                         }
                         players.Add(player);
                     }
@@ -210,7 +217,7 @@ namespace client
                     {
                         if (!players.Contains(this.NamesList.Items[i]))
                         {
-                            backgroundWorker.ReportProgress(2, this.NamesList.Items[i].ToString());
+                            backgroundWorker.ReportProgress((int)ThreadCodes.REMOVE_PLAYER, this.NamesList.Items[i].ToString());
                         }
                     }
                 }
@@ -221,7 +228,7 @@ namespace client
                         e.Cancel = true;
                         break;
                     }
-                    backgroundWorker.ReportProgress(3, error);
+                    backgroundWorker.ReportProgress((int)ThreadCodes.PRINT_ERROR, error);
                 }
 
                 sendingMutex.ReleaseMutex();
@@ -232,15 +239,15 @@ namespace client
         private void ChangeWPF(object sender, ProgressChangedEventArgs e)
         {
             string param = (string)e.UserState;
-            switch (e.ProgressPercentage)
+            switch ((ThreadCodes)e.ProgressPercentage)
             {
-                case 1:
+                case ThreadCodes.ADD_PLAYER:
                     this.NamesList.Items.Add(param);
                     break;
-                case 2:
+                case ThreadCodes.REMOVE_PLAYER:
                     this.NamesList.Items.Remove(param);
                     break;
-                case 3:
+                case ThreadCodes.PRINT_ERROR:
                     this.ErrorOutput.Text = param;
                     break;
             }
@@ -256,13 +263,13 @@ namespace client
 
             switch(roomStatus)
             {
-                case Status.OPEN:
+                case RoomStatus.OPEN:
                     return;
-                case Status.CLOSED:
+                case RoomStatus.CLOSED:
                     WindowManager.OpenWindow(WindowTypes.MAIN);
                     WindowManager.PrintError("Room closed");
                     break;
-                case Status.GAME_STARTED:
+                case RoomStatus.GAME_STARTED:
                     this.ShowQuestionWindow();
                     break;
                 default:

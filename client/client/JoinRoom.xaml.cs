@@ -25,9 +25,9 @@ namespace client
         public int currentPlayerCount;
         public int questionsCount;
         public int timePerQuestion;
-        public RoomWindow.Status roomStatus;
+        public RoomStatus roomStatus;
 
-        public RoomData(int id, string name, int maxPlayers, int questionsCount, int timePerQuestion, RoomWindow.Status roomStatus, int currentPlayerCount = 1)
+        public RoomData(int id, string name, int maxPlayers, int questionsCount, int timePerQuestion, RoomStatus roomStatus, int currentPlayerCount = 1)
         {
             this.id = id;
             this.name = name;
@@ -67,7 +67,7 @@ namespace client
 
             switch(this.roomStatus)
             {
-                case RoomWindow.Status.GAME_STARTED:
+                case RoomStatus.GAME_STARTED:
                     roomStatus = "| The room's game has started";
                     break;
             }
@@ -90,6 +90,13 @@ namespace client
         private readonly BackgroundWorker backgroundWorker;
         private readonly Mutex sendingMutex;
         private readonly List<RoomData> rooms;
+
+        private enum ThreadCodes
+        {
+            ADD_ROOM,
+            REMOVE_ROOM,
+            PRINT_ERROR
+        }
 
         public JoinRoomWindow()
         {
@@ -195,13 +202,13 @@ namespace client
                             (int)jObject[Keys.maxPlayers],
                             (int)jObject[Keys.questionsCount],
                             (int)jObject[Keys.timePerQuestion],
-                            (RoomWindow.Status)(int)jObject[Keys.roomStatus],
+                            (RoomStatus)(int)jObject[Keys.roomStatus],
                             (int)jObject[Keys.currentPlayerCount]
                         );
                         if (!this.rooms.Contains(room))
                         {
                             this.rooms.Add(room);
-                            backgroundWorker.ReportProgress(1, room.ToString());
+                            backgroundWorker.ReportProgress((int)ThreadCodes.ADD_ROOM, room.ToString());
                         }
                         newRooms.Add(room);
                     }
@@ -210,7 +217,7 @@ namespace client
                     {
                         if (!newRooms.Contains(this.rooms[i]))
                         {
-                            backgroundWorker.ReportProgress(2, this.rooms[i].ToString());
+                            backgroundWorker.ReportProgress((int)ThreadCodes.REMOVE_ROOM, this.rooms[i].ToString());
                             this.rooms.RemoveAt(i);
                         }
                     }
@@ -222,7 +229,7 @@ namespace client
                         e.Cancel = true;
                         break;
                     }
-                    backgroundWorker.ReportProgress(3, error);
+                    backgroundWorker.ReportProgress((int)ThreadCodes.PRINT_ERROR, error);
                 }
 
                 sendingMutex.ReleaseMutex();
@@ -233,15 +240,16 @@ namespace client
         private void ChangeWPF(object sender, ProgressChangedEventArgs e)
         {
             string param = (string)e.UserState;
-            switch (e.ProgressPercentage)
+            
+            switch ((ThreadCodes)e.ProgressPercentage)
             {
-                case 1:
+                case ThreadCodes.ADD_ROOM:
                     this.RoomsList.Items.Add(param);
                     break;
-                case 2:
+                case ThreadCodes.REMOVE_ROOM:
                     this.RoomsList.Items.Remove(param);
                     break;
-                case 3:
+                case ThreadCodes.PRINT_ERROR:
                     this.ErrorOutput.Text = param;
                     break;
             }
