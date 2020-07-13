@@ -341,7 +341,7 @@ namespace client
         {
             this.RightTextBlock.Text =
                 Utils.GetProperString(answersLeft, "Answer") + " Left\n" +
-                Utils.GetProperString(correctAnswers, " Correct Answer");
+                Utils.GetProperString(correctAnswers, "Correct Answer");
         }
 
         private void UpdateSelectedAnswer(string selectedAnswer = "", double timeTook = -1)

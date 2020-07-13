@@ -16,14 +16,14 @@
         MinHeight="450" MinWidth="650"
         MaxHeight="600" MaxWidth="1000"
         SizeChanged="WindowSizeChanged"        
-        Title="Join Room" Height="450" Width="355.014">
+        Title="Join Room" Height="450" Width="800">
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <Border x:Name="Border" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="WhiteSmoke" Margin="10,10,10,0" CornerRadius="5" Height="400">
                 <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="25" Height="350">
                     <Button x:Name="JoinRoomButton" Content="Join Room" HorizontalAlignment="Stretch" Margin="0,230,0,0" VerticalAlignment="Stretch" Width="168" Height="54" Click="JoinRoomButton_Click"/>
                     <Button x:Name="BackButton" Content="Back" HorizontalAlignment="Stretch" Margin="0,15,0,0" VerticalAlignment="Stretch" Width="115" Height="36" Click="BackButton_Click"/>
-                    <ListBox x:Name="RoomsList" HorizontalAlignment="Center" Width="400" Height="150" Margin="0,-450,0,0" VerticalAlignment="Stretch" SelectionChanged="RoomsList_SelectionChanged"/>
+                    <ListBox x:Name="RoomsList" HorizontalAlignment="Center" Width="572" Height="150" Margin="0,-450,0,0" VerticalAlignment="Stretch" SelectionChanged="RoomsList_SelectionChanged"/>
                     <TextBlock x:Name="ErrorOutput" Width="500" HorizontalAlignment="Center" Margin="0,-250,0,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Height="20" TextAlignment="Center"/>
                 </StackPanel>
             </Border>

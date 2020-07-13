@@ -22,4 +22,5 @@
 !*.config
 !*.settings
 !*.csproj
+!*.ico
 !.gitignore

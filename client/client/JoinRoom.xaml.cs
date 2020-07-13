@@ -44,6 +44,7 @@ namespace client
                    id == data.id &&
                    name == data.name &&
                    maxPlayers == data.maxPlayers &&
+                   currentPlayerCount == data.currentPlayerCount &&
                    questionsCount == data.questionsCount &&
                    timePerQuestion == data.timePerQuestion &&
                    roomStatus == data.roomStatus;
@@ -51,10 +52,11 @@ namespace client
 
         public override int GetHashCode()
         {
-            var hashCode = -1434586793;
+            var hashCode = 1280019825;
             hashCode = hashCode * -1521134295 + id.GetHashCode();
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(name);
             hashCode = hashCode * -1521134295 + maxPlayers.GetHashCode();
+            hashCode = hashCode * -1521134295 + currentPlayerCount.GetHashCode();
             hashCode = hashCode * -1521134295 + questionsCount.GetHashCode();
             hashCode = hashCode * -1521134295 + timePerQuestion.GetHashCode();
             hashCode = hashCode * -1521134295 + roomStatus.GetHashCode();
@@ -65,16 +67,14 @@ namespace client
         {
             string roomStatus = "";
 
-            switch(this.roomStatus)
+            if(this.roomStatus == RoomStatus.GAME_STARTED)
             {
-                case RoomStatus.GAME_STARTED:
-                    roomStatus = "| The room's game has started";
-                    break;
+                roomStatus = " | Game in session";
             }
 
             return
                 "Room: " + this.name + " | " + 
-                this.currentPlayerCount + '/' + this.maxPlayers + " players in room | " +
+                this.currentPlayerCount + '/' + this.maxPlayers + " players | " +
                 Utils.GetProperString(this.questionsCount, "question") + " | " +
                 Utils.GetProperString(this.timePerQuestion, "second") + " per question"
                 + roomStatus;

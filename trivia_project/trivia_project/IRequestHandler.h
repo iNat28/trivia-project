@@ -30,6 +30,8 @@ class IRequestHandler
 public:
 	virtual RequestResult handleRequest(RequestInfo& requestInfo) = 0;
 protected:
+
+	//Handles all of the requests from a handler, using a request map to decide which code goes to which function
 	template<class Handler, class Func>
 	RequestResult handleAllRequests(RequestInfo& requestInfo, Handler& handler, umap<Codes, Func> requestMap)
 	{
