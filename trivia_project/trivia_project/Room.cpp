@@ -52,7 +52,11 @@ Room::Room(RoomData roomData) :
 Room::Room()
 {
 }
-
+/*
+Usage: adds a user.
+Input: LoggedUser.
+Output: none.
+*/
 void Room::addUser(LoggedUser& user)
 {
 	if (this->m_roomdata.players.size() >= this->m_roomdata.maxPlayers)
@@ -69,7 +73,11 @@ void Room::addUser(LoggedUser& user)
 	}
 	this->m_roomdata.players.push_back(user);
 }
-
+/*
+Usage: removes a user.
+Input: LoggedUser.
+Output: none.
+*/
 void Room::removeUser(LoggedUser& user)
 {
 	for (auto it = this->m_roomdata.players.begin(); it != this->m_roomdata.players.end(); it++)
@@ -82,32 +90,56 @@ void Room::removeUser(LoggedUser& user)
 	}
 	throw Exception("User not found");
 }
-
+/*
+Usage: gets the number of questions.
+Input: none.
+Output: unsigned int.
+*/
 unsigned int Room::getQuestionsCount() const
 {
 	return this->m_roomdata.questionsCount;
 }
-
+/*
+Usage: gets all of the users.
+Input: none.
+Output: vector<LoggedUser>.
+*/
 vector<LoggedUser> Room::getAllUsers() const
 {
 	return this->m_roomdata.players;
 }
-
+/*
+Usage: gets the room status.
+Input: none.
+Output: RoomStatus.
+*/
 RoomStatus Room::getRoomStatus() const
 {
 	return this->m_roomdata.roomStatus;
 }
-
+/*
+Usage: gets the room id.
+Input: none.
+Output: unsigned int.
+*/
 unsigned int Room::getId() const
 {
 	return this->m_roomdata.id;
 }
-
+/*
+Usage: sets the room id.
+Input: unsigned int.
+Output: none.
+*/
 void Room::setId(unsigned int id)
 {
 	this->m_roomdata.id = id;
 }
-
+/*
+Usage: sets the room status.
+Input: RoomStatus.
+Output: none.
+*/
 void Room::setRoomStatus(RoomStatus roomStatus)
 {
 	this->m_roomdata.roomStatus = roomStatus;

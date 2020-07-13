@@ -6,7 +6,11 @@ vector<UserStats> SqliteDataBase::m_usersStats;
 bool SqliteDataBase::moreData = false;
 int SqliteDataBase::highestRoomId = 1;
 std::mutex mtx;
-
+/*
+Usage: C'tor.
+Input: none.
+Output: none.
+*/
 SqliteDataBase::SqliteDataBase()
 {
 	this->openDB();
@@ -124,14 +128,18 @@ int SqliteDataBase::users_callback(void* data, int argc, char** argv, char** azC
 	SqliteDataBase::moreData = true;
 	return 0;
 }
-
+/*
+Usage: callback for the statistics table. returns user's statistics.
+Input: callback input.
+Output: int.
+*/
 int SqliteDataBase::statistics_callback(void* data, int argc, char** argv, char** azColName)
 {
 	if (!SqliteDataBase::moreData)
 		SqliteDataBase::m_usersStats.clear();
 
 	UserStats userStats;
-	
+	//a loop to get all of the stats
 	for (int i = 0; i < argc; i++)
 	{
 		if (std::string(azColName[i]) == "username")
@@ -147,12 +155,16 @@ int SqliteDataBase::statistics_callback(void* data, int argc, char** argv, char*
 		else if (std::string(azColName[i]) == "averageAnswerTime")
 			userStats.playerResults.averageAnswerTime = atof(argv[i]);
 	}
-		
+	//adding to the list of user stats	
 	SqliteDataBase::m_usersStats.push_back(userStats);
 	SqliteDataBase::moreData = true;
 	return 0;
 }
-
+/*
+Usage: a callback for a single int.
+Input: callback input.
+Output: int.
+*/
 int SqliteDataBase::int_callback(void* data, int argc, char** argv, char** azColName)
 {
 	int* intReturn = static_cast<int*>(data);
@@ -164,13 +176,17 @@ int SqliteDataBase::int_callback(void* data, int argc, char** argv, char** azCol
 
 	return 0;
 }
-
+/*
+Usage: a callback for the questions.
+Input: callback input.
+Output: int.
+*/
 int SqliteDataBase::questions_callback(void* data, int argc, char** argv, char** azColName)
 {
 	Questions* questions = static_cast<Questions*>(data);
 	Question question;
 	int i = 0;
-	//TODO: Change from pairs (maybe)
+	//the pair is used for the index
 	vector<std::pair<unsigned int, string>> answers;
 
 	for (int i = 0; i < argc; i++)
@@ -190,9 +206,9 @@ int SqliteDataBase::questions_callback(void* data, int argc, char** argv, char**
 		else if (std::string(azColName[i]) == "incorrect_answer3" && string(argv[i]) != "")
 			answers.push_back({ 3, argv[i] });
 	}
-
+	//shuffling the answer indexes
 	std::random_shuffle(answers.begin(), answers.end());
-
+	//getting the index for the correct answer
 	for (auto& answer : answers)
 	{
 		//If it's the first index (the correct answer)
@@ -211,7 +227,11 @@ int SqliteDataBase::questions_callback(void* data, int argc, char** argv, char**
 
 	return 0;
 }
-
+/*
+Usage: a function to send a sql query.
+Input: string command and callback function with all of the callback input.
+Output: none.
+*/
 void SqliteDataBase::send_query(std::string command, int(*callback)(void*, int, char**, char**), void* data) const
 {
 	char* errMessage = nullptr;
@@ -223,7 +243,11 @@ void SqliteDataBase::send_query(std::string command, int(*callback)(void*, int, 
 		throw Exception();
 	}
 }
-
+/*
+Usage: getting the map of questions from the questions file.
+Input: none.
+Output: none.
+*/
 void SqliteDataBase::openQuestionsFile()
 {
 	//If the question file doesn't exist
@@ -237,11 +261,14 @@ void SqliteDataBase::openQuestionsFile()
 	json j;
 	file >> j;
 	vector<Question> questionList = j["results"];
-
-	//questionList = getQuestionsIntoVectorFormat(buffer);
+	
 	addToDB(questionList);
 }
-
+/*
+Usage: getting the questions into a vector.
+Input: string - all of the questions and info.
+Output: vector<Question>.
+*/
 vector<Question> SqliteDataBase::getQuestionsIntoVectorFormat(string questionsStr)
 {
 	string questionInfo;
@@ -251,7 +278,11 @@ vector<Question> SqliteDataBase::getQuestionsIntoVectorFormat(string questionsSt
 	return questions;
 }
 
-//TODO: Replace the quotes in the questions somewhere
+/*
+Usage: adding a vector of questions into the DB.
+Input: vector<Question>.
+Output: none.
+*/
 void SqliteDataBase::addToDB(vector<Question> questionsList)
 {
 	sstream buffer;
@@ -284,17 +315,25 @@ void SqliteDataBase::addToDB(vector<Question> questionsList)
 		buffer.str("");
 	}
 }
-
+/*
+Usage: gets the highest id of a current room in order to give an id to the next room.
+Input: none.
+Output: int.
+*/
 int SqliteDataBase::getHighestRoomId() const
 {
 	return this->highestRoomId++;
 }
-
+/*
+Usage: adding stats to DB after each game.
+Input: LoggedUser, PlayerResults.
+Output: none.
+*/
 void SqliteDataBase::addGameStats(LoggedUser& user, PlayerResults playerResults)
 {
 	sstream buffer;
 	UserStats otherUserStats = SqliteDataBase::getUserStats(user);
-	
+	//adding the stats
 	otherUserStats.playerResults.setAverageAnswerTime(playerResults);
 	otherUserStats.playerResults.numPoints += playerResults.numPoints;
 	otherUserStats.numTotalGames++;
@@ -311,7 +350,11 @@ void SqliteDataBase::addGameStats(LoggedUser& user, PlayerResults playerResults)
 
 	send_query(buffer.str().c_str());
 }
-
+/*
+Usage: getting a users stats from the DB.
+Input: LoggedUser.
+Output: UserStats.
+*/
 UserStats SqliteDataBase::getUserStats(LoggedUser& user) const
 {
 	SqliteDataBase::moreData = false;
@@ -322,7 +365,11 @@ UserStats SqliteDataBase::getUserStats(LoggedUser& user) const
 	
 	return m_usersStats[0];
 }
-
+/*
+Usage: get the high scores from the DB.
+Input: none.
+Output: HighScores.
+*/
 HighScores SqliteDataBase::getHighScores() const
 {
 	HighScores highScores;
@@ -339,7 +386,11 @@ HighScores SqliteDataBase::getHighScores() const
 
 	return highScores;
 }
-
+/*
+Usage: getting the questions from the DB.
+Input: unsigned int - number of questions.
+Output: Questions.
+*/
 Questions SqliteDataBase::getQuestions(unsigned int questionsCount) const
 {
 	Questions questions;

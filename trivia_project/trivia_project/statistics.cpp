@@ -31,7 +31,11 @@ PlayerResults::PlayerResults() :
 	numCorrectAnswers(0), numWrongAnswers(0), averageAnswerTime(0), numPoints(0)
 {
 }
-
+/*
+Usage: calculates the average answer time by dissecting the current answer time and adding to that the answer time and calculating it again.
+Input:
+Output:
+*/
 void PlayerResults::setAverageAnswerTime(const PlayerResults& other)
 {
 	this->averageAnswerTime =
@@ -39,7 +43,7 @@ void PlayerResults::setAverageAnswerTime(const PlayerResults& other)
 		(other.totalNumAnswers() + this->totalNumAnswers());
 }
 
-//It's a double since it's used with the average answer time
+
 double PlayerResults::totalNumAnswers() const
 {
 	return double(this->numCorrectAnswers + this->numWrongAnswers);
