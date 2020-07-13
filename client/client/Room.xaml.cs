@@ -24,6 +24,8 @@ namespace client
     {
         private bool isAdmin;
         private readonly BackgroundWorker backgroundWorker;
+        private int questionsCount;
+        private int timePerQuestion;
         private Mutex sendingMutex;
         private Status roomStatus;                     
 
@@ -49,7 +51,12 @@ namespace client
 
             backgroundWorker.DoWork += GetUsersList;
             backgroundWorker.ProgressChanged += ChangeWPF;
-            backgroundWorker.RunWorkerCompleted += GetUsersCompleted;         
+            backgroundWorker.RunWorkerCompleted += GetUsersCompleted;
+        }
+
+        protected override Border GetBorder()
+        {
+            return this.Border;
         }
 
         public override void OnShow(params object[] param)
@@ -74,11 +81,20 @@ namespace client
                 this.StartGameButton.Visibility = Visibility.Hidden;
             }
 
-            //TODO: add a thread here that updates this data when we add the functionality of changing these stats in the room window
-            this.RoomName.Text = roomData.name;
-            this.MaxPlayers.Text = roomData.maxPlayers.ToString();
-            this.TimePerQuestion.Text = roomData.timePerQuestion.ToString();
-            this.NumQuestions.Text = roomData.questionsCount.ToString();
+            this.questionsCount = roomData.questionsCount;
+            this.timePerQuestion = roomData.timePerQuestion;
+
+            //TODO: Change the max players to be curr/max players
+            this.RoomDetails.Text =
+                "Room name: " + roomData.name + '\n' +
+                roomData.questionsCount + " question";
+            if(roomData.questionsCount != 1)
+            {
+                this.RoomDetails.Text += 's';
+            }
+            this.RoomDetails.Text +=
+                "\nMax players: " + roomData.maxPlayers + '\n' +
+                Utils.GetSecondsString(roomData.timePerQuestion) + " per question\n";
             this.NamesList.Items.Clear();
 
             backgroundWorker.RunWorkerAsync();
@@ -254,7 +270,7 @@ namespace client
 
         private void ShowQuestionWindow()
         {
-            WindowManager.OpenWindow(WindowTypes.QUESTION, Convert.ToInt32(this.NumQuestions.Text), Convert.ToInt32(this.TimePerQuestion.Text));
+            WindowManager.OpenWindow(WindowTypes.QUESTION, this.questionsCount, this.timePerQuestion);
         }
     }
 }

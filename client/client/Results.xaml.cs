@@ -31,7 +31,7 @@ namespace client
         {
             this.PlayerName = playerName;
             this.NumCorrectAnswers = numCorrectAnswers;
-            this.AverageAnswerTime = averageAnswerTime.ToString("0.00");
+            this.AverageAnswerTime = Utils.GetSecondsString(averageAnswerTime);
             this.NumPoints = numPoints;
         }
     }
@@ -41,6 +41,11 @@ namespace client
         public ResultsWindow()
         {            
             InitializeComponent();
+        }
+
+        protected override Border GetBorder()
+        {
+            return this.Border;
         }
 
         public override void OnShow(params object[] param)

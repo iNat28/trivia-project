@@ -44,6 +44,7 @@ public:
 	const Question& getQuestion(LoggedUser& user) const;
 	unsigned int submitAnswer(LoggedUser& user, int answerIndex, double answerTime);
 	void removePlayer(LoggedUser& user);
+	static bool comparePlayerPoints(UserResults userResults1, UserResults userResults2);
 	vector<UserResults> getGameResults(LoggedUser& user);
 	vector<UserResults> getGameResults();
 	
@@ -59,5 +60,3 @@ private:
 	std::unordered_map<string, GameData> m_players;
 	Room& m_room;
 };
-
-bool comaprePlayerPoints(UserResults i1, UserResults i2);

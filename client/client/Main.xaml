@@ -12,17 +12,20 @@
         Background="#FF410A66"
         TextElement.FontWeight="Medium"
         TextElement.FontSize="14"
-        FontFamily="{materialDesign:MaterialDesignFont}"            
+        FontFamily="{materialDesign:MaterialDesignFont}"  
+        MinHeight="450" MinWidth="650"
+        MaxHeight="600" MaxWidth="1000"
+        SizeChanged="WindowSizeChanged"          
         Title="Main Menu" Height="450" Width="800">
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="WhiteSmoke" Margin="10,20,9.6,20" CornerRadius="5" Height="388">
-                <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="25" Height="367">
-                    <TextBlock x:Name="UsernameHeader" FontSize="40" FontWeight="bold" FontFamily="cambria" HorizontalAlignment="Stretch" Height="55" Margin="260,19,69.8,0" TextWrapping="Wrap" VerticalAlignment="Stretch"/>
-                    <Button x:Name="CreateRoomButton" Content="Create Room" HorizontalAlignment="Stretch" Margin="-20,20,0,0" VerticalAlignment="Stretch" Width="180" Height="48" Click="CreateRoomButton_Click"/>
-                    <Button x:Name="JoinRoomButton" Content="Join Room" HorizontalAlignment="Stretch" Margin="-20,20,0,0" VerticalAlignment="Stretch" Width="180" Height="48" Click="JoinRoomButton_Click"/>
-                    <Button x:Name="StatisticsButton" Content="Statistics" HorizontalAlignment="Stretch" Margin="-20,20,0,0" VerticalAlignment="Stretch" Width="180" Height="48" Click="StatisticsButton_Click"/>
-                    <Button x:Name="SignoutButton" Content="Sign Out" HorizontalAlignment="Stretch" Margin="295,20,314.8,0" VerticalAlignment="Stretch" Width="115" Height="32" Click="SignoutButton_Click"/>
+            <Border x:Name="Border" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="WhiteSmoke" Margin="10,10,10,0" CornerRadius="5" Height="400">
+                <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="25" Height="350">
+                    <TextBlock x:Name="UsernameHeader" FontSize="40" FontWeight="bold" HorizontalAlignment="Center" Height="55" TextAlignment="Center" Width="400" Margin="0,15,0,0" TextWrapping="Wrap" VerticalAlignment="Stretch"/>
+                    <Button x:Name="CreateRoomButton" Content="Create Room" HorizontalAlignment="Stretch" Margin="0,20,0,0" VerticalAlignment="Stretch" Width="180" Height="48" Click="CreateRoomButton_Click"/>
+                    <Button x:Name="JoinRoomButton" Content="Join Room" HorizontalAlignment="Stretch" Margin="0,20,0,0" VerticalAlignment="Stretch" Width="180" Height="48" Click="JoinRoomButton_Click"/>
+                    <Button x:Name="StatisticsButton" Content="Statistics" HorizontalAlignment="Stretch" Margin="0,20,0,0" VerticalAlignment="Stretch" Width="180" Height="48" Click="StatisticsButton_Click"/>
+                    <Button x:Name="SignoutButton" Content="Sign Out" HorizontalAlignment="Stretch" Margin="0,20,0,0" VerticalAlignment="Stretch" Width="115" Height="32" Click="SignoutButton_Click"/>
                     <TextBlock x:Name="ErrorOutput" HorizontalAlignment="Stretch" Margin="-480,-200,0,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Height="209" Width="237"/>
                 </StackPanel>
             </Border>

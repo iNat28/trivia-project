@@ -24,6 +24,16 @@ namespace client
             return null;
         }
 
+        protected virtual Border GetBorder()
+        {
+            return null;
+        }
+
+        protected void WindowSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            this.GetBorder().Height = e.NewSize.Height - 60;
+        }
+
         protected override void OnClosing(CancelEventArgs e)
         {
             if (e != null)

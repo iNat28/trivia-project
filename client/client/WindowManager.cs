@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media.Animation;
 
 namespace client
 {
@@ -39,6 +40,8 @@ namespace client
             { WindowTypes.RESULT, new ResultsWindow() }
         };
 
+        private static readonly DoubleAnimation fadeIn = new DoubleAnimation(0, 1, new Duration(TimeSpan.FromMilliseconds(250)));
+
         public static bool exit = false;
 
         private static CustomWindow currentWindow;
@@ -46,13 +49,18 @@ namespace client
         public static void OpenWindow(WindowTypes windowToOpen, params object[] param)
         {
             CustomWindow oldWindow = currentWindow;
-            
+
             currentWindow = windows[windowToOpen];
+            currentWindow.Height = oldWindow.Height;
+            currentWindow.Width = oldWindow.Width;
             currentWindow.GetErrorOutput().Text = "";
             currentWindow.OnShow(param);
 
+            currentWindow.Top = oldWindow.Top;
+            currentWindow.Left = oldWindow.Left;
             oldWindow.Hide();
             currentWindow.Show();
+            currentWindow.BeginAnimation(UIElement.OpacityProperty, WindowManager.fadeIn);
         }
 
         public static void Start()

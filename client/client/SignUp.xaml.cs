@@ -43,6 +43,11 @@ namespace client
             WindowManager.Close();
         }
 
+        protected override Border GetBorder()
+        {
+            return this.Border;
+        }
+
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
             WindowManager.OpenWindow(WindowTypes.LOGIN);

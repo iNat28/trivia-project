@@ -10,21 +10,24 @@
         HorizontalAlignment="Stretch"
         VerticalAlignment="Stretch"
         Background="#FF410A66"
-        TextElement.FontWeight="Medium"        
-        FontFamily="{materialDesign:MaterialDesignFont}"            
+        TextElement.FontWeight="Regular"        
+        FontFamily="{materialDesign:MaterialDesignFont}" 
+        MinHeight="450" MinWidth="650"
+        MaxHeight="600" MaxWidth="1000"
+        SizeChanged="WindowSizeChanged"           
         FontSize="25"           
         Title="My Status" Height="450" Width="800">
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="WhiteSmoke" Margin="10,20,9.6,20" CornerRadius="5" Height="388">
-                <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="25" Height="367">
+            <Border x:Name="Border" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="WhiteSmoke" Margin="10,10,10,0" CornerRadius="5" Height="400">
+                <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="25" Height="350">
                     <Button x:Name="BackButton" Content="Back" HorizontalAlignment="Stretch" Margin="0,300,0,0" VerticalAlignment="Stretch" Width="75" Click="BackButton_Click"/>
-                    <TextBlock x:Name="MyPerformancesHeader" FontWeight="Bold" FontSize="30" Text="My Performances:" HorizontalAlignment="Stretch" Margin="0,-620,198.8,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Width="327" Height="40"/>
-                    <TextBlock x:Name="numPointsOutput" HorizontalAlignment="Stretch" Margin="168,-520,176.8,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Height="40"/>
-                    <TextBlock x:Name="numOfGamesOutput" HorizontalAlignment="Stretch" Margin="168,-420,176.8,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Height="40"/>
-                    <TextBlock x:Name="numOfRightAnswersOutput" HorizontalAlignment="Stretch" Margin="168,-320,176.8,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Height="40"/>
-                    <TextBlock x:Name="numOfWrongAnswersOutput" HorizontalAlignment="Stretch" Margin="168,-220,176.8,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Height="40"/>
-                    <TextBlock x:Name="avgTimeForAnswersOutput" HorizontalAlignment="Stretch" Margin="168,-120,176.8,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Height="40"/>
+                    <TextBlock x:Name="MyPerformancesHeader" FontWeight="Bold" FontSize="30" Text="My Stats:" HorizontalAlignment="Stretch" Margin="0,-620,198.8,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Width="327" Height="40"/>
+                    <TextBlock x:Name="numPointsOutput" TextAlignment="Center" HorizontalAlignment="Stretch" Margin="0,-520,0,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Height="40"/>
+                    <TextBlock x:Name="numOfGamesOutput" TextAlignment="Center" HorizontalAlignment="Stretch" Margin="0,-420,0,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Height="40"/>
+                    <TextBlock x:Name="numOfRightAnswersOutput" TextAlignment="Center" HorizontalAlignment="Stretch" Margin="0,-320,0,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Height="40"/>
+                    <TextBlock x:Name="numOfWrongAnswersOutput" TextAlignment="Center" HorizontalAlignment="Stretch" Margin="0,-220,0,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Height="40"/>
+                    <TextBlock x:Name="avgTimeForAnswersOutput" TextAlignment="Center" HorizontalAlignment="Stretch" Margin="0,-120,0,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Height="40"/>
                     <TextBlock x:Name="ErrorOutput" HorizontalAlignment="Stretch" Margin="593,-330,26.8,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Height="355"/>
                 </StackPanel>
             </Border>
