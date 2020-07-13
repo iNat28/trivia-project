@@ -26,26 +26,15 @@
                     <TextBlock x:Name="LeftTextBlock" HorizontalAlignment="Left" Margin="0,-70,0,0" TextWrapping="Wrap" Height="105" Width="150"/>
                     <TextBlock x:Name="TimeLeft" Width="150" HorizontalAlignment="Right" Margin="0,-35,0,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Height="40"/>
                     <TextBlock x:Name="SelectedAnswer" HorizontalAlignment="Left" Width="150" Margin="0,-5,0,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Height="70"/>
-                    <!--<TextBlock x:Name="NumAnswersLeftHeader" HorizontalAlignment="Right" Margin="0,30,80,0" TextWrapping="Wrap" Text="Answers Left:" VerticalAlignment="Stretch" Height="35" Width="96"/>
-                    <TextBlock x:Name="AnswersLeft" HorizontalAlignment="Stretch" Margin="646,-35,5.8,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Height="35"/>
-                    <TextBlock x:Name="NumCorrectAnswersHeader" HorizontalAlignment="Stretch" Margin="524,0,86.8,0" TextWrapping="Wrap" Text="Correct Answers:" VerticalAlignment="Stretch" Height="35" Width="114"/>
-                    <TextBlock x:Name="CorrectAnswers" HorizontalAlignment="Stretch" Margin="646,-50,5.8,0" TextWrapping="Wrap"  VerticalAlignment="Stretch" Height="19"/>
-                    <TextBlock x:Name="TimeLeftHeader" HorizontalAlignment="Stretch" Margin="525,0,85.8,0" TextWrapping="Wrap" Text="Time Left:" VerticalAlignment="Stretch" Height="36" Width="114"/>
-                    <TextBlock x:Name="TimeLeft" HorizontalAlignment="Stretch" Margin="613,-45,20,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Height="23"/>-->
+                    
                     <Button Background="CornflowerBlue" BorderBrush="WhiteSmoke" x:Name="Answer1" Width="220" HorizontalAlignment="Center" Margin="0,-270,0,0" VerticalAlignment="Center" Height="35" Click="Answer1_Click"/>
                     <Button Background="MediumSeaGreen" BorderBrush="WhiteSmoke" x:Name="Answer2" Width="220" HorizontalAlignment="Center" Margin="0,-175,0,0" VerticalAlignment="Stretch" Height="35" Click="Answer2_Click"/>
                     <Button Background="Red" BorderBrush="WhiteSmoke" x:Name="Answer3" Width="220" HorizontalAlignment="Center" Margin="0,-80,0,0" VerticalAlignment="Stretch" Height="35" Click="Answer3_Click"/>
                     <Button Background="RoyalBlue" BorderBrush="WhiteSmoke" x:Name="Answer4" Width="220" HorizontalAlignment="Center" Margin="0,-10,0,0" VerticalAlignment="Stretch" Height="35" Click="Answer4_Click"/>
                     <Button x:Name="BackButton" Content="Leave Game" HorizontalAlignment="Right" Margin="0,20,10,0" VerticalAlignment="Bottom" Height="41" Click="BackButton_Click"/>
-                    <!--<TextBlock x:Name="DifficultyHeader" HorizontalAlignment="Stretch" Margin="15,-400,612,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Height="28"><Run Text="Difficulty:"/></TextBlock>
-                    <TextBlock x:Name="Difficulty" HorizontalAlignment="Stretch" Margin="115,-395,548.8,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Height="35" Width="77"><Run Text=""/></TextBlock>
-                    <TextBlock x:Name="CategoryHeader" HorizontalAlignment="Stretch" Margin="15,-320,632,0" TextWrapping="Wrap" Text="Category:" VerticalAlignment="Stretch" Height="28"/>
-                    <TextBlock x:Name="Category" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="-420,-330,0,0" TextWrapping="Wrap" Height="34" Width="113"><Run Text=""/></TextBlock>-->
-                    <TextBlock x:Name="ErrorOutput" HorizontalAlignment="Left" Margin="0,-45,0,0" TextWrapping="WrapWithOverflow" VerticalAlignment="Bottom" Height="50" Width="450"/>
-                    <!--<TextBlock Margin="15,-350,593,0" TextWrapping="Wrap" Width="114" Text="Selected Answer:" Height="32"/>
-                    <TextBlock x:Name="SelectedAnswerOutput"  HorizontalAlignment="Stretch" Margin="15,-310,507,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Height="32"/>
-                    <TextBlock Width="200" Margin="15,-230,0,0" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Stretch" Text="Time took for answer:" Height="39"/>
-                    <TextBlock x:Name="TimeTookForAnswerOutput"  Margin="15,-200,570,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Height="22"/>-->
+
+                    <TextBlock x:Name="ErrorOutput" TextAlignment="Center" HorizontalAlignment="Center" Margin="0,-278,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="35" Width="342"/>
+                    
                 </StackPanel>
             </Border>
         </StackPanel>

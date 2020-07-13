@@ -30,7 +30,7 @@
                         </DataGrid.Columns>
                     </DataGrid>
                     <Button x:Name="ExitButton" Content="Exit" HorizontalAlignment="Stretch" Margin="0,10,0,0" VerticalAlignment="Stretch" Width="161" Height="43" Click="ExitButton_Click"/>
-                    <TextBlock x:Name="ErrorOutput" HorizontalAlignment="Stretch" Margin="22,-40,464.8,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Height="54"/>
+                    <TextBlock x:Name="ErrorOutput" TextAlignment="Center" HorizontalAlignment="Stretch" Margin="0,-590,0,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Height="20"/>
                 </StackPanel>
             </Border>
         </StackPanel>

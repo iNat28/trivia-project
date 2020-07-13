@@ -22,16 +22,7 @@
             <Border x:Name="Border" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="WhiteSmoke" Margin="10,10,10,0" CornerRadius="5" Height="400">
                 <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="25" Height="350">
                     <TextBlock x:Name="RoomDetails" HorizontalAlignment="Left" Margin="0,30,0,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Width="224" Height="150"/>
-                    <!--<TextBlock x:Name="RoomNameHeader" HorizontalAlignment="Stretch" Margin="50,70,574.8,0" TextWrapping="Wrap" Text="Room Name:" VerticalAlignment="Stretch" Height="29"/>
-                    <TextBlock x:Name="NumQuestionsHeader" HorizontalAlignment="Stretch" Margin="-480,5,0,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Width="149" Height="17"><Run Text="Number of Questions:"/></TextBlock>
-                    <TextBlock x:Name="TimePerQuestionHeader" HorizontalAlignment="Stretch" Margin="-510,15,0,0" TextWrapping="Wrap" Text="Time Per Question:" VerticalAlignment="Stretch" Height="27" Width="125"/>
-                    <TextBlock x:Name="MaxPlayersHeader" HorizontalAlignment="Stretch" Margin="-520,5,0,0" TextWrapping="Wrap" Text="Max Players:" VerticalAlignment="Stretch" Height="29" Width="107"/>
-
-                    <TextBlock x:Name="RoomName" HorizontalAlignment="Stretch" Margin="150,-230,455.8,0" TextWrapping="Wrap" Text="" VerticalAlignment="Stretch" Height="22"/>
-                    <TextBlock x:Name="NumQuestions" HorizontalAlignment="Stretch" Margin="196,-160,472.8,0" TextWrapping="Wrap" Text="" VerticalAlignment="Stretch" Height="27"/>
-                    <TextBlock x:Name="TimePerQuestion" HorizontalAlignment="Stretch" Margin="196,-95,430,0" TextWrapping="Wrap" Text="" VerticalAlignment="Stretch" Height="27"/>
-                    <TextBlock x:Name="MaxPlayers" HorizontalAlignment="Stretch" Margin="146,-35,527.8,0" TextWrapping="Wrap" Text="" VerticalAlignment="Stretch" Height="29"/>-->
-
+                    
                     <TextBlock x:Name="PlayersListHeader" FontSize="20" HorizontalAlignment="Right" Margin="0,-250,80,0" TextWrapping="Wrap" Text="Current Participants:" VerticalAlignment="Stretch" Height="30" FontWeight="DemiBold"/>
                     <ListBox x:Name="NamesList" HorizontalAlignment="Right" Height="250" Margin="0,-100,40,0" VerticalAlignment="Stretch" Width="225" SelectionChanged="ListBox_SelectionChanged"/>
 
@@ -39,7 +30,7 @@
                     <Button x:Name="CloseRoomButton" Content="Close Room" HorizontalAlignment="Left" Margin="120,-50,0,0" VerticalAlignment="Bottom" Width="115" Click="CloseRoomButton_Click"/>
                     <Button x:Name="LeaveRoomButton" Content="Leave Room" HorizontalAlignment="Left" Margin="0,-50,0,0" VerticalAlignment="Bottom" Width="115" Click="LeaveGameButton_Click"/>
 
-                    <TextBlock x:Name="ErrorOutput" HorizontalAlignment="Left" Width="224" Margin="0,-150,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="100"/>
+                    <TextBlock x:Name="ErrorOutput" TextAlignment="Center" HorizontalAlignment="Left" Width="224" Margin="0,-150,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="100"/>
                 </StackPanel>
             </Border>
         </StackPanel>

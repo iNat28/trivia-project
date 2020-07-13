@@ -23,7 +23,7 @@
                 <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="25" Height="350">
                     <TextBlock x:Name="HighScoresHeader" FontSize="25" FontWeight="DemiBold" HorizontalAlignment="Center" Margin="0,20,0,0" TextWrapping="Wrap" Text="High Scores:" VerticalAlignment="Stretch" Height="38"/>
                     <Button x:Name="BackButton" Content="Back" HorizontalAlignment="Stretch" Margin="0,225,0,0" VerticalAlignment="Stretch" Width="117" Height="42" Click="BackButton_Click"/>
-                    <TextBlock x:Name="ErrorOutput" HorizontalAlignment="Stretch" Margin="-500,-300,0,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Height="306" Width="191"/>
+                    <TextBlock x:Name="ErrorOutput" HorizontalAlignment="Left" Margin="0,-350,0,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Height="300" Width="191"/>
                     <ListBox x:Name="highScores" HorizontalAlignment="Stretch" Height="218" Margin="0,-330,0,0" VerticalAlignment="Stretch" Width="288"/>
                 </StackPanel>
             </Border>
