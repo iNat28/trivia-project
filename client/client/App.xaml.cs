@@ -17,7 +17,6 @@ namespace client
         {
             base.OnStartup(e);
 
-            //this.MainWindow.Hide();
             WindowManager.Start();
         }
     }
