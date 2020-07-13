@@ -16,19 +16,34 @@ using System.Net.Sockets;
 using System.Net;
 using System.IO;
 using Newtonsoft.Json.Linq;
+using System.ComponentModel;
 
 namespace client
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class LoginWindow : Window
+    public partial class LoginWindow : CustomWindow
     {
         public LoginWindow()
         {
             InitializeComponent();
+        }
 
-            User.errorOutput = this.errorOutput;
+        public override void OnShow(params object[] param)
+        {
+            this.usernameInput.Text = "";
+            this.passwordInput.Password = "";
+        }
+
+        public override TextBlock GetErrorOutput()
+        {
+            return this.ErrorOutput;
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            WindowManager.Close();
         }
 
         //Move to functions and classes
@@ -40,25 +55,28 @@ namespace client
                 ["password"] = passwordInput.Password
             };
 
-            Stream.Send(login, Codes.LOGIN);
-
-            Response response = Stream.Recieve();
+            Response response = Stream.Send(login, Codes.LOGIN);
 
             if(Stream.Response(response, Codes.LOGIN))
             {
                 User.username = (string)login["username"];
-                Utils.OpenWindow(this, new MainWindow());
+                WindowManager.OpenWindow(WindowTypes.MAIN);
             }
         }
 
         private void SignUpButton_Click(object sender, RoutedEventArgs e)
         {
-            Utils.OpenWindow(this, new SignUpWindow());
+            WindowManager.OpenWindow(WindowTypes.SIGN_UP);
         }
 
         private void ExitButton_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            WindowManager.Close();
+        }
+
+        protected override Border GetBorder()
+        {
+            return this.Border;
         }
     }
 }

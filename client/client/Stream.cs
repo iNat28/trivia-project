@@ -12,10 +12,16 @@ using System.IO;
 
 namespace client
 {
-    public struct Response
+    public class Response
     {
         public JObject jObject;
         public Codes code;
+
+        public Response(JObject jObject, Codes code)
+        {
+            this.jObject = jObject;
+            this.code = code;
+        }
     }
 
     public static class Stream
@@ -28,22 +34,16 @@ namespace client
         private const string IP_ADDRESS = "127.0.0.1";
         private const int PORT = 40200;
 
+        public static bool backendClosed = false;
         public static NetworkStream Client
         {
             get
             {
                 if (client == null)
                 {
-                    try
-                    {
-                        tcpClient = new TcpClient();
-                        tcpClient.Connect(new IPEndPoint(IPAddress.Parse(IP_ADDRESS), PORT));
-                        client = tcpClient.GetStream();
-                    }
-                    catch(Exception e)
-                    {
-                        User.PrintErrorAndKeep(e);
-                    }
+                    tcpClient = new TcpClient();
+                    tcpClient.Connect(new IPEndPoint(IPAddress.Parse(IP_ADDRESS), PORT));
+                    client = tcpClient.GetStream();
                 }
 
                 return client;
@@ -52,16 +52,14 @@ namespace client
 
         public static void Close()
         {
-            try
-            {
-                client.Close();
-                tcpClient = null;
-                client = null;
-            }
-            catch (Exception e)
-            {
-                User.PrintErrorAndKeep(e);
-            }
+            WindowManager.OpenWindow(WindowTypes.LOGIN);
+
+            client?.Close();
+            tcpClient = null;
+            client = null;
+
+            WindowManager.PrintError("Error connecting to back end");
+            backendClosed = false;
         }
 
         public static void Signout()
@@ -71,44 +69,80 @@ namespace client
                 ["username"] = User.username
             };
             Send(jObject, Codes.LOGOUT);
-            Recieve();
         }
 
-        public static void Send(JObject jObject, Codes code)
+        public static Response Send(JObject jObject, Codes code, bool closeStream = true)
         {
+            MemoryStream memoryStream = new MemoryStream();
+            BsonDataWriter bsonWriter = new BsonDataWriter(memoryStream);
+            jObject.WriteTo(bsonWriter);
+            byte[] buffer = new byte[] { Convert.ToByte(code) };
+
             try
             {
-                MemoryStream memoryStream = new MemoryStream();
-                BsonDataWriter bsonWriter = new BsonDataWriter(memoryStream);
-                jObject.WriteTo(bsonWriter);
-
-                byte[] buffer = new byte[] { Convert.ToByte(code) };
                 Client.Write(buffer, 0, buffer.Length);
                 Client.Write(memoryStream.ToArray(), 0, (int)memoryStream.Length);
                 Client.Flush();
             }
-            catch (Exception e)
+            catch
             {
-                User.PrintErrorAndClose(e);
+                backendClosed = true;
+                if (closeStream)
+                {
+                    Stream.Close();
+                }
+                return null;
             }
+
+            return Recieve();
         }
 
-        public static Response Recieve()
+        public static Response Send(Codes code, bool closeStream = true)
         {
-            Response response = new Response();
+            byte[] buffer = new byte[5];
+            buffer[0] = Convert.ToByte(code);
+
             try
             {
-                int bufferSize;
-                byte[] bufferBson;
-                byte[] bufferRead = new byte[MSG_CODE_SIZE + MSG_LEN_SIZE];
+                Client.Write(buffer, 0, buffer.Length);
+            }
+            catch
+            {
+                backendClosed = true;
+                if (closeStream)
+                {
+                    Stream.Close();
+                }
+                return null;
+            }
 
+            return Recieve();
+        }
+
+        private static Response Recieve()
+        {
+            int bufferSize;
+            byte[] bufferBson;
+            byte[] bufferRead = new byte[MSG_CODE_SIZE + MSG_LEN_SIZE];
+
+            try
+            {
                 Client.Read(bufferRead, 0, bufferRead.Length);
-            
-                //Converts the read buffer to the message code and size
-                //If buffer code size is changed, then this needs to be changed
-                response.code = (Codes)bufferRead[0]; 
-                bufferSize = BitConverter.ToInt32(bufferRead, MSG_CODE_SIZE);
+            }
+            catch
+            {
+                Stream.Close();
+                return null;
+            }
 
+            //Converts the read buffer to the message code and size
+            Response response = new Response(null, (Codes)bufferRead[0]);
+
+            //If buffer code size is changed, then this needs to be changed
+            bufferSize = BitConverter.ToInt32(bufferRead, MSG_CODE_SIZE);
+
+            if (bufferSize > 0)
+            {
                 bufferBson = new byte[bufferSize + MSG_LEN_SIZE];
                 //Copies the Bson length to the bson buffer
                 Array.Copy(bufferRead, MSG_CODE_SIZE, bufferBson, 0, MSG_LEN_SIZE);
@@ -117,42 +151,65 @@ namespace client
 
                 response.jObject = (JObject)JToken.ReadFrom(new BsonDataReader(new MemoryStream(bufferBson)));
             }
-            catch (Exception e)
-            {
-                User.PrintErrorAndClose(e);
-            }
 
             return response;
         }
 
         public static bool Response(Response response, Codes code)
         {
-            string error;
-
             try
             {
-                if (response.code == code)
-                {
-                    return true;
-                }
-                
-                if (response.code == Codes.ERROR_CODE)
-                {
-                    error = (string)response.jObject["message"];
-                }
-                else
-                {
-                    error = response.jObject.ToString();
-                }
-
-                throw new Exception(error);
+                return ResponseWithoutTryCatch(response, code);
             }
             catch (Exception e)
             {
-                User.PrintErrorAndClose(e);
+                if (e.Message != "exit")
+                {
+                    WindowManager.PrintError(e.Message);
+                }
             }
 
             return false;
+        }
+
+        public static bool ResponseForThread(Response response, Codes code, out string error)
+        {
+            error = "";
+
+            try
+            {
+                return ResponseWithoutTryCatch(response, code);
+            }
+            catch (Exception e)
+            {
+                error = e.Message;
+            }
+
+            return false;
+        }
+
+        private static bool ResponseWithoutTryCatch(Response response, Codes code)
+        {
+            string error;
+
+            if (response == null)
+            {
+                return false;
+            }
+            else if (response.code == code)
+            {
+                return true;
+            }
+            else if (response.code == Codes.ERROR_CODE)
+            {
+                error = (string)response.jObject["message"];
+            }
+            else
+            {
+                error = response.jObject.ToString();
+            }
+
+            throw new Exception(error);
         }
     }
 }

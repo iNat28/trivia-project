@@ -18,48 +18,137 @@ namespace client
     /// <summary>
     /// Interaction logic for CreateRoom.xaml
     /// </summary>
-    public partial class CreateRoom : LogoutWindow
-    {
-        public CreateRoom()
+    public partial class CreateRoomWindow : LogoutWindow
+    {       
+        private int numMaxPlayers;
+        private int numQuestions;
+        private int answerTime;
+        
+        public CreateRoomWindow()
         {
             InitializeComponent();
-
-            User.errorOutput = this.errorOutput;
         }
-        //unsigned int id;
-        //string name;
-        //unsigned int maxPlayers;
-        //unsigned int timePerQuestion;
-        //unsigned int isActive;
-        //unsigned int numQuestionsAsked;
+
+        protected override Border GetBorder()
+        {
+            return this.Border;
+        }
+
+        public override void OnShow(params object[] param)
+        {
+            this.RoomName.Text = "";
+            this.NumQuestionsSlider.Value = 1;
+            this.MaxPlayersSlider.Value = 1;
+            this.AnswerTimeSlider.Value = 1;
+        }
+
         private void CreateRoomButton_Click(object sender, RoutedEventArgs e)
         {
-            //TODO throw error about blank fields
-            if (!(this.RoomName.Text == "") && !(this.MaxPlayers.Text == "") && !(this.AnswerTime.Text == ""))
+            if (this.RoomName.Text == "")
             {
+                this.ErrorOutput.Text = "Room name field is empty!";
+            }
+            else
+            {
+                this.numQuestions = (int)this.NumQuestionsSlider.Value;
+                this.numMaxPlayers = (int)this.MaxPlayersSlider.Value;
+                this.answerTime = (int)this.AnswerTimeSlider.Value;
+
                 JObject jObject = new JObject
                 {
-                    [Keys.id] = 0,
                     [Keys.roomName] = this.RoomName.Text,
-                    [Keys.maxUsers] = Convert.ToInt32(this.MaxPlayers.Text),
-                    [Keys.timePerQuestion] = Convert.ToInt32(this.AnswerTime.Text),
-                    [Keys.isActive] = 0,
-                    [Keys.numQuestionsAsked] = 0,
-                    [Keys.username] = User.username
+                    [Keys.maxPlayers] = this.numMaxPlayers,
+                    [Keys.questionsCount] = this.numQuestions,
+                    [Keys.timePerQuestion] = this.answerTime
                 };
-                
-                Stream.Send(jObject, Codes.CREATE_ROOM);
 
-                Response response = Stream.Recieve();
+                Response response = Stream.Send(jObject, Codes.CREATE_ROOM);
 
                 if (Stream.Response(response, Codes.CREATE_ROOM))
-                    Utils.OpenWindow(this, new Room(true, this.RoomName.Text, Convert.ToInt32(this.MaxPlayers.Text), Convert.ToInt32(this.AnswerTime.Text)));
-            }
+                {
+                    WindowManager.OpenWindow(WindowTypes.ROOM, true, new RoomData(0, this.RoomName.Text, this.numMaxPlayers, this.numQuestions, this.answerTime, RoomStatus.OPEN));
+                }
+            }           
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
-            Utils.OpenWindow(this, new MainWindow());
+            WindowManager.OpenWindow(WindowTypes.MAIN);
+        }
+
+        private void QuestionsSliderTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            this.UpdateSlider(this.NumQuestionsSlider, this.QuestionsSliderTextBox);
+        }
+
+        private void NumQuestionsSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            this.UpdateTextBox(this.QuestionsSliderTextBox, this.NumQuestionsSlider);
+        }
+
+        private void AnswerTimeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            this.UpdateTextBox(this.AnswerTimeTextBox, this.AnswerTimeSlider);
+        }
+
+        private void AnswerTimeTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            this.UpdateSlider(this.AnswerTimeSlider, this.AnswerTimeTextBox);
+        }
+
+        private void MaxPlayersSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            this.UpdateTextBox(this.MaxPlayersTextBox, this.MaxPlayersSlider);
+        }
+
+        private void MaxPlayersTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            this.UpdateSlider(this.MaxPlayersSlider, this.MaxPlayersTextBox);
+        }
+
+        private void UpdateSlider(Slider slider, TextBox textBox)
+        {
+            double value;
+
+            if(slider == null || textBox == null)
+            {
+                return;
+            }
+
+            if (int.TryParse(textBox.Text, out _))
+            {
+                value = Convert.ToDouble(textBox.Text);
+
+                if (value > slider.Maximum)
+                {
+                    textBox.Text = slider.Maximum.ToString();
+                }
+                else if (value < slider.Minimum)
+                {
+                    textBox.Text = slider.Minimum.ToString();
+                }
+
+                slider.Value = value;
+            }
+            else
+            {
+                textBox.Text = slider.Minimum.ToString();
+            }
+        }
+
+        private void UpdateTextBox(TextBox textBox, Slider slider)
+        {
+            if (slider == null || textBox == null)
+            {
+                return;
+            }
+
+            textBox.Text = slider.Value.ToString();
+        }
+
+        public override TextBlock GetErrorOutput()
+        {
+            return this.ErrorOutput;
         }
     }
 }

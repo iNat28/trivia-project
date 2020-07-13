@@ -12,16 +12,16 @@ Communicator::Communicator(IDatabase& database) : m_handlerFactory(database), m_
 
 //Thread for handling new clients
 //Input: A communicator object, the client socket, the handler to start with
-void s_handleNewClient(Communicator& communicator, SOCKET socket, IRequestHandlerPtr handler)
+void s_handleNewClient(Communicator& communicator, SOCKET socket, sptr<IRequestHandler> handler)
 {
 	//Recieves from the buffer
 	char msgCodeBuffer[MSG_CODE_SIZE + 1] = "";
 	char msgLenBuffer[MSG_LEN_SIZE + 1] = "";
 	int msgLen = 0;
 	RequestInfo requestInfo;
-	RequestResult requestResult;
 	std::unique_ptr<char[]> msgBuffer;
 	char* msgBufferPtr = nullptr;
+	Buffer buffer;
 
 	try {
 		while (true)
@@ -33,27 +33,34 @@ void s_handleNewClient(Communicator& communicator, SOCKET socket, IRequestHandle
 			//Converts the message length into an int
 			memcpy_s(&msgLen, sizeof(int), msgLenBuffer, MSG_LEN_SIZE);
 
-			//Creates the buffer to recieve from the socket
-			msgBuffer = std::make_unique<char[]>(size_t(msgLen) + MSG_LEN_SIZE + 1);
-			msgBufferPtr = msgBuffer.get();
-			Communicator::s_getFromSocket(socket, msgBufferPtr + MSG_LEN_SIZE, msgLen);
-			memcpy_s(msgBufferPtr, MSG_LEN_SIZE, msgLenBuffer, MSG_LEN_SIZE);
+			if (msgLen > 0)
+			{
+				//Creates the buffer to recieve from the socket
+				msgBuffer = std::make_unique<char[]>(size_t(msgLen) + MSG_LEN_SIZE + 1);
+				msgBufferPtr = msgBuffer.get();
+				Communicator::s_getFromSocket(socket, msgBufferPtr + MSG_LEN_SIZE, msgLen);
+				memcpy_s(msgBufferPtr, MSG_LEN_SIZE, msgLenBuffer, MSG_LEN_SIZE);
+				buffer = Buffer(msgBufferPtr, msgBufferPtr + msgLen);
+			}
+			else
+			{
+				buffer = Buffer();
+			}
 
 			//Puts the buffers into a RequestInfo
 			requestInfo = RequestInfo(
 				static_cast<Codes>(msgCodeBuffer[0]),
 				std::time(0), //The current time
-				Buffer(msgBufferPtr, msgBufferPtr + msgLen)
+				buffer,
+				handler
 			);
 
-			if (handler == nullptr)
-			{
-				throw Exception("Null handler");
-			}
 			//Handles the request, and gets the request result
-			requestResult = handler->handleRequest(requestInfo);
-			
-			handler = requestResult.newHandler;
+			RequestResult requestResult = handler->handleRequest(requestInfo);
+			if (handler != requestResult.newHandler)
+			{
+				handler = requestResult.newHandler;
+			}
 
 			//Sends the request result response
 			Communicator::s_sendToSocket(socket, requestResult.response.data(), (int)requestResult.response.size());
@@ -73,7 +80,7 @@ void Communicator::startHandleRequests()
 {
 	SOCKET clientSocket = 0;
 	std::thread client;
-	IRequestHandlerPtr handler;
+	sptr<IRequestHandler> handler;
 
 	this->_bindAndListen();
 

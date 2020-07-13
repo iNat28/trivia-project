@@ -2,6 +2,8 @@
 #include "pch.h"
 #include "Room.h"
 #include "Codes.h"
+#include "statistics.h"
+#include "Game.h"
 
 struct Response
 {
@@ -17,94 +19,120 @@ struct ErrorResponse : Response
 	std::string message;
 };
 
-struct StatusResponse : Response
+struct LoginResponse : Response
 {
-	StatusResponse(unsigned int status);
-
-	unsigned int status;
-};
-
-struct LoginResponse : StatusResponse
-{
-	using StatusResponse::StatusResponse;
-
 	virtual Codes getResponseCode() const override;
 };
 
-struct SignupResponse : StatusResponse
+struct SignupResponse : Response
 {
-	using StatusResponse::StatusResponse;
-
 	virtual Codes getResponseCode() const override;
 };
 
-struct LogoutResponse : StatusResponse
+struct LogoutResponse : Response
 {
-	using StatusResponse::StatusResponse;
-
 	virtual Codes getResponseCode() const override;
 };
 
-struct GetRoomResponse : StatusResponse
+struct GetRoomResponse : Response
 {
-	GetRoomResponse(unsigned int status, vector<Room> rooms);
+	GetRoomResponse(const vector<Room>& rooms);
 
 	virtual Codes getResponseCode() const override;
 
-	vector<Room> rooms;
+	const vector<Room>& rooms;
 };
 
 struct GetPlayersInRoomResponse : Response
 {
-	GetPlayersInRoomResponse(vector<LoggedUser> rooms);
+	GetPlayersInRoomResponse(const vector<LoggedUser>& players);
 
 	virtual Codes getResponseCode() const override;
 
-	vector<LoggedUser> users;
+	const vector<LoggedUser>& players;
 };
 
-struct GetUserStatsResponse : StatusResponse
+struct GetUserStatsResponse : Response
 {
-	GetUserStatsResponse(unsigned int status, UserStats userStats);
+	GetUserStatsResponse(const UserStats& userStats);
 
 	virtual Codes getResponseCode() const override;
 
-	UserStats userStats;
+	const UserStats& userStats;
 };
 
-struct GetHighScoresResponse : StatusResponse
+struct GetHighScoresResponse : Response
 {
-	GetHighScoresResponse(unsigned int status, HighScores highScores);
+	GetHighScoresResponse(const HighScores& highScores);
 
 	virtual Codes getResponseCode() const override;
 
-	HighScores highScores;
+	const HighScores& highScores;
 };
 
-struct JoinRoomResponse : StatusResponse
+struct JoinRoomResponse : Response
 {
-	using StatusResponse::StatusResponse;
-
 	virtual Codes getResponseCode() const override;
 };
 
-struct CreateRoomResponse : StatusResponse
+struct CreateRoomResponse : Response
 {
 	virtual Codes getResponseCode() const override;
-
-	using StatusResponse::StatusResponse;
 };
 
-struct CloseRoomResponse : StatusResponse
+struct CloseRoomResponse : Response
 {
 	virtual Codes getResponseCode() const override;
-
-	using StatusResponse::StatusResponse;
 };
 
-struct LeaveRoomResponse : StatusResponse
+struct LeaveRoomResponse : Response
 {
 	virtual Codes getResponseCode() const override;
+};
 
-	using StatusResponse::StatusResponse;
+struct GetRoomStateResponse : Response
+{
+	GetRoomStateResponse(RoomStatus roomStatus, const vector<LoggedUser>& players);
+
+	virtual Codes getResponseCode() const override;
+
+	RoomStatus roomStatus;
+	const vector<LoggedUser>& players;
+};
+
+struct StartGameResponse : Response
+{
+	virtual Codes getResponseCode() const override;
+};
+
+struct GetGameResultsResponse : Response
+{
+	GetGameResultsResponse(vector<UserResults> playersResults);
+
+	virtual Codes getResponseCode() const override;
+
+	vector<UserResults> playersResults;
+};
+
+struct SubmitAnswerResponse : Response
+{
+	SubmitAnswerResponse(unsigned int correctAnswerIndex);
+
+	virtual Codes getResponseCode() const override;
+
+	unsigned int correctAnswerIndex;
+};
+
+struct GetQuestionResponse : Response
+{
+	GetQuestionResponse(Question question);
+
+	virtual Codes getResponseCode() const override;
+
+	Question question;
+};
+
+struct LeaveGameResponse : Response
+{
+	virtual Codes getResponseCode() const override;
 };

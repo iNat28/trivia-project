@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Server.h"
 
-Server::Server() : m_database(std::make_shared<SqliteDataBase>()), m_handlerFactory(*m_database), m_communicator(*m_database)
+Server::Server() : m_database(make_shared<SqliteDataBase>()), m_handlerFactory(*m_database), m_communicator(*m_database)
 {
 }
 
@@ -23,5 +23,5 @@ void Server::adminInput()
 	}
 
 	//Closes the whole program
-	std::exit(EXIT_SUCCESS);	//Might not do proper clean up
+	std::exit(EXIT_SUCCESS);
 }

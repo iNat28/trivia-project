@@ -1,32 +1,28 @@
 #pragma once
 #include "pch.h"
-#include "IRequestHandler.h"
 #include "RequestHandlerFactory.h"
+#include "LoggedUserRequestHandler.h"
 #include "Constants.h"
 #include "LoggedUser.h"
-#include "IDatabase.h"
 
 class RequestHandlerFactory;
 
-class MenuRequestHandler : public IRequestHandler
+class MenuRequestHandler : public LoggedUserRequestHandler
 {
 public:
-	MenuRequestHandler(RequestHandlerFactory& handlerFactor, LoggedUser user);
+	MenuRequestHandler(RequestHandlerFactory& handlerFactory, LoggedUser& user);
 
-	virtual RequestResult handleRequest(const RequestInfo& requestInfo) const override;
+	virtual RequestResult handleRequest(RequestInfo& requestInfo) override;
 private:
-	RequestHandlerFactory& m_handlerFactor;
-	LoggedUser m_user;
-	using requests_func_t = RequestResult(MenuRequestHandler::*)(const RequestInfo&)const;
-	static const map<Codes, MenuRequestHandler::requests_func_t> m_requests;
+	RequestHandlerFactory& m_handlerFactory;
+	using requests_func_t = RequestResult(MenuRequestHandler::*)(RequestInfo&);
+	static const umap<Codes, MenuRequestHandler::requests_func_t> m_requests;
 
-	RequestResult _signout(const RequestInfo& requestInfo) const;
-	RequestResult _getRooms(const RequestInfo& requestInfo) const;
-	RequestResult _getPlayersInRoom(const RequestInfo& requestInfo) const;
-	RequestResult _getUserStats(const RequestInfo& requestInfo) const;
-	RequestResult _getHighScores(const RequestInfo& requestInfo) const;
-	RequestResult _joinRoom(const RequestInfo& requestInfo) const;
-	RequestResult _createRoom(const RequestInfo& requestInfo) const;
-	RequestResult _closeRoom(const RequestInfo& requestInfo) const;
-	RequestResult _leaveRoom(const RequestInfo& requestInfo) const;
+	RequestResult _signout(RequestInfo& requestInfo);
+	RequestResult _getRooms(RequestInfo& requestInfo);
+	RequestResult _getPlayersInRoom(RequestInfo& requestInfo);
+	RequestResult _getUserStats(RequestInfo& requestInfo);
+	RequestResult _getHighScores(RequestInfo& requestInfo);
+	RequestResult _joinRoom(RequestInfo& requestInfo);
+	RequestResult _createRoom(RequestInfo& requestInfo);
 };

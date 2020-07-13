@@ -8,6 +8,8 @@ struct LoggedUser
 	LoggedUser();
 
 	string username;
+
+	bool operator==(const LoggedUser& other) const;
 };
 
 void to_json(json& j, const LoggedUser& loggedUser);

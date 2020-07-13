@@ -1,85 +1,151 @@
 #include "pch.h"
 #include "Room.h"
 
-Room::Room(RoomData roomData) :
-	m_metadata(roomData)
+RoomData::RoomData(unsigned int id, string name, vector<LoggedUser> players, unsigned int maxPlayers, unsigned int questionsCount, unsigned int timePerQuestion) :
+	id(id), name(name), players(players), maxPlayers(maxPlayers), questionsCount(questionsCount), timePerQuestion(timePerQuestion), roomStatus(RoomStatus::OPEN)
 {
+}
+
+RoomData::RoomData() :
+	id(0), name(), players(), maxPlayers(0), questionsCount(0), timePerQuestion(0), roomStatus(RoomStatus::OPEN)
+{
+}
+
+void to_json(json& j, const RoomData& roomData)
+{
+	j[Keys::roomId] = roomData.id;
+	j[Keys::roomName] = roomData.name;
+	j[Keys::currentPlayerCount] = roomData.players.size();
+	j[Keys::maxPlayers] = roomData.maxPlayers;
+	j[Keys::timePerQuestion] = roomData.timePerQuestion;
+	j[Keys::questionsCount] = roomData.questionsCount;
+	j[Keys::roomStatus] = roomData.roomStatus;
+}
+
+Room::Room(RoomData roomData) : 
+	m_roomdata(roomData)
+{
+	if (roomData.timePerQuestion > MAX_ANSWER_TIME)
+	{
+		Exception::ex << "Max answer time is " << MAX_ANSWER_TIME << '!';
+		throw Exception();
+	}
+	else if (roomData.timePerQuestion < 1)
+	{
+		throw Exception("Minimum answer time is 1!");
+	}
+	else if (roomData.questionsCount > MAX_QUESTION_COUNT)
+	{
+		Exception::ex << "Max amount of questions is " << MAX_QUESTION_COUNT << '!';
+		throw Exception();
+	}
+	else if (roomData.questionsCount < 1)
+	{
+		throw Exception("Minimum amount of questions is 1!");
+	}
+	else if (roomData.name.empty())
+	{
+		throw Exception("Room name cannot be empty");
+	}
 }
 
 Room::Room()
 {
 }
-
-void Room::addUser(LoggedUser user)
+/*
+Usage: adds a user.
+Input: LoggedUser.
+Output: none.
+*/
+void Room::addUser(LoggedUser& user)
 {
-	if (this->m_users.size() < this->m_metadata.maxPlayers)
+	if (this->m_roomdata.players.size() >= this->m_roomdata.maxPlayers)
 	{
-		this->m_users.push_back(user);
+		throw Exception("Room is full!");
 	}
-}
-
-void Room::removeUser(LoggedUser user)
-{
-	vector<LoggedUser>::iterator it;
-	for (it = this->m_users.begin(); it != this->m_users.end(); it++)
+	if (this->m_roomdata.roomStatus == RoomStatus::CLOSED)
 	{
-		if (it->username == user.username)
+		throw Exception("Room is closed!");
+	}
+	if (this->m_roomdata.roomStatus == RoomStatus::GAME_STARTED)
+	{
+		throw Exception("Room has started!");
+	}
+	this->m_roomdata.players.push_back(user);
+}
+/*
+Usage: removes a user.
+Input: LoggedUser.
+Output: none.
+*/
+void Room::removeUser(LoggedUser& user)
+{
+	for (auto it = this->m_roomdata.players.begin(); it != this->m_roomdata.players.end(); it++)
+	{
+		if (*it == user)
 		{
-			this->m_users.erase(it);
-			break;
+			this->m_roomdata.players.erase(it);
+			return;
 		}
 	}
+	throw Exception("User not found");
 }
-
+/*
+Usage: gets the number of questions.
+Input: none.
+Output: unsigned int.
+*/
+unsigned int Room::getQuestionsCount() const
+{
+	return this->m_roomdata.questionsCount;
+}
+/*
+Usage: gets all of the users.
+Input: none.
+Output: vector<LoggedUser>.
+*/
 vector<LoggedUser> Room::getAllUsers() const
 {
-	return this->m_users;
+	return this->m_roomdata.players;
 }
-
-int Room::getActivity() const
+/*
+Usage: gets the room status.
+Input: none.
+Output: RoomStatus.
+*/
+RoomStatus Room::getRoomStatus() const
 {
-	return this->m_metadata.isActive;
+	return this->m_roomdata.roomStatus;
 }
-
-const RoomData& Room::getRoomDataConst() const
+/*
+Usage: gets the room id.
+Input: none.
+Output: unsigned int.
+*/
+unsigned int Room::getId() const
 {
-	return this->m_metadata;
+	return this->m_roomdata.id;
 }
-
-RoomData& Room::getRoomData()
+/*
+Usage: sets the room id.
+Input: unsigned int.
+Output: none.
+*/
+void Room::setId(unsigned int id)
 {
-	return this->m_metadata;
+	this->m_roomdata.id = id;
 }
-
-RoomData::RoomData(unsigned int id, string name, unsigned int maxPlayers, unsigned int timePerQuestion, unsigned int isActive, unsigned int numQuestionsAsked) :
-	id(id), name(name), maxPlayers(maxPlayers), timePerQuestion(timePerQuestion), isActive(isActive), numQuestionsAsked(numQuestionsAsked)
+/*
+Usage: sets the room status.
+Input: RoomStatus.
+Output: none.
+*/
+void Room::setRoomStatus(RoomStatus roomStatus)
 {
-}
-
-RoomData::RoomData() :
-	id(0), maxPlayers(5), timePerQuestion(20), isActive(false), numQuestionsAsked(0)
-{
+	this->m_roomdata.roomStatus = roomStatus;
 }
 
 void to_json(json& j, const Room& room)
 {
-	j[Keys::id] = room.getRoomDataConst().id;
-	j[Keys::name] = room.getRoomDataConst().name;
-	j[Keys::maxPlayers] = room.getRoomDataConst().maxPlayers;
-	j[Keys::timePerQuestion] = room.getRoomDataConst().timePerQuestion;
-	j[Keys::isActive] = room.getActivity();
-	j[Keys::users] = room.getAllUsers();
-	j[Keys::numQuestionsAsked] = room.getRoomDataConst().numQuestionsAsked;
-}
-
-void from_json(const json& j, Room& room)
-{
-	room = RoomData(
-		j[Keys::id],
-		j[Keys::name],
-		j[Keys::maxPlayers],
-		j[Keys::timePerQuestion],
-		j[Keys::isActive],
-		j[Keys::numQuestionsAsked]
-	);
+	j = room.m_roomdata;
 }

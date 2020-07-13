@@ -5,6 +5,7 @@
 !/client/client
 !/client/client/Properties
 !
+!questions.txt
 !*.h
 !*.cpp
 !*.c
@@ -14,10 +15,10 @@
 !*.Designer.cs
 !*.resx
 !*.sln
-!*.py
 !*.cs
 !*.xaml
 !*.config
 !*.settings
 !*.csproj
+!*.ico
 !.gitignore

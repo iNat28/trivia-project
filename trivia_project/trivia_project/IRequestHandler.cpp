@@ -1,8 +1,8 @@
 #include "pch.h"
 #include "IRequestHandler.h"
 
-RequestInfo::RequestInfo(Codes RequestId, time_t receivalTime, Buffer buffer) :
-	requestId(RequestId), receivalTime(receivalTime), buffer(buffer)
+RequestInfo::RequestInfo(Codes RequestId, time_t receivalTime, Buffer buffer, sptr<IRequestHandler> currentHandler) :
+	requestId(RequestId), receivalTime(receivalTime), buffer(buffer), currentHandler(currentHandler)
 {
 }
 
@@ -11,12 +11,7 @@ RequestInfo::RequestInfo() :
 {
 }
 
-RequestResult::RequestResult(Buffer response, IRequestHandlerPtr newHandler) :
+RequestResult::RequestResult(Buffer response, sptr<IRequestHandler> newHandler) :
 	response(response), newHandler(newHandler)
-{
-}
-
-RequestResult::RequestResult() : 
-	response(JsonResponsePacketSerializer::serializeResponse(ErrorResponse("Error occurred"))), newHandler(nullptr)
 {
 }

@@ -5,40 +5,39 @@ RoomManager::RoomManager(IDatabase& database) :
 	m_database(database)
 {
 }
-
-void RoomManager::createRoom(RoomData roomData, string adminUsername)
+/*
+Usage: creates a room.
+Input: Room.
+Output: none.
+*/
+void RoomManager::createRoom(Room& room)
 {
-	Room newRoom(roomData);
-	
-	newRoom.getRoomData().id = this->m_database.getHighestRoomId();
-	newRoom.addUser(LoggedUser(adminUsername));
+	room.setId(this->m_database.getHighestRoomId());
 
-	this->m_rooms[newRoom.getRoomData().id] = newRoom;
+	this->m_rooms[room.getId()] = room;
 }
-
-void RoomManager::deleteRoom(unsigned int roomId)
+/*
+Usage: closes a room.
+Input: Room.
+Output: none.
+*/
+void RoomManager::closeRoom(Room& room)
 {
-	Room& room = getRoom(roomId);
-	
-	//TODO: Add user stats from the game
-	/*for (auto& user : room.getAllUsers())
-	{
-		this->m_database.addGameStats(
-			UserStats()
-		);
-	}*/
+	room.setRoomStatus(RoomStatus::CLOSED);
 
-	if (!this->m_rooms.erase(roomId))
+	if (room.getAllUsers().empty())
 	{
-		throw Exception("Room ID not found");
+		if (!this->m_rooms.erase(room.getId()))
+		{
+			throw Exception("Room ID not found");
+		}
 	}
 }
-
-bool RoomManager::getRoomState(unsigned int id) const
-{
-	return this->_getRoom(id).getActivity();
-}
-
+/*
+Usage: get a room.
+Input: unsigned int.
+Output: Room.
+*/
 Room& RoomManager::getRoom(unsigned int id)
 {
 	try
@@ -50,19 +49,30 @@ Room& RoomManager::getRoom(unsigned int id)
 		throw Exception("Room ID not found");
 	}
 }
-
+/*
+Usage: gets all of the users in the room.
+Input: unsigned int.
+Output: vector<LoggedUser>.
+*/
 vector<LoggedUser> RoomManager::getUsersInRoom(unsigned int id) const
 {
 	return this->_getRoom(id).getAllUsers();
 }
-
+/*
+Usage: get all of the rooms.
+Input: none.
+Output: vector<Room>.
+*/
 vector<Room> RoomManager::getRooms() const
 {
 	vector<Room> rooms;
 
 	for (const auto& room : this->m_rooms)
 	{
-		rooms.push_back(room.second);
+		if (room.second.getRoomStatus() != RoomStatus::CLOSED)
+		{
+			rooms.push_back(room.second);
+		}
 	}
 
 	return rooms;

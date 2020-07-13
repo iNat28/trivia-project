@@ -11,28 +11,24 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.ComponentModel;
 using Newtonsoft.Json.Linq;
 
 namespace client
 {
-    public class LogoutWindow : Window
+    public abstract class LogoutWindow : CustomWindow
     {
-        public static bool toClose = true;
-
-        protected override void OnClosed(EventArgs e)
+        protected override void OnClosing(CancelEventArgs e)
         {
-            base.OnClosed(e);
-
-            if (toClose)
+            if (!WindowManager.exit)
             {
+                if (e != null)
+                {
+                    e.Cancel = true;
+                }
                 Stream.Signout();
-                Stream.Close();
+                WindowManager.Close();
             }
-        }
-
-        protected void OnClosedBase(EventArgs e)
-        {
-            base.OnClosed(e);
         }
     }
 }

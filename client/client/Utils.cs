@@ -9,13 +9,21 @@ namespace client
 {
     public static class Utils
     {
-        public static void OpenWindow(Window windowToHide, Window windowToOpen)
+        public static string GetProperString(int num, string word)
         {
-            LogoutWindow.toClose = false;
-            windowToHide.Close();
-            LogoutWindow.toClose = true;
-            User.errorOutput = null;
-            windowToOpen.ShowDialog();
+            string ret = num + " " + word;
+
+            if (num == 1)
+            {
+                return ret;
+            }
+
+            return ret + 's';
+        }
+
+        public static string GetProperString(double time)
+        {
+            return time.ToString("0.00") + " seconds";
         }
     }
 
@@ -28,40 +36,77 @@ namespace client
         SIGNUP,
         LOGOUT,
 
-        //Room
+
+        //Menu
         GET_ROOM = 20,
         GET_PLAYERS_IN_ROOM,
         JOIN_ROOM,
         CREATE_ROOM,
-        CLOSE_ROOM,
-        LEAVE_ROOM,
 
         //Statistics
-        USER_STATS = 30,
-        HIGH_SCORES
-    };
+        USER_STATS,
+        HIGH_SCORES,
 
-    //TODO: Add Keys for Json
+
+        //Room
+        GET_ROOM_STATE = 30,
+
+        //RoomAdmin
+        CLOSE_ROOM,
+        START_GAME,
+
+        //RoomMember
+        LEAVE_ROOM,
+
+
+        //Game
+        GET_GAME_RESULTS,
+        SUBMIT_ANSWER,
+        GET_QUESTION,
+        LEAVE_GAME
+    };
+    
     public static class Keys
     {
+        /* Login */
         public const string username = "username";
         public const string password = "password";
         public const string email = "email";
 
-        public const string roomId = "roomId";
+
+        /* Rooms */
+
+        //Requests
         public const string roomName = "roomName";
-        public const string maxUsers = "maxUsers";
         public const string questionCount = "questionCount";
-        public const string answerTimeout = "answerTimeout";
+        public const string maxPlayers = "maxPlayers";
+        public const string timePerQuestion = "timePerQuestion";
+        public const string questionsCount = "questionsCount";
 
-        public const string userStats = "userStats";
+        //Responses
+        public const string rooms = "rooms";
+        public const string playersInRoom = "playersInRoom";
+        public const string roomId = "roomId";
+        public const string currentPlayerCount = "currentPlayerCount";
+        public const string roomStatus = "roomStatus";
 
-        public const string status = "status";
-        public const string message = "message";
 
-        public const string rooms = "Rooms";
-        public const string playersInRoom = "PlayersInRoom";
+        /* Game */
 
+        //Requests
+        public const string answerIndex = "answerIndex";
+        public const string answerTime = "answerTime";
+
+        //Responses
+        public const string category = "category";
+        public const string difficulty = "difficulty";
+        public const string question = "question";
+        public const string answers = "answers";
+        public const string correctAnswerIndex = "correctAnswerIndex";
+        public const string playersResults = "playersResults";
+
+
+        /* Statistics */
         public const string numPoints = "numPoints";
         public const string numTotalGames = "numTotalGames";
         public const string numCorrectAnswers = "numCorrectAnswers";
@@ -69,20 +114,7 @@ namespace client
         public const string averageAnswerTime = "averageAnswerTime";
         public const string highScores = "highScores";
 
-        public const string id = "id";
-        public const string name = "name";
-        public const string maxPlayers = "maxPlayers";
-        public const string timePerQuestion = "timePerQuestion";
-        public const string isActive = "isActive";
-        public const string users = "users";
-        public const string numQuestionsAsked = "numQuestionsAsked";
-
-        public const string category = "category";
-        public const string difficulty = "difficulty";
-        public const string question = "question";
-        public const string correctAnswer = "correctAnswer";
-        public const string incorrectAnswer1 = "incorrectAnswer1";
-        public const string incorrectAnswer2 = "incorrectAnswer2";
-        public const string incorrectAnswer3 = "incorrectAnswer3";
+        /* Error Response */
+        public const string message = "message";
     }
 }
