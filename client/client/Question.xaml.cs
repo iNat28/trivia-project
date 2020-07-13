@@ -26,7 +26,7 @@ namespace client
         private readonly Stopwatch stopwatch;
         private int numCorrectAnswers;
         private int numQuestionsLeft;
-        private int timeLeft;
+        private int timePerQuestion;
         private int timerTemp;
         private int selectedAnswerIndex;
         private bool answersAreDisplayed;
@@ -52,7 +52,7 @@ namespace client
 
             this.numCorrectAnswers = 0;
             this.numQuestionsLeft = 0;
-            this.timeLeft = 0;
+            this.timePerQuestion = 0;
             this.timerTemp = 0;
             this.selectedAnswerIndex = -1;
             this.answersAreDisplayed = false;
@@ -82,11 +82,10 @@ namespace client
             this.numCorrectAnswers = 0;
             this.currentTime = answerTime;
             this.numQuestionsLeft = numQuestions;
-            this.UpdateRightTextBlock();
+            this.UpdateRightTextBlock(numQuestions);
             this.UpdateSelectedAnswer();
-            this.UpdateTimeLeft(answerTime);
-            this.timeLeft = answerTime;
-            this.timerTemp = this.timeLeft;
+            this.timePerQuestion = answerTime;
+            this.timerTemp = this.timePerQuestion;
             this.selectedAnswerIndex = -1;
             this.answersAreDisplayed = false;
             this.showResults = true;
@@ -107,7 +106,7 @@ namespace client
             this.mutex.WaitOne();
             Thread.Sleep(1000);
 
-            this.timerTemp = this.timeLeft;
+            this.timerTemp = this.timePerQuestion;
             while (true)
             {
                 if (this.thread.CancellationPending)
@@ -139,12 +138,13 @@ namespace client
                     Thread.Sleep(100);
                     this.mutex.WaitOne();
 
-                    Thread.Sleep(3000);
+                    Thread.Sleep(500);
                     if (this.thread.CancellationPending)
                     {
                         e.Cancel = true;
                         break;
                     }
+                    Thread.Sleep(2000);
 
                     if (this.numQuestionsLeft != 0)
                     {
@@ -224,7 +224,7 @@ namespace client
         }
 
         private void UpdateNewQuestion(JObject question)
-        {                    
+        {
             this.QuestionText.Text = question[Keys.question].ToString();
             //TODO: Change to text
             this.LeftTextBlock.Text =
@@ -250,7 +250,8 @@ namespace client
                 this.Answer3.Content = jArray[2].ToString();
                 this.Answer4.Content = jArray[3].ToString();
             }
-            this.TimeLeft.Text = this.timeLeft.ToString();
+
+            this.UpdateTimeLeft(this.timePerQuestion);
         }
 
         private void GameCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -336,11 +337,11 @@ namespace client
             }
         }
 
-        private void UpdateRightTextBlock(int correctAnswers = 0, int answersLeft = 0)
+        private void UpdateRightTextBlock(int answersLeft = 0, int correctAnswers = 0)
         {
             this.RightTextBlock.Text =
-                answersLeft + " Answers Left\n" +
-                correctAnswers + " Correct Answers";
+                Utils.GetProperString(answersLeft, "Answer") + " Left\n" +
+                Utils.GetProperString(correctAnswers, " Correct Answer");
         }
 
         private void UpdateSelectedAnswer(string selectedAnswer = "", double timeTook = -1)
@@ -352,25 +353,25 @@ namespace client
             
             if(timeTook >= 0)
             {
-                this.SelectedAnswer.Text += Utils.GetSecondsString(timeTook);
+                this.SelectedAnswer.Text += Utils.GetProperString(timeTook);
             }
         }
 
         private void UpdateTimeLeft(int timeLeft)
         {
-            this.TimeLeft.Text = Utils.GetSecondsString(timeLeft) + " left";
+            this.TimeLeft.Text = Utils.GetProperString(timeLeft, "second") + " left";
         }
 
         private void GetNewQuestion()
         {
             this.ResetAnswerColors();
 
-            this.UpdateRightTextBlock(this.numCorrectAnswers, this.numQuestionsLeft);
-            this.UpdateTimeLeft(this.timeLeft);
+            this.UpdateRightTextBlock(this.numQuestionsLeft, this.numCorrectAnswers);
+            this.UpdateTimeLeft(this.timePerQuestion);
             this.UpdateSelectedAnswer();
             this.selectedAnswerIndex = -1;
-            this.currentTime = this.timeLeft;
-            this.timerTemp = this.timeLeft;
+            this.currentTime = this.timePerQuestion;
+            this.timerTemp = this.timePerQuestion;
 
             this.GetQuestion();
         }

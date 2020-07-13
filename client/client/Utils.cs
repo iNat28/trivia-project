@@ -9,11 +9,11 @@ namespace client
 {
     public static class Utils
     {
-        public static string GetSecondsString(int time)
+        public static string GetProperString(int num, string word)
         {
-            string ret = time + " second";
+            string ret = num + " " + word;
 
-            if (time == 1)
+            if (num == 1)
             {
                 return ret;
             }
@@ -21,7 +21,7 @@ namespace client
             return ret + 's';
         }
 
-        public static string GetSecondsString(double time)
+        public static string GetProperString(double time)
         {
             return time.ToString("0.00") + " seconds";
         }

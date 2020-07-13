@@ -31,7 +31,7 @@ namespace client
         {
             this.PlayerName = playerName;
             this.NumCorrectAnswers = numCorrectAnswers;
-            this.AverageAnswerTime = Utils.GetSecondsString(averageAnswerTime);
+            this.AverageAnswerTime = Utils.GetProperString(averageAnswerTime);
             this.NumPoints = numPoints;
         }
     }

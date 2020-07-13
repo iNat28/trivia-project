@@ -34,6 +34,7 @@ namespace client
         private const string IP_ADDRESS = "127.0.0.1";
         private const int PORT = 40200;
 
+        public static bool backendClosed = false;
         public static NetworkStream Client
         {
             get
@@ -58,6 +59,7 @@ namespace client
             client = null;
 
             WindowManager.PrintError("Error connecting to back end");
+            backendClosed = false;
         }
 
         public static void Signout()
@@ -69,7 +71,7 @@ namespace client
             Send(jObject, Codes.LOGOUT);
         }
 
-        public static Response Send(JObject jObject, Codes code)
+        public static Response Send(JObject jObject, Codes code, bool closeStream = true)
         {
             MemoryStream memoryStream = new MemoryStream();
             BsonDataWriter bsonWriter = new BsonDataWriter(memoryStream);
@@ -84,14 +86,18 @@ namespace client
             }
             catch
             {
-                Stream.Close();
+                backendClosed = true;
+                if (closeStream)
+                {
+                    Stream.Close();
+                }
                 return null;
             }
 
             return Recieve();
         }
 
-        public static Response Send(Codes code)
+        public static Response Send(Codes code, bool closeStream = true)
         {
             byte[] buffer = new byte[5];
             buffer[0] = Convert.ToByte(code);
@@ -102,7 +108,11 @@ namespace client
             }
             catch
             {
-                Stream.Close();
+                backendClosed = true;
+                if (closeStream)
+                {
+                    Stream.Close();
+                }
                 return null;
             }
 
@@ -184,7 +194,7 @@ namespace client
 
             if (response == null)
             {
-                error = "exit";
+                return false;
             }
             else if (response.code == code)
             {

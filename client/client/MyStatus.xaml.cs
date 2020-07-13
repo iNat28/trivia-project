@@ -39,7 +39,7 @@ namespace client
                 this.numOfGamesOutput.Text = "Number of Games: " + (int)response.jObject[Keys.numTotalGames];
                 this.numOfRightAnswersOutput.Text = "Number of Correct Answers: " + (int)response.jObject[Keys.numCorrectAnswers];
                 this.numOfWrongAnswersOutput.Text = "Number of Wrong Answers: " + (int)response.jObject[Keys.numWrongAnswers];
-                this.avgTimeForAnswersOutput.Text = "Average Answer Time: " + Utils.GetSecondsString((double)response.jObject[Keys.averageAnswerTime]);
+                this.avgTimeForAnswersOutput.Text = "Average Answer Time: " + Utils.GetProperString((double)response.jObject[Keys.averageAnswerTime]);
 
                 response.jObject.ToString();
             }

@@ -27,7 +27,7 @@ namespace client
         private int questionsCount;
         private int timePerQuestion;
         private Mutex sendingMutex;
-        private Status roomStatus;                     
+        private Status roomStatus;
 
         public enum Status
         { 
@@ -87,14 +87,9 @@ namespace client
             //TODO: Change the max players to be curr/max players
             this.RoomDetails.Text =
                 "Room name: " + roomData.name + '\n' +
-                roomData.questionsCount + " question";
-            if(roomData.questionsCount != 1)
-            {
-                this.RoomDetails.Text += 's';
-            }
-            this.RoomDetails.Text +=
+                Utils.GetProperString(roomData.questionsCount, "question") + 
                 "\nMax players: " + roomData.maxPlayers + '\n' +
-                Utils.GetSecondsString(roomData.timePerQuestion) + " per question\n";
+                Utils.GetProperString(roomData.timePerQuestion, "second") + " per question\n";
             this.NamesList.Items.Clear();
 
             backgroundWorker.RunWorkerAsync();
@@ -185,7 +180,7 @@ namespace client
                 }
 
                 sendingMutex.WaitOne();
-                Response usersResponse = Stream.Send(Codes.GET_ROOM_STATE);
+                Response usersResponse = Stream.Send(Codes.GET_ROOM_STATE, false);
 
                 if (Stream.ResponseForThread(usersResponse, Codes.GET_ROOM_STATE, out string error))
                 {
@@ -221,7 +216,7 @@ namespace client
                 }
                 else
                 {
-                    if (error == "exit")
+                    if (Stream.backendClosed)
                     {
                         e.Cancel = true;
                         break;
@@ -253,6 +248,12 @@ namespace client
 
         private void GetUsersCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            if(Stream.backendClosed)
+            {
+                Stream.Close();
+                return;
+            }
+
             switch(roomStatus)
             {
                 case Status.OPEN:

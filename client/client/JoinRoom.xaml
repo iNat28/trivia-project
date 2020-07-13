@@ -23,7 +23,7 @@
                 <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="25" Height="350">
                     <Button x:Name="JoinRoomButton" Content="Join Room" HorizontalAlignment="Stretch" Margin="0,230,0,0" VerticalAlignment="Stretch" Width="168" Height="54" Click="JoinRoomButton_Click"/>
                     <Button x:Name="BackButton" Content="Back" HorizontalAlignment="Stretch" Margin="0,15,0,0" VerticalAlignment="Stretch" Width="115" Height="36" Click="BackButton_Click"/>
-                    <ListBox x:Name="RoomsList" HorizontalAlignment="Stretch" Height="150" Margin="123,-450,121.8,0" VerticalAlignment="Stretch" SelectionChanged="RoomsList_SelectionChanged"/>
+                    <ListBox x:Name="RoomsList" HorizontalAlignment="Center" Width="400" Height="150" Margin="0,-450,0,0" VerticalAlignment="Stretch" SelectionChanged="RoomsList_SelectionChanged"/>
                     <TextBlock x:Name="ErrorOutput" Width="500" HorizontalAlignment="Center" Margin="0,-250,0,0" TextWrapping="Wrap" VerticalAlignment="Stretch" Height="20" TextAlignment="Center"/>
                 </StackPanel>
             </Border>

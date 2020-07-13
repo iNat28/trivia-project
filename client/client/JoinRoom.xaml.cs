@@ -75,8 +75,8 @@ namespace client
             return
                 "Room: " + this.name + " | " + 
                 this.currentPlayerCount + '/' + this.maxPlayers + " players in room | " +
-                this.questionsCount + " questions | " +
-                Utils.GetSecondsString(this.timePerQuestion) + " per question"
+                Utils.GetProperString(this.questionsCount, "question") + " | " +
+                Utils.GetProperString(this.timePerQuestion, "second") + " per question"
                 + roomStatus;
         }
     };
@@ -88,7 +88,7 @@ namespace client
     {
         private RoomData selectedRoom;
         private readonly BackgroundWorker backgroundWorker;
-        private Mutex sendingMutex;
+        private readonly Mutex sendingMutex;
         private readonly List<RoomData> rooms;
 
         public JoinRoomWindow()
@@ -105,6 +105,7 @@ namespace client
 
             backgroundWorker.DoWork += GetRoomsList;
             backgroundWorker.ProgressChanged += ChangeWPF;
+            backgroundWorker.RunWorkerCompleted += WorkerFinished;
         }
 
         protected override Border GetBorder()
@@ -178,7 +179,7 @@ namespace client
 
                 sendingMutex.WaitOne();
 
-                Response response = Stream.Send(Codes.GET_ROOM);
+                Response response = Stream.Send(Codes.GET_ROOM, false);
 
                 if (Stream.ResponseForThread(response, Codes.GET_ROOM, out string error))
                 {
@@ -216,7 +217,7 @@ namespace client
                 }
                 else
                 {
-                    if (error == "exit")
+                    if (Stream.backendClosed)
                     {
                         e.Cancel = true;
                         break;
@@ -243,6 +244,15 @@ namespace client
                 case 3:
                     this.ErrorOutput.Text = param;
                     break;
+            }
+        }
+
+        private void WorkerFinished(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (Stream.backendClosed)
+            {
+                Stream.Close();
+                return;
             }
         }
     }
